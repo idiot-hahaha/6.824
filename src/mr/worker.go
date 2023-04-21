@@ -12,6 +12,8 @@ import "log"
 import "net/rpc"
 import "hash/fnv"
 
+var threadID WorkerID
+
 // Map functions return a slice of KeyValue.
 type KeyValue struct {
 	Key   string
@@ -35,34 +37,36 @@ func Worker(mapf func(string, string) []KeyValue,
 	// uncomment to send the Example RPC to the coordinator.
 	//CallExample()
 
+	threadID = WorkerID(os.Getpid())
+	link()
+	go ping()
+
 	for {
 		var TaskInfo GetTaskReply
-		var args GetTaskArgs
+		var args = GetTaskArgs{
+			ID: threadID,
+		}
 		if ok := call("Coordinator.GetTask", &args, &TaskInfo); !ok {
 			break
 		}
 		if TaskInfo.Task == MapTask {
+			//fmt.Println("doMap:", TaskInfo.TaskID)
 			doMap(mapf, TaskInfo.TaskID, TaskInfo.Inames[0], TaskInfo.NReduce)
 			finishMap(TaskInfo.TaskID)
 		} else if TaskInfo.Task == ReduceTask {
+			//fmt.Println("doReduce:", TaskInfo.TaskID)
 			doReduce(reducef, TaskInfo.TaskID, TaskInfo.NMap)
 			finishReduce(TaskInfo.TaskID)
 		} else if TaskInfo.Task == Complete {
 			break
 		} else {
-			time.Sleep(time.Millisecond)
+			//fmt.Println("sleep")
+			time.Sleep(time.Second)
 		}
 	}
 }
 
-type ByKey []KeyValue
-
-// for sorting by key.
-func (a ByKey) Len() int           { return len(a) }
-func (a ByKey) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
-func (a ByKey) Less(i, j int) bool { return a[i].Key < a[j].Key }
-
-func doMap(mapf func(string, string) []KeyValue, taskID int, filename string, nReduce int) {
+func doMap(mapf func(string, string) []KeyValue, taskID TaskID, filename string, nReduce int) {
 	file, err := os.Open(filename)
 	if err != nil {
 		log.Fatalf("cannot open %v", filename)
@@ -85,22 +89,29 @@ func doMap(mapf func(string, string) []KeyValue, taskID int, filename string, nR
 			enc.Encode(&kv)
 		}
 		ofile.Close()
-		oname := mapOutFilePath(taskID, idx)
+		oname := mapOutFilePath(taskID, TaskID(idx))
 		os.Rename(ofile.Name(), oname)
 	}
 	return
 }
 
-func mapOutFilePath(taskID int, reduceIndex int) string {
+func mapOutFilePath(taskID TaskID, reduceIndex TaskID) string {
 	path := fmt.Sprintf("mr-%d-%d", taskID, reduceIndex)
 	return path
 }
 
-func doReduce(reducef func(string, []string) string, TaskID int, nMap int) {
-	//oname := "mr-out-0"
+type ByKey []KeyValue
+
+// for sorting by key.
+func (a ByKey) Len() int           { return len(a) }
+func (a ByKey) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
+func (a ByKey) Less(i, j int) bool { return a[i].Key < a[j].Key }
+
+func doReduce(reducef func(string, []string) string, rTaskID TaskID, nMap int) {
+
 	intermediate := []KeyValue{}
 	for taskID := 0; taskID < nMap; taskID++ {
-		iname := mapOutFilePath(taskID, TaskID)
+		iname := mapOutFilePath(TaskID(taskID), rTaskID)
 		ifile, _ := os.Open(iname)
 		dec := json.NewDecoder(ifile)
 		for {
@@ -139,11 +150,11 @@ func doReduce(reducef func(string, []string) string, TaskID int, nMap int) {
 	}
 
 	ofile.Close()
-	oname := fmt.Sprintf("mr-out-%d", TaskID)
+	oname := fmt.Sprintf("mr-out-%d", rTaskID)
 	os.Rename(ofile.Name(), oname)
 }
 
-func finishMap(id int) {
+func finishMap(id TaskID) {
 	args := FinishMapArgs{
 		TaskID: id,
 	}
@@ -151,12 +162,31 @@ func finishMap(id int) {
 	call("Coordinator.FinishMap", &args, &reply)
 }
 
-func finishReduce(taskID int) {
+func finishReduce(taskID TaskID) {
 	args := FinishReduceArgs{
 		TaskID: taskID,
 	}
 	reply := FinishReduceReply{}
 	call("Coordinator.FinishReduce", &args, &reply)
+}
+
+func link() {
+	args := &LinkArgs{
+		ID: threadID,
+	}
+	reply := &LinkReply{}
+	call("Coordinator.Link", args, reply)
+}
+
+func ping() {
+	args := &PingArgs{
+		ID: threadID,
+	}
+	reply := &PingReply{}
+	for {
+		time.Sleep(time.Millisecond * 500)
+		call("Coordinator.Ping", args, reply)
+	}
 }
 
 // example function to show how to make an RPC call to the coordinator.

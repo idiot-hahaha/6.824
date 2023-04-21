@@ -16,21 +16,27 @@ const (
 	complete
 )
 
+type TaskID int
+type WorkerID int
+
 type Coordinator struct {
 	// Your definitions here.
-	nReduce              int
-	state                chan int
-	mapTasks             chan int
-	reduceTasks          chan int
-	mTaskUnassignedCount chan int
-	rTaskUnassignedCount chan int
-	mTaskCount           chan int
-	rTaskCount           chan int
-	mapCompleteMutex     sync.Mutex
-	reduceCompleteMutex  sync.Mutex
-	files                []string
-	mapComplete          []bool
-	reduceComplete       []bool
+	nReduce             int
+	nMap                int
+	state               chan int
+	files               []string
+	Tasks               chan TaskID
+	unassignedTaskCount chan int
+	taskCount           chan int
+	mapComplete         []bool
+	reduceComplete      []bool
+	workerTaskID        map[WorkerID]TaskID
+	workerAlive         map[WorkerID]bool
+	//mutex               sync.Mutex
+	mapCompleteMutex    sync.Mutex
+	reduceCompleteMutex sync.Mutex
+	workerTaskIDMutex   sync.Mutex
+	workerAliveMutex    sync.Mutex
 }
 
 // Your code here -- RPC handlers for the worker to call.
@@ -38,64 +44,48 @@ type Coordinator struct {
 func (c *Coordinator) GetTask(args *GetTaskArgs, reply *GetTaskReply) error {
 	state := <-c.state
 	if state == inMap {
-		count := <-c.mTaskUnassignedCount
+		count := <-c.unassignedTaskCount
 		c.state <- state
 		if count == 0 {
-			c.mTaskUnassignedCount <- 0
+			c.unassignedTaskCount <- 0
 			reply.Task = Sleep
 			return nil
 		}
-		taskID := <-c.mapTasks
-		c.mTaskUnassignedCount <- count - 1
+		taskID := <-c.Tasks
+		c.unassignedTaskCount <- count - 1
 		reply.Task = MapTask
 		reply.TaskID = taskID
-		reply.NMap = len(c.files)
+		reply.NMap = c.nMap
 		reply.NReduce = c.nReduce
 		reply.Inames = []string{c.files[taskID]}
-		go func() {
-			time.Sleep(time.Second * 10)
-			c.mapCompleteMutex.Lock()
-			if !c.mapComplete[taskID] {
-				c.mapCompleteMutex.Unlock()
-				c.mapTasks <- taskID
-				mCount := <-c.mTaskUnassignedCount
-				c.mTaskUnassignedCount <- mCount + 1
-			} else {
-				c.mapCompleteMutex.Unlock()
-			}
-		}()
+		c.workerTaskIDMutex.Lock()
+		c.workerTaskID[args.ID] = taskID
+		c.workerTaskIDMutex.Unlock()
 	} else if state == inReduce {
-		count := <-c.rTaskUnassignedCount
+		count := <-c.unassignedTaskCount
 		c.state <- state
 		if count == 0 {
-			c.rTaskUnassignedCount <- 0
+			c.unassignedTaskCount <- 0
 			reply.Task = Sleep
 			return nil
 		}
-		taskID := <-c.reduceTasks
-		c.rTaskUnassignedCount <- count - 1
+		taskID := <-c.Tasks
+		c.unassignedTaskCount <- count - 1
 		reply.Task = ReduceTask
 		reply.TaskID = taskID
-		reply.NMap = len(c.files)
+		reply.NMap = c.nMap
 		reply.NReduce = c.nReduce
-		go func() {
-			time.Sleep(time.Second * 10)
-			c.reduceCompleteMutex.Lock()
-			if !c.reduceComplete[taskID] {
-				c.reduceCompleteMutex.Unlock()
-				c.reduceTasks <- taskID
-				rCount := <-c.rTaskUnassignedCount
-				c.rTaskUnassignedCount <- rCount + 1
-			} else {
-				c.reduceCompleteMutex.Unlock()
-			}
-		}()
+		c.workerTaskIDMutex.Lock()
+		c.workerTaskID[args.ID] = taskID
+		c.workerTaskIDMutex.Unlock()
 	} else if state == complete {
 		c.state <- state
 		reply.Task = Complete
+		return nil
 	} else {
 		c.state <- state
 		reply.Task = Sleep
+		return nil
 	}
 
 	return nil
@@ -105,16 +95,28 @@ func (c *Coordinator) FinishMap(args *FinishMapArgs, reply *FinishMapReply) erro
 	taskID := args.TaskID
 	c.mapCompleteMutex.Lock()
 	if !c.mapComplete[taskID] {
-		mTaskCount := <-c.mTaskCount
+		c.mapCompleteMutex.Unlock()
+		mTaskCount := <-c.taskCount
 		mTaskCount--
 		if mTaskCount == 0 {
 			<-c.state
 			c.state <- inReduce
+			c.Tasks = make(chan TaskID, c.nReduce)
+			for i := 0; i < c.nReduce; i++ {
+				c.Tasks <- TaskID(i)
+			}
+			c.taskCount <- c.nReduce
+			<-c.unassignedTaskCount
+			c.unassignedTaskCount <- c.nReduce
+			c.workerTaskIDMutex.Lock()
+			c.workerTaskID = map[WorkerID]TaskID{}
+			c.workerTaskIDMutex.Unlock()
+			return nil
 		}
-		c.mTaskCount <- mTaskCount
+		c.taskCount <- mTaskCount
 		c.mapComplete[taskID] = true
 	}
-	c.mapCompleteMutex.Unlock()
+	//c.mutex.Unlock()
 	return nil
 }
 
@@ -122,16 +124,65 @@ func (c *Coordinator) FinishReduce(args *FinishReduceArgs, reply *FinishReduceRe
 	taskID := args.TaskID
 	c.reduceCompleteMutex.Lock()
 	if !c.reduceComplete[taskID] {
-		rTaskCount := <-c.rTaskCount
+		rTaskCount := <-c.taskCount
 		rTaskCount--
 		if rTaskCount == 0 {
 			<-c.state
 			c.state <- complete
 		}
-		c.rTaskCount <- rTaskCount
+		c.taskCount <- rTaskCount
 		c.reduceComplete[taskID] = true
 	}
 	c.reduceCompleteMutex.Unlock()
+	return nil
+}
+
+func (c *Coordinator) Ping(args *PingArgs, reply *PingReply) error {
+	c.workerAliveMutex.Lock()
+	c.workerAlive[args.ID] = true
+	c.workerAliveMutex.Unlock()
+	return nil
+}
+func (c *Coordinator) Link(args *LinkArgs, reply *LinkReply) error {
+	workerID := args.ID
+	c.workerAliveMutex.Lock()
+	c.workerAlive[workerID] = true
+	c.workerAliveMutex.Unlock()
+
+	go func() {
+		for {
+			time.Sleep(time.Second)
+			c.workerAliveMutex.Lock()
+			if !c.workerAlive[workerID] {
+				delete(c.workerAlive, workerID)
+				c.workerAliveMutex.Unlock()
+				c.workerTaskIDMutex.Lock()
+				c.Tasks <- c.workerTaskID[workerID]
+				delete(c.workerTaskID, workerID)
+				c.workerTaskIDMutex.Unlock()
+				unassignedTaskCount := <-c.unassignedTaskCount
+				c.unassignedTaskCount <- unassignedTaskCount + 1
+				return
+			}
+			c.workerAlive[workerID] = false
+			c.workerAliveMutex.Unlock()
+			//select {
+			//case <-c.workerAlive[workerID]:
+			//	continue
+			//case <-time.After(time.Second):
+			//	c.Tasks <- c.workerTaskID[workerID]
+			//	c.mutex.Lock()
+			//	delete(c.workerAlive, workerID)
+			//	//c.workerAliveMutex.Unlock()
+			//	//c.workerTaskIDMutex.Lock()
+			//	delete(c.workerTaskID, workerID)
+			//	c.mutex.Unlock()
+			//	unassignedTaskCount := <-c.unassignedTaskCount
+			//	c.unassignedTaskCount <- unassignedTaskCount + 1
+			//	return
+			//}
+		}
+	}()
 	return nil
 }
 
@@ -170,28 +221,36 @@ func (c *Coordinator) Done() bool {
 	return ret
 }
 
-func (c *Coordinator) init(files []string, nReduce int) {
+func (c *Coordinator) initForMap(files []string, nReduce int) {
 	c.files = files
+	c.nMap = len(files)
 	c.nReduce = nReduce
-	c.mapTasks = make(chan int, len(files))
-	for i := 0; i < len(files); i++ {
-		c.mapTasks <- i
-	}
-	c.reduceTasks = make(chan int, nReduce)
-	for i := 0; i < c.nReduce; i++ {
-		c.reduceTasks <- i
-	}
 	c.state = make(chan int, 1)
-
-	c.mapComplete = make([]bool, len(files))
-	c.reduceComplete = make([]bool, nReduce)
+	c.Tasks = make(chan TaskID, c.nMap)
+	for i := 0; i < c.nMap; i++ {
+		c.Tasks <- TaskID(i)
+	}
+	c.mapComplete = make([]bool, c.nMap)
+	c.reduceComplete = make([]bool, c.nReduce)
 	c.state <- inMap
-	c.mTaskUnassignedCount, c.rTaskUnassignedCount = make(chan int, 1), make(chan int, 1)
-	c.mTaskUnassignedCount <- len(files)
-	c.rTaskUnassignedCount <- nReduce
-	c.mTaskCount, c.rTaskCount = make(chan int, 1), make(chan int, 1)
-	c.mTaskCount <- len(files)
-	c.rTaskCount <- nReduce
+	c.unassignedTaskCount = make(chan int, 1)
+	c.unassignedTaskCount <- c.nMap
+	c.taskCount = make(chan int, 1)
+	c.taskCount <- c.nMap
+	c.workerTaskID = map[WorkerID]TaskID{}
+	c.workerAlive = map[WorkerID]bool{}
+}
+
+func (c *Coordinator) initForReduce() {
+	<-c.state
+	c.state <- inReduce
+	c.Tasks = make(chan TaskID, c.nReduce)
+	for i := 0; i < c.nReduce; i++ {
+		c.Tasks <- TaskID(i)
+	}
+	c.workerTaskIDMutex.Lock()
+	c.workerTaskID = map[WorkerID]TaskID{}
+	c.workerTaskIDMutex.Unlock()
 }
 
 // create a Coordinator.
@@ -201,7 +260,7 @@ func MakeCoordinator(files []string, nReduce int) *Coordinator {
 	c := Coordinator{}
 
 	// Your code here.
-	c.init(files, nReduce)
+	c.initForMap(files, nReduce)
 
 	c.server()
 	return &c

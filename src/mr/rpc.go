@@ -31,28 +31,42 @@ const (
 )
 
 type GetTaskArgs struct {
+	ID WorkerID
 }
 
 type GetTaskReply struct {
 	Task    int
-	TaskID  int
+	TaskID  TaskID
 	NReduce int
 	NMap    int
 	Inames  []string
 }
 
 type FinishMapArgs struct {
-	TaskID int
+	TaskID TaskID
 }
 
 type FinishMapReply struct {
 }
 
 type FinishReduceArgs struct {
-	TaskID int
+	TaskID TaskID
 }
 
 type FinishReduceReply struct {
+}
+
+type LinkArgs struct {
+	ID WorkerID
+}
+
+type LinkReply struct {
+}
+type PingArgs struct {
+	ID WorkerID
+}
+
+type PingReply struct {
 }
 
 // Cook up a unique-ish UNIX-domain socket name
