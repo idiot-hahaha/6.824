@@ -1,0 +1,1441 @@
+03:26:11.744160 server(0) start!
+03:26:11.744932 server(1) start!
+03:26:11.745144 server(2) start!
+Test (2D): install snapshots (unreliable+crash) ...
+03:26:11.845080 server(0) is alive
+03:26:11.845124 server(0) is not dead lock
+03:26:11.845133 server(1) is not dead lock
+03:26:11.845148 server(1) is alive
+03:26:11.846290 server(2) is alive
+03:26:11.846410 server(2) is not dead lock
+03:26:11.897243 server(2) become candidate of term1 because of time out!
+03:26:11.900136 server(0) become candidate of term1 because of time out!
+03:26:11.901974 server(1) get RequestVoteArgs({Term:1 CandidateId:0 LastLogIndex:0 LastLogTerm:0}) from candidate(0)
+03:26:11.902024 server(0) get RequestVoteArgs({Term:1 CandidateId:2 LastLogIndex:0 LastLogTerm:0}) from candidate(2)
+03:26:11.902073 server(1) become follower
+03:26:11.902169 args(&{Term:1 CandidateId:0 LastLogIndex:0 LastLogTerm:0}) is more new than term:0 index:0
+03:26:11.902361 candidate(2) get reply(&{Term:1 VoteGranted:false}) from server(0)
+03:26:11.902383 server(1) get RequestVoteArgs({Term:1 CandidateId:2 LastLogIndex:0 LastLogTerm:0}) from candidate(2)
+03:26:11.902512 candidate(0) get reply(&{Term:1 VoteGranted:true}) from server(1)
+03:26:11.902531 candidate(0) get vote from server(1)
+03:26:11.902553 lastIndex:0, index0:0, nextIndex:[1 1 1], matchIndex:[0 0 0]
+03:26:11.902594 candidate(0) become leader of term1
+03:26:11.902652 candidate(2) get reply(&{Term:1 VoteGranted:false}) from server(1)
+03:26:11.907387 server(2) get RequestVoteArgs({Term:1 CandidateId:0 LastLogIndex:0 LastLogTerm:0}) from candidate(0)
+03:26:11.907658 candidate(0) get reply(&{Term:1 VoteGranted:false}) from server(2)
+03:26:11.946318 server(1) is alive
+03:26:11.946362 server(1) is not dead lock
+03:26:11.946366 server(0) is not dead lock
+03:26:11.946372 server(2) is alive
+03:26:11.946375 server(0) is alive
+03:26:11.946457 server(2) is not dead lock
+03:26:11.997834 =====Start!=====  cmd:4011690651454006606
+03:26:11.998034 lastIndex:1, index0:0, nextIndex:[2 1 1], matchIndex:[1 0 0]
+03:26:11.998127 leader(0) update log of server(1)
+03:26:11.998193 leader(0) update log of server(2)
+03:26:12.003186 leader(0) beat heart
+03:26:12.003258 lastIndex:1, index0:0, nextIndex:[2 1 1], matchIndex:[1 0 0]
+03:26:12.003327 leader(0) update log of server(2)
+03:26:12.003426 leader(0) update log of server(1)
+03:26:12.014350 server(1) get AppendEntriesMsg, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[{Command:4011690651454006606 Index:1 Term:1}] LeaderCommit:0}, server.lastIndex: 0, lastTerm:0
+03:26:12.014619 server(1) new log:{Entries:[{Command:<nil> Index:0 Term:0} {Command:4011690651454006606 Index:1 Term:1}] StartIndex:0}
+03:26:12.014832 server(1) get AppendEntriesMsg, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[{Command:4011690651454006606 Index:1 Term:1}] LeaderCommit:0}, server.lastIndex: 1, lastTerm:1
+03:26:12.014869 server(1) new log:{Entries:[{Command:<nil> Index:0 Term:0} {Command:4011690651454006606 Index:1 Term:1}] StartIndex:0}
+03:26:12.015125 leader(0) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:1 Success:true} from server(1)
+03:26:12.015150 matchIndex[1]:1 nextIndex[1]:2
+03:26:12.015205 leader(0) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:1 Success:true} from server(1)
+03:26:12.015224 matchIndex[1]:1 nextIndex[1]:2
+03:26:12.015268 server(0) apply entry, lastApplied:0 log:{Entries:[{Command:<nil> Index:0 Term:0} {Command:4011690651454006606 Index:1 Term:1}] StartIndex:0}
+03:26:12.018833 server(2) get AppendEntriesMsg, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[{Command:4011690651454006606 Index:1 Term:1}] LeaderCommit:0}, server.lastIndex: 0, lastTerm:0
+03:26:12.019092 candidate(2) become follower of term1 because get heartBeat from leader(0)
+03:26:12.019213 server(2) new log:{Entries:[{Command:<nil> Index:0 Term:0} {Command:4011690651454006606 Index:1 Term:1}] StartIndex:0}
+03:26:12.019477 leader(0) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:1 Success:true} from server(2)
+03:26:12.019505 matchIndex[2]:1 nextIndex[2]:2
+03:26:12.023852 server(2) get AppendEntriesMsg, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[{Command:4011690651454006606 Index:1 Term:1}] LeaderCommit:0}, server.lastIndex: 1, lastTerm:1
+03:26:12.023943 server(2) new log:{Entries:[{Command:<nil> Index:0 Term:0} {Command:4011690651454006606 Index:1 Term:1}] StartIndex:0}
+03:26:12.024204 leader(0) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:1 Success:true} from server(2)
+03:26:12.024223 matchIndex[2]:1 nextIndex[2]:2
+03:26:12.047447 server(2) is alive
+03:26:12.047472 server(1) is alive
+03:26:12.047509 server(0) is not dead lock
+03:26:12.047528 server(1) is not dead lock
+03:26:12.047538 server(0) is alive
+03:26:12.047566 server(2) is not dead lock
+03:26:12.104173 leader(0) beat heart
+03:26:12.104259 lastIndex:1, index0:0, nextIndex:[2 2 2], matchIndex:[1 1 1]
+03:26:12.104307 leader(0) update log of server(2)
+03:26:12.104399 leader(0) update log of server(1)
+03:26:12.117254 server(1) get AppendEntriesMsg, args:&{Term:1 LeaderId:0 PrevLogIndex:1 PrevLogTerm:1 Entries:[] LeaderCommit:1}, server.lastIndex: 1, lastTerm:1
+03:26:12.117321 server(1) new log:{Entries:[{Command:<nil> Index:0 Term:0} {Command:4011690651454006606 Index:1 Term:1}] StartIndex:0}
+03:26:12.117425 server(1) apply entry, lastApplied:0 log:{Entries:[{Command:<nil> Index:0 Term:0} {Command:4011690651454006606 Index:1 Term:1}] StartIndex:0}
+03:26:12.117611 leader(0) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:1 Success:true} from server(1)
+03:26:12.117628 matchIndex[1]:1 nextIndex[1]:2
+03:26:12.126483 server(2) get AppendEntriesMsg, args:&{Term:1 LeaderId:0 PrevLogIndex:1 PrevLogTerm:1 Entries:[] LeaderCommit:1}, server.lastIndex: 1, lastTerm:1
+03:26:12.126567 server(2) new log:{Entries:[{Command:<nil> Index:0 Term:0} {Command:4011690651454006606 Index:1 Term:1}] StartIndex:0}
+03:26:12.126726 server(2) apply entry, lastApplied:0 log:{Entries:[{Command:<nil> Index:0 Term:0} {Command:4011690651454006606 Index:1 Term:1}] StartIndex:0}
+03:26:12.127142 leader(0) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:1 Success:true} from server(2)
+03:26:12.127191 matchIndex[2]:1 nextIndex[2]:2
+03:26:12.147977 server(2) is not dead lock
+03:26:12.148058 server(1) is alive
+03:26:12.148060 server(0) is not dead lock
+03:26:12.148065 server(2) is alive
+03:26:12.148072 server(1) is not dead lock
+03:26:12.148160 server(0) is alive
+03:26:12.205145 leader(0) beat heart
+03:26:12.205207 lastIndex:1, index0:0, nextIndex:[2 2 2], matchIndex:[1 1 1]
+03:26:12.205246 leader(0) update log of server(2)
+03:26:12.205312 leader(0) update log of server(1)
+03:26:12.227035 server(1) get AppendEntriesMsg, args:&{Term:1 LeaderId:0 PrevLogIndex:1 PrevLogTerm:1 Entries:[] LeaderCommit:1}, server.lastIndex: 1, lastTerm:1
+03:26:12.227199 server(1) new log:{Entries:[{Command:<nil> Index:0 Term:0} {Command:4011690651454006606 Index:1 Term:1}] StartIndex:0}
+03:26:12.227479 leader(0) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:1 Success:true} from server(1)
+03:26:12.227498 matchIndex[1]:1 nextIndex[1]:2
+03:26:12.249159 server(0) is alive
+03:26:12.249195 server(0) is not dead lock
+03:26:12.249209 server(2) is not dead lock
+03:26:12.249227 server(2) is alive
+03:26:12.249237 server(1) is alive
+03:26:12.249240 server(1) is not dead lock
+03:26:12.305690 leader(0) beat heart
+03:26:12.305816 lastIndex:1, index0:0, nextIndex:[2 2 2], matchIndex:[1 1 1]
+03:26:12.305945 leader(0) update log of server(1)
+03:26:12.306019 leader(0) update log of server(2)
+03:26:12.328732 server(1) get AppendEntriesMsg, args:&{Term:1 LeaderId:0 PrevLogIndex:1 PrevLogTerm:1 Entries:[] LeaderCommit:1}, server.lastIndex: 1, lastTerm:1
+03:26:12.328802 server(1) new log:{Entries:[{Command:<nil> Index:0 Term:0} {Command:4011690651454006606 Index:1 Term:1}] StartIndex:0}
+03:26:12.329070 leader(0) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:1 Success:true} from server(1)
+03:26:12.329098 matchIndex[1]:1 nextIndex[1]:2
+03:26:12.332447 server(2) get AppendEntriesMsg, args:&{Term:1 LeaderId:0 PrevLogIndex:1 PrevLogTerm:1 Entries:[] LeaderCommit:1}, server.lastIndex: 1, lastTerm:1
+03:26:12.332498 server(2) new log:{Entries:[{Command:<nil> Index:0 Term:0} {Command:4011690651454006606 Index:1 Term:1}] StartIndex:0}
+03:26:12.332788 leader(0) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:1 Success:true} from server(2)
+03:26:12.332813 matchIndex[2]:1 nextIndex[2]:2
+03:26:12.349560 server(1) is not dead lock
+03:26:12.349614 server(1) is alive
+03:26:12.349633 server(2) is alive
+03:26:12.349634 server(2) is not dead lock
+03:26:12.349641 server(0) is not dead lock
+03:26:12.349644 server(0) is alive
+03:26:12.406940 leader(0) beat heart
+03:26:12.407056 lastIndex:1, index0:0, nextIndex:[2 2 2], matchIndex:[1 1 1]
+03:26:12.407194 leader(0) update log of server(2)
+03:26:12.407215 leader(0) update log of server(1)
+03:26:12.421551 server(2) get AppendEntriesMsg, args:&{Term:1 LeaderId:0 PrevLogIndex:1 PrevLogTerm:1 Entries:[] LeaderCommit:1}, server.lastIndex: 1, lastTerm:1
+03:26:12.421646 server(2) new log:{Entries:[{Command:<nil> Index:0 Term:0} {Command:4011690651454006606 Index:1 Term:1}] StartIndex:0}
+03:26:12.421926 leader(0) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:1 Success:true} from server(2)
+03:26:12.421944 matchIndex[2]:1 nextIndex[2]:2
+03:26:12.422093 server(1) get AppendEntriesMsg, args:&{Term:1 LeaderId:0 PrevLogIndex:1 PrevLogTerm:1 Entries:[] LeaderCommit:1}, server.lastIndex: 1, lastTerm:1
+03:26:12.422127 server(1) new log:{Entries:[{Command:<nil> Index:0 Term:0} {Command:4011690651454006606 Index:1 Term:1}] StartIndex:0}
+03:26:12.422357 leader(0) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:1 Success:true} from server(1)
+03:26:12.422374 matchIndex[1]:1 nextIndex[1]:2
+03:26:12.450571 server(1) is alive
+03:26:12.450616 server(1) is not dead lock
+03:26:12.450624 server(0) is alive
+03:26:12.450644 server(0) is not dead lock
+03:26:12.450631 server(2) is not dead lock
+03:26:12.450640 server(2) is alive
+03:26:12.508118 leader(0) beat heart
+03:26:12.508252 lastIndex:1, index0:0, nextIndex:[2 2 2], matchIndex:[1 1 1]
+03:26:12.508391 leader(0) update log of server(2)
+03:26:12.508544 leader(0) update log of server(1)
+03:26:12.523478 server(2) get AppendEntriesMsg, args:&{Term:1 LeaderId:0 PrevLogIndex:1 PrevLogTerm:1 Entries:[] LeaderCommit:1}, server.lastIndex: 1, lastTerm:1
+03:26:12.523647 server(2) new log:{Entries:[{Command:<nil> Index:0 Term:0} {Command:4011690651454006606 Index:1 Term:1}] StartIndex:0}
+03:26:12.524028 leader(0) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:1 Success:true} from server(2)
+03:26:12.524047 matchIndex[2]:1 nextIndex[2]:2
+03:26:12.526655 server(1) get AppendEntriesMsg, args:&{Term:1 LeaderId:0 PrevLogIndex:1 PrevLogTerm:1 Entries:[] LeaderCommit:1}, server.lastIndex: 1, lastTerm:1
+03:26:12.526715 server(1) new log:{Entries:[{Command:<nil> Index:0 Term:0} {Command:4011690651454006606 Index:1 Term:1}] StartIndex:0}
+03:26:12.527023 leader(0) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:1 Success:true} from server(1)
+03:26:12.527066 matchIndex[1]:1 nextIndex[1]:2
+03:26:12.550761 server(2) is not dead lock
+03:26:12.550849 server(1) is not dead lock
+03:26:12.550854 server(1) is alive
+03:26:12.550865 server(0) is not dead lock
+03:26:12.550954 server(2) is alive
+03:26:12.550873 server(0) is alive
+03:26:12.609121 leader(0) beat heart
+03:26:12.609169 lastIndex:1, index0:0, nextIndex:[2 2 2], matchIndex:[1 1 1]
+03:26:12.609280 leader(0) update log of server(2)
+03:26:12.609309 leader(0) update log of server(1)
+03:26:12.630692 server(2) get AppendEntriesMsg, args:&{Term:1 LeaderId:0 PrevLogIndex:1 PrevLogTerm:1 Entries:[] LeaderCommit:1}, server.lastIndex: 1, lastTerm:1
+03:26:12.630786 server(2) new log:{Entries:[{Command:<nil> Index:0 Term:0} {Command:4011690651454006606 Index:1 Term:1}] StartIndex:0}
+03:26:12.631196 leader(0) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:1 Success:true} from server(2)
+03:26:12.631218 matchIndex[2]:1 nextIndex[2]:2
+03:26:12.651183 server(0) is alive
+03:26:12.651266 server(2) is alive
+03:26:12.651345 server(2) is not dead lock
+03:26:12.651370 server(1) is alive
+03:26:12.651379 server(1) is not dead lock
+03:26:12.651386 server(0) is not dead lock
+03:26:12.710207 leader(0) beat heart
+03:26:12.710298 lastIndex:1, index0:0, nextIndex:[2 2 2], matchIndex:[1 1 1]
+03:26:12.710394 leader(0) update log of server(1)
+03:26:12.710530 leader(0) update log of server(2)
+03:26:12.715049 server(2) get AppendEntriesMsg, args:&{Term:1 LeaderId:0 PrevLogIndex:1 PrevLogTerm:1 Entries:[] LeaderCommit:1}, server.lastIndex: 1, lastTerm:1
+03:26:12.715114 server(2) new log:{Entries:[{Command:<nil> Index:0 Term:0} {Command:4011690651454006606 Index:1 Term:1}] StartIndex:0}
+03:26:12.715401 leader(0) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:1 Success:true} from server(2)
+03:26:12.715421 matchIndex[2]:1 nextIndex[2]:2
+03:26:12.733379 =====Start!=====  cmd:5531077008207381974
+03:26:12.733574 lastIndex:2, index0:0, nextIndex:[3 2 2], matchIndex:[2 1 1]
+03:26:12.733661 leader(0) update log of server(2)
+03:26:12.733727 leader(0) update log of server(1)
+03:26:12.750307 server(2) get AppendEntriesMsg, args:&{Term:1 LeaderId:0 PrevLogIndex:1 PrevLogTerm:1 Entries:[{Command:5531077008207381974 Index:2 Term:1}] LeaderCommit:1}, server.lastIndex: 1, lastTerm:1
+03:26:12.750516 server(2) new log:{Entries:[{Command:<nil> Index:0 Term:0} {Command:4011690651454006606 Index:1 Term:1} {Command:5531077008207381974 Index:2 Term:1}] StartIndex:0}
+03:26:12.750769 leader(0) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:1 Success:true} from server(2)
+03:26:12.750788 matchIndex[2]:2 nextIndex[2]:3
+03:26:12.750885 server(0) apply entry, lastApplied:1 log:{Entries:[{Command:<nil> Index:0 Term:0} {Command:4011690651454006606 Index:1 Term:1} {Command:5531077008207381974 Index:2 Term:1}] StartIndex:0}
+03:26:12.752224 server(2) is not dead lock
+03:26:12.752273 server(0) is alive
+03:26:12.752294 server(1) is alive
+03:26:12.752312 server(2) is alive
+03:26:12.752300 server(1) is not dead lock
+03:26:12.752305 server(0) is not dead lock
+03:26:12.810627 leader(0) beat heart
+03:26:12.810731 lastIndex:2, index0:0, nextIndex:[3 2 3], matchIndex:[2 1 2]
+03:26:12.810819 leader(0) update log of server(2)
+03:26:12.811180 leader(0) update log of server(1)
+03:26:12.812821 server(2) get AppendEntriesMsg, args:&{Term:1 LeaderId:0 PrevLogIndex:2 PrevLogTerm:1 Entries:[] LeaderCommit:2}, server.lastIndex: 2, lastTerm:1
+03:26:12.812940 server(2) new log:{Entries:[{Command:<nil> Index:0 Term:0} {Command:4011690651454006606 Index:1 Term:1} {Command:5531077008207381974 Index:2 Term:1}] StartIndex:0}
+03:26:12.813143 server(2) apply entry, lastApplied:1 log:{Entries:[{Command:<nil> Index:0 Term:0} {Command:4011690651454006606 Index:1 Term:1} {Command:5531077008207381974 Index:2 Term:1}] StartIndex:0}
+03:26:12.813461 leader(0) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:1 Success:true} from server(2)
+03:26:12.813490 matchIndex[2]:2 nextIndex[2]:3
+03:26:12.816204 =====Start!=====  cmd:4393916900428191899
+03:26:12.817008 lastIndex:3, index0:0, nextIndex:[4 2 3], matchIndex:[3 1 2]
+03:26:12.817075 =====Start!=====  cmd:2405994760989788082
+03:26:12.817296 lastIndex:4, index0:0, nextIndex:[5 2 3], matchIndex:[4 1 2]
+03:26:12.817348 =====Start!=====  cmd:2687814647807510459
+03:26:12.817535 lastIndex:5, index0:0, nextIndex:[6 2 3], matchIndex:[5 1 2]
+03:26:12.817568 =====Start!=====  cmd:2488848726372024040
+03:26:12.817776 lastIndex:6, index0:0, nextIndex:[7 2 3], matchIndex:[6 1 2]
+03:26:12.817812 =====Start!=====  cmd:8964474463742986733
+03:26:12.818026 lastIndex:7, index0:0, nextIndex:[8 2 3], matchIndex:[7 1 2]
+03:26:12.818064 =====Start!=====  cmd:3110082159077335585
+03:26:12.818311 lastIndex:8, index0:0, nextIndex:[9 2 3], matchIndex:[8 1 2]
+03:26:12.818347 =====Start!=====  cmd:8314954164924564877
+03:26:12.818571 lastIndex:9, index0:0, nextIndex:[10 2 3], matchIndex:[9 1 2]
+03:26:12.818646 leader(0) update log of server(2)
+03:26:12.818856 leader(0) update log of server(1)
+03:26:12.819008 leader(0) update log of server(2)
+03:26:12.819149 leader(0) update log of server(2)
+03:26:12.819296 leader(0) update log of server(1)
+03:26:12.819463 leader(0) update log of server(1)
+03:26:12.819629 leader(0) update log of server(2)
+03:26:12.819951 leader(0) update log of server(2)
+03:26:12.820417 leader(0) update log of server(1)
+03:26:12.820652 leader(0) update log of server(2)
+03:26:12.820810 leader(0) update log of server(1)
+03:26:12.820991 leader(0) update log of server(2)
+03:26:12.821316 leader(0) update log of server(1)
+03:26:12.821839 leader(0) update log of server(1)
+03:26:12.823334 server(2) get AppendEntriesMsg, args:&{Term:1 LeaderId:0 PrevLogIndex:2 PrevLogTerm:1 Entries:[{Command:4393916900428191899 Index:3 Term:1} {Command:2405994760989788082 Index:4 Term:1} {Command:2687814647807510459 Index:5 Term:1} {Command:2488848726372024040 Index:6 Term:1}] LeaderCommit:2}, server.lastIndex: 2, lastTerm:1
+03:26:12.823672 server(2) new log:{Entries:[{Command:<nil> Index:0 Term:0} {Command:4011690651454006606 Index:1 Term:1} {Command:5531077008207381974 Index:2 Term:1} {Command:4393916900428191899 Index:3 Term:1} {Command:2405994760989788082 Index:4 Term:1} {Command:2687814647807510459 Index:5 Term:1} {Command:2488848726372024040 Index:6 Term:1}] StartIndex:0}
+03:26:12.823971 leader(0) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:1 Success:true} from server(2)
+03:26:12.824003 matchIndex[2]:6 nextIndex[2]:7
+03:26:12.824248 server(0) apply entry, lastApplied:2 log:{Entries:[{Command:<nil> Index:0 Term:0} {Command:4011690651454006606 Index:1 Term:1} {Command:5531077008207381974 Index:2 Term:1} {Command:4393916900428191899 Index:3 Term:1} {Command:2405994760989788082 Index:4 Term:1} {Command:2687814647807510459 Index:5 Term:1} {Command:2488848726372024040 Index:6 Term:1} {Command:8964474463742986733 Index:7 Term:1} {Command:3110082159077335585 Index:8 Term:1} {Command:8314954164924564877 Index:9 Term:1}] StartIndex:0}
+03:26:12.824455 server(0) apply entry, lastApplied:3 log:{Entries:[{Command:<nil> Index:0 Term:0} {Command:4011690651454006606 Index:1 Term:1} {Command:5531077008207381974 Index:2 Term:1} {Command:4393916900428191899 Index:3 Term:1} {Command:2405994760989788082 Index:4 Term:1} {Command:2687814647807510459 Index:5 Term:1} {Command:2488848726372024040 Index:6 Term:1} {Command:8964474463742986733 Index:7 Term:1} {Command:3110082159077335585 Index:8 Term:1} {Command:8314954164924564877 Index:9 Term:1}] StartIndex:0}
+03:26:12.824601 server(0) apply entry, lastApplied:4 log:{Entries:[{Command:<nil> Index:0 Term:0} {Command:4011690651454006606 Index:1 Term:1} {Command:5531077008207381974 Index:2 Term:1} {Command:4393916900428191899 Index:3 Term:1} {Command:2405994760989788082 Index:4 Term:1} {Command:2687814647807510459 Index:5 Term:1} {Command:2488848726372024040 Index:6 Term:1} {Command:8964474463742986733 Index:7 Term:1} {Command:3110082159077335585 Index:8 Term:1} {Command:8314954164924564877 Index:9 Term:1}] StartIndex:0}
+03:26:12.824738 server(0) apply entry, lastApplied:5 log:{Entries:[{Command:<nil> Index:0 Term:0} {Command:4011690651454006606 Index:1 Term:1} {Command:5531077008207381974 Index:2 Term:1} {Command:4393916900428191899 Index:3 Term:1} {Command:2405994760989788082 Index:4 Term:1} {Command:2687814647807510459 Index:5 Term:1} {Command:2488848726372024040 Index:6 Term:1} {Command:8964474463742986733 Index:7 Term:1} {Command:3110082159077335585 Index:8 Term:1} {Command:8314954164924564877 Index:9 Term:1}] StartIndex:0}
+03:26:12.827415 server(2) get AppendEntriesMsg, args:&{Term:1 LeaderId:0 PrevLogIndex:2 PrevLogTerm:1 Entries:[{Command:4393916900428191899 Index:3 Term:1} {Command:2405994760989788082 Index:4 Term:1} {Command:2687814647807510459 Index:5 Term:1}] LeaderCommit:2}, server.lastIndex: 6, lastTerm:1
+03:26:12.827517 server(2) new log:{Entries:[{Command:<nil> Index:0 Term:0} {Command:4011690651454006606 Index:1 Term:1} {Command:5531077008207381974 Index:2 Term:1} {Command:4393916900428191899 Index:3 Term:1} {Command:2405994760989788082 Index:4 Term:1} {Command:2687814647807510459 Index:5 Term:1} {Command:2488848726372024040 Index:6 Term:1}] StartIndex:0}
+03:26:12.827661 server(2) get AppendEntriesMsg, args:&{Term:1 LeaderId:0 PrevLogIndex:2 PrevLogTerm:1 Entries:[{Command:4393916900428191899 Index:3 Term:1}] LeaderCommit:2}, server.lastIndex: 6, lastTerm:1
+03:26:12.827741 server(2) new log:{Entries:[{Command:<nil> Index:0 Term:0} {Command:4011690651454006606 Index:1 Term:1} {Command:5531077008207381974 Index:2 Term:1} {Command:4393916900428191899 Index:3 Term:1} {Command:2405994760989788082 Index:4 Term:1} {Command:2687814647807510459 Index:5 Term:1} {Command:2488848726372024040 Index:6 Term:1}] StartIndex:0}
+03:26:12.828044 leader(0) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:1 Success:true} from server(2)
+03:26:12.828083 matchIndex[2]:6 nextIndex[2]:7
+03:26:12.830057 server(2) get AppendEntriesMsg, args:&{Term:1 LeaderId:0 PrevLogIndex:2 PrevLogTerm:1 Entries:[{Command:4393916900428191899 Index:3 Term:1} {Command:2405994760989788082 Index:4 Term:1} {Command:2687814647807510459 Index:5 Term:1} {Command:2488848726372024040 Index:6 Term:1} {Command:8964474463742986733 Index:7 Term:1} {Command:3110082159077335585 Index:8 Term:1} {Command:8314954164924564877 Index:9 Term:1}] LeaderCommit:2}, server.lastIndex: 6, lastTerm:1
+03:26:12.830445 server(2) new log:{Entries:[{Command:<nil> Index:0 Term:0} {Command:4011690651454006606 Index:1 Term:1} {Command:5531077008207381974 Index:2 Term:1} {Command:4393916900428191899 Index:3 Term:1} {Command:2405994760989788082 Index:4 Term:1} {Command:2687814647807510459 Index:5 Term:1} {Command:2488848726372024040 Index:6 Term:1} {Command:8964474463742986733 Index:7 Term:1} {Command:3110082159077335585 Index:8 Term:1} {Command:8314954164924564877 Index:9 Term:1}] StartIndex:0}
+03:26:12.830783 leader(0) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:1 Success:true} from server(2)
+03:26:12.830809 matchIndex[2]:9 nextIndex[2]:10
+03:26:12.830885 server(2) get AppendEntriesMsg, args:&{Term:1 LeaderId:0 PrevLogIndex:2 PrevLogTerm:1 Entries:[{Command:4393916900428191899 Index:3 Term:1} {Command:2405994760989788082 Index:4 Term:1} {Command:2687814647807510459 Index:5 Term:1} {Command:2488848726372024040 Index:6 Term:1} {Command:8964474463742986733 Index:7 Term:1}] LeaderCommit:2}, server.lastIndex: 9, lastTerm:1
+03:26:12.830936 server(0) apply entry, lastApplied:6 log:{Entries:[{Command:<nil> Index:0 Term:0} {Command:4011690651454006606 Index:1 Term:1} {Command:5531077008207381974 Index:2 Term:1} {Command:4393916900428191899 Index:3 Term:1} {Command:2405994760989788082 Index:4 Term:1} {Command:2687814647807510459 Index:5 Term:1} {Command:2488848726372024040 Index:6 Term:1} {Command:8964474463742986733 Index:7 Term:1} {Command:3110082159077335585 Index:8 Term:1} {Command:8314954164924564877 Index:9 Term:1}] StartIndex:0}
+03:26:12.831050 server(2) new log:{Entries:[{Command:<nil> Index:0 Term:0} {Command:4011690651454006606 Index:1 Term:1} {Command:5531077008207381974 Index:2 Term:1} {Command:4393916900428191899 Index:3 Term:1} {Command:2405994760989788082 Index:4 Term:1} {Command:2687814647807510459 Index:5 Term:1} {Command:2488848726372024040 Index:6 Term:1} {Command:8964474463742986733 Index:7 Term:1} {Command:3110082159077335585 Index:8 Term:1} {Command:8314954164924564877 Index:9 Term:1}] StartIndex:0}
+03:26:12.831069 server(0) apply entry, lastApplied:7 log:{Entries:[{Command:<nil> Index:0 Term:0} {Command:4011690651454006606 Index:1 Term:1} {Command:5531077008207381974 Index:2 Term:1} {Command:4393916900428191899 Index:3 Term:1} {Command:2405994760989788082 Index:4 Term:1} {Command:2687814647807510459 Index:5 Term:1} {Command:2488848726372024040 Index:6 Term:1} {Command:8964474463742986733 Index:7 Term:1} {Command:3110082159077335585 Index:8 Term:1} {Command:8314954164924564877 Index:9 Term:1}] StartIndex:0}
+03:26:12.831202 server(0) apply entry, lastApplied:8 log:{Entries:[{Command:<nil> Index:0 Term:0} {Command:4011690651454006606 Index:1 Term:1} {Command:5531077008207381974 Index:2 Term:1} {Command:4393916900428191899 Index:3 Term:1} {Command:2405994760989788082 Index:4 Term:1} {Command:2687814647807510459 Index:5 Term:1} {Command:2488848726372024040 Index:6 Term:1} {Command:8964474463742986733 Index:7 Term:1} {Command:3110082159077335585 Index:8 Term:1} {Command:8314954164924564877 Index:9 Term:1}] StartIndex:0}
+03:26:12.831319 leader(0) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:1 Success:true} from server(2)
+03:26:12.831338 matchIndex[2]:9 nextIndex[2]:10
+03:26:12.831654 server(0) snapshot index:9, new log:{Entries:[{Command:8314954164924564877 Index:9 Term:1}] StartIndex:9}
+03:26:12.847806 server(2) get AppendEntriesMsg, args:&{Term:1 LeaderId:0 PrevLogIndex:2 PrevLogTerm:1 Entries:[{Command:4393916900428191899 Index:3 Term:1} {Command:2405994760989788082 Index:4 Term:1} {Command:2687814647807510459 Index:5 Term:1} {Command:2488848726372024040 Index:6 Term:1} {Command:8964474463742986733 Index:7 Term:1} {Command:3110082159077335585 Index:8 Term:1}] LeaderCommit:2}, server.lastIndex: 9, lastTerm:1
+03:26:12.848000 server(2) new log:{Entries:[{Command:<nil> Index:0 Term:0} {Command:4011690651454006606 Index:1 Term:1} {Command:5531077008207381974 Index:2 Term:1} {Command:4393916900428191899 Index:3 Term:1} {Command:2405994760989788082 Index:4 Term:1} {Command:2687814647807510459 Index:5 Term:1} {Command:2488848726372024040 Index:6 Term:1} {Command:8964474463742986733 Index:7 Term:1} {Command:3110082159077335585 Index:8 Term:1} {Command:8314954164924564877 Index:9 Term:1}] StartIndex:0}
+03:26:12.848492 leader(0) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:1 Success:true} from server(2)
+03:26:12.848522 matchIndex[2]:9 nextIndex[2]:10
+03:26:12.852755 server(0) is alive
+03:26:12.852801 server(2) is not dead lock
+03:26:12.852807 server(1) is alive
+03:26:12.852772 server(1) is not dead lock
+03:26:12.852763 server(0) is not dead lock
+03:26:12.852828 server(2) is alive
+03:26:12.868982 =====Start!=====  cmd:2761212402830017127
+03:26:12.869191 lastIndex:10, index0:9, nextIndex:[11 2 10], matchIndex:[10 1 9]
+03:26:12.869208 leader(0) update snapshot of server(1)
+03:26:12.869269 leader(0) send snapshot to server(1)
+03:26:12.869296 leader(0) update log of server(2)
+03:26:12.873615 server(2) get AppendEntriesMsg, args:&{Term:1 LeaderId:0 PrevLogIndex:9 PrevLogTerm:1 Entries:[{Command:2761212402830017127 Index:10 Term:1}] LeaderCommit:9}, server.lastIndex: 9, lastTerm:1
+03:26:12.874211 server(2) new log:{Entries:[{Command:<nil> Index:0 Term:0} {Command:4011690651454006606 Index:1 Term:1} {Command:5531077008207381974 Index:2 Term:1} {Command:4393916900428191899 Index:3 Term:1} {Command:2405994760989788082 Index:4 Term:1} {Command:2687814647807510459 Index:5 Term:1} {Command:2488848726372024040 Index:6 Term:1} {Command:8964474463742986733 Index:7 Term:1} {Command:3110082159077335585 Index:8 Term:1} {Command:8314954164924564877 Index:9 Term:1} {Command:2761212402830017127 Index:10 Term:1}] StartIndex:0}
+03:26:12.874506 server(2) apply entry, lastApplied:2 log:{Entries:[{Command:<nil> Index:0 Term:0} {Command:4011690651454006606 Index:1 Term:1} {Command:5531077008207381974 Index:2 Term:1} {Command:4393916900428191899 Index:3 Term:1} {Command:2405994760989788082 Index:4 Term:1} {Command:2687814647807510459 Index:5 Term:1} {Command:2488848726372024040 Index:6 Term:1} {Command:8964474463742986733 Index:7 Term:1} {Command:3110082159077335585 Index:8 Term:1} {Command:8314954164924564877 Index:9 Term:1} {Command:2761212402830017127 Index:10 Term:1}] StartIndex:0}
+03:26:12.874589 server(2) apply entry, lastApplied:3 log:{Entries:[{Command:<nil> Index:0 Term:0} {Command:4011690651454006606 Index:1 Term:1} {Command:5531077008207381974 Index:2 Term:1} {Command:4393916900428191899 Index:3 Term:1} {Command:2405994760989788082 Index:4 Term:1} {Command:2687814647807510459 Index:5 Term:1} {Command:2488848726372024040 Index:6 Term:1} {Command:8964474463742986733 Index:7 Term:1} {Command:3110082159077335585 Index:8 Term:1} {Command:8314954164924564877 Index:9 Term:1} {Command:2761212402830017127 Index:10 Term:1}] StartIndex:0}
+03:26:12.874676 server(2) apply entry, lastApplied:4 log:{Entries:[{Command:<nil> Index:0 Term:0} {Command:4011690651454006606 Index:1 Term:1} {Command:5531077008207381974 Index:2 Term:1} {Command:4393916900428191899 Index:3 Term:1} {Command:2405994760989788082 Index:4 Term:1} {Command:2687814647807510459 Index:5 Term:1} {Command:2488848726372024040 Index:6 Term:1} {Command:8964474463742986733 Index:7 Term:1} {Command:3110082159077335585 Index:8 Term:1} {Command:8314954164924564877 Index:9 Term:1} {Command:2761212402830017127 Index:10 Term:1}] StartIndex:0}
+03:26:12.874756 server(2) apply entry, lastApplied:5 log:{Entries:[{Command:<nil> Index:0 Term:0} {Command:4011690651454006606 Index:1 Term:1} {Command:5531077008207381974 Index:2 Term:1} {Command:4393916900428191899 Index:3 Term:1} {Command:2405994760989788082 Index:4 Term:1} {Command:2687814647807510459 Index:5 Term:1} {Command:2488848726372024040 Index:6 Term:1} {Command:8964474463742986733 Index:7 Term:1} {Command:3110082159077335585 Index:8 Term:1} {Command:8314954164924564877 Index:9 Term:1} {Command:2761212402830017127 Index:10 Term:1}] StartIndex:0}
+03:26:12.875029 server(2) apply entry, lastApplied:6 log:{Entries:[{Command:<nil> Index:0 Term:0} {Command:4011690651454006606 Index:1 Term:1} {Command:5531077008207381974 Index:2 Term:1} {Command:4393916900428191899 Index:3 Term:1} {Command:2405994760989788082 Index:4 Term:1} {Command:2687814647807510459 Index:5 Term:1} {Command:2488848726372024040 Index:6 Term:1} {Command:8964474463742986733 Index:7 Term:1} {Command:3110082159077335585 Index:8 Term:1} {Command:8314954164924564877 Index:9 Term:1} {Command:2761212402830017127 Index:10 Term:1}] StartIndex:0}
+03:26:12.875112 server(2) apply entry, lastApplied:7 log:{Entries:[{Command:<nil> Index:0 Term:0} {Command:4011690651454006606 Index:1 Term:1} {Command:5531077008207381974 Index:2 Term:1} {Command:4393916900428191899 Index:3 Term:1} {Command:2405994760989788082 Index:4 Term:1} {Command:2687814647807510459 Index:5 Term:1} {Command:2488848726372024040 Index:6 Term:1} {Command:8964474463742986733 Index:7 Term:1} {Command:3110082159077335585 Index:8 Term:1} {Command:8314954164924564877 Index:9 Term:1} {Command:2761212402830017127 Index:10 Term:1}] StartIndex:0}
+03:26:12.875190 server(2) apply entry, lastApplied:8 log:{Entries:[{Command:<nil> Index:0 Term:0} {Command:4011690651454006606 Index:1 Term:1} {Command:5531077008207381974 Index:2 Term:1} {Command:4393916900428191899 Index:3 Term:1} {Command:2405994760989788082 Index:4 Term:1} {Command:2687814647807510459 Index:5 Term:1} {Command:2488848726372024040 Index:6 Term:1} {Command:8964474463742986733 Index:7 Term:1} {Command:3110082159077335585 Index:8 Term:1} {Command:8314954164924564877 Index:9 Term:1} {Command:2761212402830017127 Index:10 Term:1}] StartIndex:0}
+03:26:12.875514 server(2) snapshot index:9, new log:{Entries:[{Command:8314954164924564877 Index:9 Term:1} {Command:2761212402830017127 Index:10 Term:1}] StartIndex:9}
+03:26:12.875717 leader(0) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:1 Success:true} from server(2)
+03:26:12.875748 matchIndex[2]:10 nextIndex[2]:11
+03:26:12.875793 server(0) apply entry, lastApplied:9 log:{Entries:[{Command:8314954164924564877 Index:9 Term:1} {Command:2761212402830017127 Index:10 Term:1}] StartIndex:9}
+03:26:12.911211 leader(0) beat heart
+03:26:12.911292 lastIndex:10, index0:9, nextIndex:[11 2 11], matchIndex:[10 1 10]
+03:26:12.911316 leader(0) update snapshot of server(1), nextIndex:2, IndexStart:9
+03:26:12.911389 leader(0) update log of server(2)
+03:26:12.911618 leader(0) send snapshot to server(1)
+03:26:12.934742 server(2) get AppendEntriesMsg, args:&{Term:1 LeaderId:0 PrevLogIndex:10 PrevLogTerm:1 Entries:[] LeaderCommit:10}, server.lastIndex: 10, lastTerm:1
+03:26:12.934838 server(2) new log:{Entries:[{Command:8314954164924564877 Index:9 Term:1} {Command:2761212402830017127 Index:10 Term:1}] StartIndex:9}
+03:26:12.934996 server(2) apply entry, lastApplied:9 log:{Entries:[{Command:8314954164924564877 Index:9 Term:1} {Command:2761212402830017127 Index:10 Term:1}] StartIndex:9}
+03:26:12.935243 leader(0) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:1 Success:true} from server(2)
+03:26:12.935265 matchIndex[2]:10 nextIndex[2]:11
+03:26:12.951686 server(1) start!
+03:26:12.953568 server(2) is alive
+03:26:12.953617 server(1) is not dead lock
+03:26:12.953630 server(0) is alive
+03:26:12.953646 server(2) is not dead lock
+03:26:12.953652 server(1) is alive
+03:26:12.953666 server(0) is not dead lock
+03:26:13.011966 leader(0) beat heart
+03:26:13.012074 lastIndex:10, index0:9, nextIndex:[11 2 11], matchIndex:[10 1 10]
+03:26:13.012123 leader(0) update snapshot of server(1), nextIndex:2, IndexStart:9
+03:26:13.012184 leader(0) send snapshot to server(1)
+03:26:13.012331 leader(0) update log of server(2)
+03:26:13.020325 server(1) get InstallSnapshotRPC from leader(0)
+03:26:13.020649 args:&{Term:1 LeaderId:0 LastIncludedIndex:9 LastIncludedTerm:1 Offset:0 Data:[3 4 0 18 12 255 143 2 1 2 255 144 0 1 16 0 0 255 149 255 144 0 10 0 3 105 110 116 4 10 0 248 111 88 198 201 9 87 202 156 3 105 110 116 4 10 0 248 153 132 170 119 215 16 11 172 3 105 110 116 4 10 0 248 121 244 168 72 45 55 49 54 3 105 110 116 4 10 0 248 66 199 158 249 168 126 143 100 3 105 110 116 4 10 0 248 74 154 18 92 241 81 15 118 3 105 110 116 4 10 0 248 69 20 85 117 214 44 253 208 3 105 110 116 4 10 0 248 248 208 108 14 210 236 19 218 3 105 110 116 4 10 0 248 86 82 118 125 212 43 68 66 3 105 110 116 4 10 0 248 230 201 77 132 87 247 139 26] Done:true}
+03:26:13.026690 server(2) get AppendEntriesMsg, args:&{Term:1 LeaderId:0 PrevLogIndex:10 PrevLogTerm:1 Entries:[] LeaderCommit:10}, server.lastIndex: 10, lastTerm:1
+03:26:13.026787 server(2) new log:{Entries:[{Command:8314954164924564877 Index:9 Term:1} {Command:2761212402830017127 Index:10 Term:1}] StartIndex:9}
+03:26:13.027197 leader(0) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:1 Success:true} from server(2)
+03:26:13.027230 matchIndex[2]:10 nextIndex[2]:11
+03:26:13.052606 server(1) is alive
+03:26:13.052646 =====Start!=====  cmd:2960811755736821203
+03:26:13.052627 server(1) is not dead lock
+03:26:13.052970 lastIndex:11, index0:9, nextIndex:[12 10 11], matchIndex:[11 9 10]
+03:26:13.053078 leader(0) update log of server(1)
+03:26:13.053095 leader(0) update log of server(2)
+03:26:13.053813 server(0) is alive
+03:26:13.053855 server(1) is not dead lock
+03:26:13.053872 server(1) is alive
+03:26:13.053856 server(0) is not dead lock
+03:26:13.053866 server(2) is not dead lock
+03:26:13.053891 server(2) is alive
+03:26:13.072842 server(1) get AppendEntriesMsg, args:&{Term:1 LeaderId:0 PrevLogIndex:9 PrevLogTerm:1 Entries:[{Command:2761212402830017127 Index:10 Term:1} {Command:2960811755736821203 Index:11 Term:1}] LeaderCommit:10}, server.lastIndex: 9, lastTerm:1
+03:26:13.073136 server(1) new log:{Entries:[{Command:<nil> Index:9 Term:1} {Command:2761212402830017127 Index:10 Term:1} {Command:2960811755736821203 Index:11 Term:1}] StartIndex:9}
+03:26:13.073325 server(1) apply snapshot, lastApplied:0 log:{Entries:[{Command:<nil> Index:9 Term:1} {Command:2761212402830017127 Index:10 Term:1} {Command:2960811755736821203 Index:11 Term:1}] StartIndex:9}
+03:26:13.073563 leader(0) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:1 Success:true} from server(1)
+03:26:13.073594 matchIndex[1]:11 nextIndex[1]:12
+03:26:13.073658 server(0) apply entry, lastApplied:10 log:{Entries:[{Command:8314954164924564877 Index:9 Term:1} {Command:2761212402830017127 Index:10 Term:1} {Command:2960811755736821203 Index:11 Term:1}] StartIndex:9}
+03:26:13.079743 server(2) get AppendEntriesMsg, args:&{Term:1 LeaderId:0 PrevLogIndex:10 PrevLogTerm:1 Entries:[{Command:2960811755736821203 Index:11 Term:1}] LeaderCommit:10}, server.lastIndex: 10, lastTerm:1
+03:26:13.080050 server(2) new log:{Entries:[{Command:8314954164924564877 Index:9 Term:1} {Command:2761212402830017127 Index:10 Term:1} {Command:2960811755736821203 Index:11 Term:1}] StartIndex:9}
+03:26:13.080461 leader(0) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:1 Success:true} from server(2)
+03:26:13.080488 matchIndex[2]:11 nextIndex[2]:12
+03:26:13.112643 leader(0) beat heart
+03:26:13.112714 lastIndex:11, index0:9, nextIndex:[12 12 12], matchIndex:[11 11 11]
+03:26:13.112777 leader(0) update log of server(2)
+03:26:13.112782 leader(0) update log of server(1)
+03:26:13.117736 server(1) get AppendEntriesMsg, args:&{Term:1 LeaderId:0 PrevLogIndex:11 PrevLogTerm:1 Entries:[] LeaderCommit:11}, server.lastIndex: 11, lastTerm:1
+03:26:13.117817 server(1) new log:{Entries:[{Command:<nil> Index:9 Term:1} {Command:2761212402830017127 Index:10 Term:1} {Command:2960811755736821203 Index:11 Term:1}] StartIndex:9}
+03:26:13.118252 leader(0) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:1 Success:true} from server(1)
+03:26:13.118284 matchIndex[1]:11 nextIndex[1]:12
+03:26:13.118346 server(1) apply entry, lastApplied:9 log:{Entries:[{Command:<nil> Index:9 Term:1} {Command:2761212402830017127 Index:10 Term:1} {Command:2960811755736821203 Index:11 Term:1}] StartIndex:9}
+03:26:13.118399 server(1) apply entry, lastApplied:10 log:{Entries:[{Command:<nil> Index:9 Term:1} {Command:2761212402830017127 Index:10 Term:1} {Command:2960811755736821203 Index:11 Term:1}] StartIndex:9}
+03:26:13.119921 server(2) get AppendEntriesMsg, args:&{Term:1 LeaderId:0 PrevLogIndex:11 PrevLogTerm:1 Entries:[] LeaderCommit:11}, server.lastIndex: 11, lastTerm:1
+03:26:13.120020 server(2) new log:{Entries:[{Command:8314954164924564877 Index:9 Term:1} {Command:2761212402830017127 Index:10 Term:1} {Command:2960811755736821203 Index:11 Term:1}] StartIndex:9}
+03:26:13.120167 server(2) apply entry, lastApplied:10 log:{Entries:[{Command:8314954164924564877 Index:9 Term:1} {Command:2761212402830017127 Index:10 Term:1} {Command:2960811755736821203 Index:11 Term:1}] StartIndex:9}
+03:26:13.120413 leader(0) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:1 Success:true} from server(2)
+03:26:13.120439 matchIndex[2]:11 nextIndex[2]:12
+03:26:13.153406 server(1) is not dead lock
+03:26:13.153406 server(1) is alive
+03:26:13.154537 server(2) is alive
+03:26:13.154569 server(0) is not dead lock
+03:26:13.154578 server(1) is alive
+03:26:13.154602 server(1) is not dead lock
+03:26:13.154584 server(2) is not dead lock
+03:26:13.154621 server(0) is alive
+03:26:13.213654 leader(0) beat heart
+03:26:13.213734 lastIndex:11, index0:9, nextIndex:[12 12 12], matchIndex:[11 11 11]
+03:26:13.213796 leader(0) update log of server(1)
+03:26:13.213989 leader(0) update log of server(2)
+03:26:13.230939 server(2) get AppendEntriesMsg, args:&{Term:1 LeaderId:0 PrevLogIndex:11 PrevLogTerm:1 Entries:[] LeaderCommit:11}, server.lastIndex: 11, lastTerm:1
+03:26:13.231110 server(2) new log:{Entries:[{Command:8314954164924564877 Index:9 Term:1} {Command:2761212402830017127 Index:10 Term:1} {Command:2960811755736821203 Index:11 Term:1}] StartIndex:9}
+03:26:13.231659 leader(0) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:1 Success:true} from server(2)
+03:26:13.231717 matchIndex[2]:11 nextIndex[2]:12
+03:26:13.233994 server(1) get AppendEntriesMsg, args:&{Term:1 LeaderId:0 PrevLogIndex:11 PrevLogTerm:1 Entries:[] LeaderCommit:11}, server.lastIndex: 11, lastTerm:1
+03:26:13.234060 server(1) new log:{Entries:[{Command:<nil> Index:9 Term:1} {Command:2761212402830017127 Index:10 Term:1} {Command:2960811755736821203 Index:11 Term:1}] StartIndex:9}
+03:26:13.234401 leader(0) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:1 Success:true} from server(1)
+03:26:13.234432 matchIndex[1]:11 nextIndex[1]:12
+03:26:13.253872 server(1) is not dead lock
+03:26:13.253894 server(1) is alive
+03:26:13.254973 server(0) is alive
+03:26:13.255012 server(1) is not dead lock
+03:26:13.254996 server(2) is alive
+03:26:13.255005 server(2) is not dead lock
+03:26:13.255027 server(0) is not dead lock
+03:26:13.255030 server(1) is alive
+03:26:13.314475 leader(0) beat heart
+03:26:13.314570 lastIndex:11, index0:9, nextIndex:[12 12 12], matchIndex:[11 11 11]
+03:26:13.314667 leader(0) update log of server(1)
+03:26:13.314719 leader(0) update log of server(2)
+03:26:13.327564 server(2) get AppendEntriesMsg, args:&{Term:1 LeaderId:0 PrevLogIndex:11 PrevLogTerm:1 Entries:[] LeaderCommit:11}, server.lastIndex: 11, lastTerm:1
+03:26:13.327660 server(2) new log:{Entries:[{Command:8314954164924564877 Index:9 Term:1} {Command:2761212402830017127 Index:10 Term:1} {Command:2960811755736821203 Index:11 Term:1}] StartIndex:9}
+03:26:13.327998 leader(0) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:1 Success:true} from server(2)
+03:26:13.328019 matchIndex[2]:11 nextIndex[2]:12
+03:26:13.331778 server(1) get AppendEntriesMsg, args:&{Term:1 LeaderId:0 PrevLogIndex:11 PrevLogTerm:1 Entries:[] LeaderCommit:11}, server.lastIndex: 11, lastTerm:1
+03:26:13.331879 server(1) new log:{Entries:[{Command:<nil> Index:9 Term:1} {Command:2761212402830017127 Index:10 Term:1} {Command:2960811755736821203 Index:11 Term:1}] StartIndex:9}
+03:26:13.332124 leader(0) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:1 Success:true} from server(1)
+03:26:13.332140 matchIndex[1]:11 nextIndex[1]:12
+03:26:13.355018 server(1) is alive
+03:26:13.355054 server(0) is alive
+03:26:13.355067 server(1) is not dead lock
+03:26:13.355076 server(1) is not dead lock
+03:26:13.355085 server(2) is alive
+03:26:13.356215 server(1) is alive
+03:26:13.356256 server(2) is not dead lock
+03:26:13.356293 server(0) is not dead lock
+03:26:13.415101 leader(0) beat heart
+03:26:13.415240 lastIndex:11, index0:9, nextIndex:[12 12 12], matchIndex:[11 11 11]
+03:26:13.415404 leader(0) update log of server(2)
+03:26:13.415565 leader(0) update log of server(1)
+03:26:13.421625 server(2) get AppendEntriesMsg, args:&{Term:1 LeaderId:0 PrevLogIndex:11 PrevLogTerm:1 Entries:[] LeaderCommit:11}, server.lastIndex: 11, lastTerm:1
+03:26:13.421726 server(2) new log:{Entries:[{Command:8314954164924564877 Index:9 Term:1} {Command:2761212402830017127 Index:10 Term:1} {Command:2960811755736821203 Index:11 Term:1}] StartIndex:9}
+03:26:13.422037 leader(0) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:1 Success:true} from server(2)
+03:26:13.422061 matchIndex[2]:11 nextIndex[2]:12
+03:26:13.456025 server(2) is alive
+03:26:13.456060 server(1) is alive
+03:26:13.456077 server(1) is not dead lock
+03:26:13.456085 server(1) is not dead lock
+03:26:13.456106 server(0) is alive
+03:26:13.457273 server(1) is alive
+03:26:13.457353 server(2) is not dead lock
+03:26:13.457359 server(0) is not dead lock
+03:26:13.516264 leader(0) beat heart
+03:26:13.516389 lastIndex:11, index0:9, nextIndex:[12 12 12], matchIndex:[11 11 11]
+03:26:13.516492 leader(0) update log of server(2)
+03:26:13.516509 leader(0) update log of server(1)
+03:26:13.527563 server(1) get AppendEntriesMsg, args:&{Term:1 LeaderId:0 PrevLogIndex:11 PrevLogTerm:1 Entries:[] LeaderCommit:11}, server.lastIndex: 11, lastTerm:1
+03:26:13.527638 server(1) new log:{Entries:[{Command:<nil> Index:9 Term:1} {Command:2761212402830017127 Index:10 Term:1} {Command:2960811755736821203 Index:11 Term:1}] StartIndex:9}
+03:26:13.527879 leader(0) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:1 Success:true} from server(1)
+03:26:13.527897 matchIndex[1]:11 nextIndex[1]:12
+03:26:13.528049 server(2) get AppendEntriesMsg, args:&{Term:1 LeaderId:0 PrevLogIndex:11 PrevLogTerm:1 Entries:[] LeaderCommit:11}, server.lastIndex: 11, lastTerm:1
+03:26:13.528089 server(2) new log:{Entries:[{Command:8314954164924564877 Index:9 Term:1} {Command:2761212402830017127 Index:10 Term:1} {Command:2960811755736821203 Index:11 Term:1}] StartIndex:9}
+03:26:13.528348 leader(0) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:1 Success:true} from server(2)
+03:26:13.528368 matchIndex[2]:11 nextIndex[2]:12
+03:26:13.556441 server(1) is alive
+03:26:13.556491 server(2) is alive
+03:26:13.556513 server(0) is alive
+03:26:13.556522 server(1) is not dead lock
+03:26:13.556528 server(1) is not dead lock
+03:26:13.557815 server(0) is not dead lock
+03:26:13.557862 server(2) is not dead lock
+03:26:13.557863 server(1) is alive
+03:26:13.617281 leader(0) beat heart
+03:26:13.617327 lastIndex:11, index0:9, nextIndex:[12 12 12], matchIndex:[11 11 11]
+03:26:13.617400 leader(0) update log of server(2)
+03:26:13.617465 leader(0) update log of server(1)
+03:26:13.624184 server(2) get AppendEntriesMsg, args:&{Term:1 LeaderId:0 PrevLogIndex:11 PrevLogTerm:1 Entries:[] LeaderCommit:11}, server.lastIndex: 11, lastTerm:1
+03:26:13.624290 server(2) new log:{Entries:[{Command:8314954164924564877 Index:9 Term:1} {Command:2761212402830017127 Index:10 Term:1} {Command:2960811755736821203 Index:11 Term:1}] StartIndex:9}
+03:26:13.637010 server(1) get AppendEntriesMsg, args:&{Term:1 LeaderId:0 PrevLogIndex:11 PrevLogTerm:1 Entries:[] LeaderCommit:11}, server.lastIndex: 11, lastTerm:1
+03:26:13.637111 server(1) new log:{Entries:[{Command:<nil> Index:9 Term:1} {Command:2761212402830017127 Index:10 Term:1} {Command:2960811755736821203 Index:11 Term:1}] StartIndex:9}
+03:26:13.657214 server(1) is not dead lock
+03:26:13.657277 server(2) is alive
+03:26:13.657278 server(1) is alive
+03:26:13.657285 server(1) is not dead lock
+03:26:13.657316 server(0) is alive
+03:26:13.658399 server(1) is alive
+03:26:13.658443 server(0) is not dead lock
+03:26:13.658478 server(2) is not dead lock
+03:26:13.757831 server(0) is alive
+03:26:13.757837 server(2) is alive
+03:26:13.757849 server(1) is alive
+03:26:13.757858 server(1) is not dead lock
+03:26:13.757870 server(1) is not dead lock
+03:26:13.758966 server(1) is alive
+03:26:13.759018 server(0) is not dead lock
+03:26:13.759027 server(2) is not dead lock
+03:26:13.858479 server(1) is alive
+03:26:13.858555 server(0) is alive
+03:26:13.858577 server(2) is alive
+03:26:13.858556 server(1) is not dead lock
+03:26:13.858563 server(1) is not dead lock
+03:26:13.859818 server(1) is alive
+03:26:13.859830 server(0) is not dead lock
+03:26:13.859863 server(2) is not dead lock
+03:26:13.959416 server(0) is alive
+03:26:13.959502 server(1) is not dead lock
+03:26:13.959521 server(2) is alive
+03:26:13.959531 server(1) is not dead lock
+03:26:13.959520 server(1) is alive
+03:26:13.960742 server(1) is alive
+03:26:13.960836 server(0) is not dead lock
+03:26:13.960855 server(2) is not dead lock
+03:26:14.059946 server(0) is alive
+03:26:14.059970 server(1) is not dead lock
+03:26:14.059958 server(1) is alive
+03:26:14.059964 server(1) is not dead lock
+03:26:14.059981 server(2) is alive
+03:26:14.061106 server(2) is not dead lock
+03:26:14.061168 server(1) is alive
+03:26:14.061205 server(0) is not dead lock
+03:26:14.082256 server(1) become candidate of term2 because of time out!
+03:26:14.140566 server(2) become candidate of term2 because of time out!
+03:26:14.153420 server(1) get RequestVoteArgs({Term:2 CandidateId:2 LastLogIndex:11 LastLogTerm:1}) from candidate(2)
+03:26:14.153670 candidate(2) get reply(&{Term:2 VoteGranted:false}) from server(1)
+03:26:14.160571 server(2) is alive
+03:26:14.160623 server(1) is not dead lock
+03:26:14.160634 server(1) is alive
+03:26:14.160637 server(1) is not dead lock
+03:26:14.160645 server(0) is alive
+03:26:14.161967 server(1) is alive
+03:26:14.162053 server(0) is not dead lock
+03:26:14.162106 server(2) is not dead lock
+03:26:14.261128 server(2) is alive
+03:26:14.261156 server(1) is not dead lock
+03:26:14.261177 server(1) is alive
+03:26:14.261181 server(1) is not dead lock
+03:26:14.261186 server(0) is alive
+03:26:14.262303 server(2) is not dead lock
+03:26:14.262340 server(1) is alive
+03:26:14.262388 server(0) is not dead lock
+03:26:14.345468 server(2) become candidate of term3 because of time out!
+03:26:14.361898 server(1) is not dead lock
+03:26:14.361965 server(1) is not dead lock
+03:26:14.361965 server(1) is alive
+03:26:14.361971 server(0) is alive
+03:26:14.361976 server(2) is alive
+03:26:14.363142 server(0) is not dead lock
+03:26:14.363194 server(2) is not dead lock
+03:26:14.363195 server(1) is alive
+03:26:14.377527 server(1) become candidate of term3 because of time out!
+03:26:14.462975 server(1) is not dead lock
+03:26:14.463030 server(0) is alive
+03:26:14.463040 server(2) is alive
+03:26:14.463046 server(1) is not dead lock
+03:26:14.463069 server(1) is alive
+03:26:14.464159 server(1) is alive
+03:26:14.464178 server(0) is not dead lock
+03:26:14.464189 server(2) is not dead lock
+03:26:14.560279 server(2) become candidate of term4 because of time out!
+03:26:14.563520 server(1) is not dead lock
+03:26:14.563543 server(0) is alive
+03:26:14.563617 server(1) is alive
+03:26:14.563639 server(1) is not dead lock
+03:26:14.563639 server(2) is alive
+03:26:14.564755 server(2) is not dead lock
+03:26:14.564782 server(0) is not dead lock
+03:26:14.564773 server(1) is alive
+03:26:14.570244 server(1) get RequestVoteArgs({Term:4 CandidateId:2 LastLogIndex:11 LastLogTerm:1}) from candidate(2)
+03:26:14.570423 server(1) become follower
+03:26:14.570548 args(&{Term:4 CandidateId:2 LastLogIndex:11 LastLogTerm:1}) is more new than term:1 index:11
+03:26:14.570862 candidate(2) get reply(&{Term:4 VoteGranted:true}) from server(1)
+03:26:14.570880 candidate(2) get vote from server(1)
+03:26:14.570930 lastIndex:11, index0:9, nextIndex:[12 12 12], matchIndex:[0 0 11]
+03:26:14.570995 candidate(2) become leader of term4
+03:26:14.583275 =====Start!=====  cmd:3384610909169051224
+03:26:14.583481 lastIndex:12, index0:9, nextIndex:[12 12 13], matchIndex:[0 0 12]
+03:26:14.583582 leader(2) update log of server(0)
+03:26:14.583647 leader(2) update log of server(1)
+03:26:14.606081 server(1) get AppendEntriesMsg, args:&{Term:4 LeaderId:2 PrevLogIndex:11 PrevLogTerm:1 Entries:[{Command:3384610909169051224 Index:12 Term:4}] LeaderCommit:11}, server.lastIndex: 11, lastTerm:1
+03:26:14.606321 server(1) new log:{Entries:[{Command:<nil> Index:9 Term:1} {Command:2761212402830017127 Index:10 Term:1} {Command:2960811755736821203 Index:11 Term:1} {Command:3384610909169051224 Index:12 Term:4}] StartIndex:9}
+03:26:14.606614 leader(2) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:4 Success:true} from server(1)
+03:26:14.606639 matchIndex[1]:12 nextIndex[1]:13
+03:26:14.606723 server(2) apply entry, lastApplied:11 log:{Entries:[{Command:8314954164924564877 Index:9 Term:1} {Command:2761212402830017127 Index:10 Term:1} {Command:2960811755736821203 Index:11 Term:1} {Command:3384610909169051224 Index:12 Term:4}] StartIndex:9}
+03:26:14.663950 server(1) is not dead lock
+03:26:14.664030 server(0) is alive
+03:26:14.664032 server(1) is not dead lock
+03:26:14.664038 server(1) is alive
+03:26:14.664116 server(2) is alive
+03:26:14.665240 server(0) is not dead lock
+03:26:14.665311 server(2) is not dead lock
+03:26:14.665348 server(1) is alive
+03:26:14.672130 leader(2) beat heart
+03:26:14.672209 lastIndex:12, index0:9, nextIndex:[12 13 13], matchIndex:[0 12 12]
+03:26:14.672274 leader(2) update log of server(0)
+03:26:14.672355 leader(2) update log of server(1)
+03:26:14.696218 server(1) get AppendEntriesMsg, args:&{Term:4 LeaderId:2 PrevLogIndex:12 PrevLogTerm:4 Entries:[] LeaderCommit:12}, server.lastIndex: 12, lastTerm:4
+03:26:14.696335 server(1) new log:{Entries:[{Command:<nil> Index:9 Term:1} {Command:2761212402830017127 Index:10 Term:1} {Command:2960811755736821203 Index:11 Term:1} {Command:3384610909169051224 Index:12 Term:4}] StartIndex:9}
+03:26:14.696495 server(1) apply entry, lastApplied:11 log:{Entries:[{Command:<nil> Index:9 Term:1} {Command:2761212402830017127 Index:10 Term:1} {Command:2960811755736821203 Index:11 Term:1} {Command:3384610909169051224 Index:12 Term:4}] StartIndex:9}
+03:26:14.696679 leader(2) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:4 Success:true} from server(1)
+03:26:14.696719 matchIndex[1]:12 nextIndex[1]:13
+03:26:14.759048 =====Start!=====  cmd:3839034595656059631
+03:26:14.759285 lastIndex:13, index0:9, nextIndex:[12 13 14], matchIndex:[0 12 13]
+03:26:14.759360 leader(2) update log of server(1)
+03:26:14.759426 leader(2) update log of server(0)
+03:26:14.764291 server(2) is alive
+03:26:14.764367 server(1) is alive
+03:26:14.764388 server(1) is not dead lock
+03:26:14.764399 server(0) is alive
+03:26:14.764471 server(1) is not dead lock
+03:26:14.765469 server(1) is alive
+03:26:14.765533 server(0) is not dead lock
+03:26:14.765613 server(2) is not dead lock
+03:26:14.765906 server(1) get AppendEntriesMsg, args:&{Term:4 LeaderId:2 PrevLogIndex:12 PrevLogTerm:4 Entries:[{Command:3839034595656059631 Index:13 Term:4}] LeaderCommit:12}, server.lastIndex: 12, lastTerm:4
+03:26:14.766082 server(1) new log:{Entries:[{Command:<nil> Index:9 Term:1} {Command:2761212402830017127 Index:10 Term:1} {Command:2960811755736821203 Index:11 Term:1} {Command:3384610909169051224 Index:12 Term:4} {Command:3839034595656059631 Index:13 Term:4}] StartIndex:9}
+03:26:14.766355 leader(2) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:4 Success:true} from server(1)
+03:26:14.766401 matchIndex[1]:13 nextIndex[1]:14
+03:26:14.766487 server(2) apply entry, lastApplied:12 log:{Entries:[{Command:8314954164924564877 Index:9 Term:1} {Command:2761212402830017127 Index:10 Term:1} {Command:2960811755736821203 Index:11 Term:1} {Command:3384610909169051224 Index:12 Term:4} {Command:3839034595656059631 Index:13 Term:4}] StartIndex:9}
+03:26:14.773257 leader(2) beat heart
+03:26:14.773316 lastIndex:13, index0:9, nextIndex:[12 14 14], matchIndex:[0 13 13]
+03:26:14.773376 leader(2) update log of server(0)
+03:26:14.773442 leader(2) update log of server(1)
+03:26:14.773819 server(1) get AppendEntriesMsg, args:&{Term:4 LeaderId:2 PrevLogIndex:13 PrevLogTerm:4 Entries:[] LeaderCommit:13}, server.lastIndex: 13, lastTerm:4
+03:26:14.773887 server(1) new log:{Entries:[{Command:<nil> Index:9 Term:1} {Command:2761212402830017127 Index:10 Term:1} {Command:2960811755736821203 Index:11 Term:1} {Command:3384610909169051224 Index:12 Term:4} {Command:3839034595656059631 Index:13 Term:4}] StartIndex:9}
+03:26:14.774078 leader(2) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:4 Success:true} from server(1)
+03:26:14.774093 matchIndex[1]:13 nextIndex[1]:14
+03:26:14.774122 server(1) apply entry, lastApplied:12 log:{Entries:[{Command:<nil> Index:9 Term:1} {Command:2761212402830017127 Index:10 Term:1} {Command:2960811755736821203 Index:11 Term:1} {Command:3384610909169051224 Index:12 Term:4} {Command:3839034595656059631 Index:13 Term:4}] StartIndex:9}
+03:26:14.780029 server(0) start!
+03:26:14.780202 server(0) apply snapshot, lastApplied:9 log:{Entries:[{Command:8314954164924564877 Index:9 Term:1} {Command:2761212402830017127 Index:10 Term:1} {Command:2960811755736821203 Index:11 Term:1}] StartIndex:9}
+03:26:14.831020 =====Start!=====  cmd:852545324706437940
+03:26:14.831256 lastIndex:14, index0:9, nextIndex:[12 14 15], matchIndex:[0 13 14]
+03:26:14.831332 leader(2) update log of server(0)
+03:26:14.831393 leader(2) update log of server(1)
+03:26:14.833104 server(0) get AppendEntriesMsg, args:&{Term:4 LeaderId:2 PrevLogIndex:11 PrevLogTerm:1 Entries:[{Command:3384610909169051224 Index:12 Term:4} {Command:3839034595656059631 Index:13 Term:4} {Command:852545324706437940 Index:14 Term:4}] LeaderCommit:13}, server.lastIndex: 11, lastTerm:1
+03:26:14.833436 server(0) become follower of term4 because term of appendArgs(&{Term:4 LeaderId:2 PrevLogIndex:11 PrevLogTerm:1 Entries:[{Command:3384610909169051224 Index:12 Term:4} {Command:3839034595656059631 Index:13 Term:4} {Command:852545324706437940 Index:14 Term:4}] LeaderCommit:13}) is more new
+03:26:14.833680 server(0) new log:{Entries:[{Command:8314954164924564877 Index:9 Term:1} {Command:2761212402830017127 Index:10 Term:1} {Command:2960811755736821203 Index:11 Term:1} {Command:3384610909169051224 Index:12 Term:4} {Command:3839034595656059631 Index:13 Term:4} {Command:852545324706437940 Index:14 Term:4}] StartIndex:9}
+03:26:14.833816 server(0) apply entry, lastApplied:9 log:{Entries:[{Command:8314954164924564877 Index:9 Term:1} {Command:2761212402830017127 Index:10 Term:1} {Command:2960811755736821203 Index:11 Term:1} {Command:3384610909169051224 Index:12 Term:4} {Command:3839034595656059631 Index:13 Term:4} {Command:852545324706437940 Index:14 Term:4}] StartIndex:9}
+03:26:14.833880 server(0) apply entry, lastApplied:10 log:{Entries:[{Command:8314954164924564877 Index:9 Term:1} {Command:2761212402830017127 Index:10 Term:1} {Command:2960811755736821203 Index:11 Term:1} {Command:3384610909169051224 Index:12 Term:4} {Command:3839034595656059631 Index:13 Term:4} {Command:852545324706437940 Index:14 Term:4}] StartIndex:9}
+03:26:14.833958 server(0) apply entry, lastApplied:11 log:{Entries:[{Command:8314954164924564877 Index:9 Term:1} {Command:2761212402830017127 Index:10 Term:1} {Command:2960811755736821203 Index:11 Term:1} {Command:3384610909169051224 Index:12 Term:4} {Command:3839034595656059631 Index:13 Term:4} {Command:852545324706437940 Index:14 Term:4}] StartIndex:9}
+03:26:14.834012 server(0) apply entry, lastApplied:12 log:{Entries:[{Command:8314954164924564877 Index:9 Term:1} {Command:2761212402830017127 Index:10 Term:1} {Command:2960811755736821203 Index:11 Term:1} {Command:3384610909169051224 Index:12 Term:4} {Command:3839034595656059631 Index:13 Term:4} {Command:852545324706437940 Index:14 Term:4}] StartIndex:9}
+03:26:14.834112 leader(2) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:1 Success:true} from server(0)
+03:26:14.834140 matchIndex[0]:14 nextIndex[0]:15
+03:26:14.834230 server(2) apply entry, lastApplied:13 log:{Entries:[{Command:8314954164924564877 Index:9 Term:1} {Command:2761212402830017127 Index:10 Term:1} {Command:2960811755736821203 Index:11 Term:1} {Command:3384610909169051224 Index:12 Term:4} {Command:3839034595656059631 Index:13 Term:4} {Command:852545324706437940 Index:14 Term:4}] StartIndex:9}
+03:26:14.850071 server(1) get AppendEntriesMsg, args:&{Term:4 LeaderId:2 PrevLogIndex:13 PrevLogTerm:4 Entries:[{Command:852545324706437940 Index:14 Term:4}] LeaderCommit:13}, server.lastIndex: 13, lastTerm:4
+03:26:14.850331 server(1) new log:{Entries:[{Command:<nil> Index:9 Term:1} {Command:2761212402830017127 Index:10 Term:1} {Command:2960811755736821203 Index:11 Term:1} {Command:3384610909169051224 Index:12 Term:4} {Command:3839034595656059631 Index:13 Term:4} {Command:852545324706437940 Index:14 Term:4}] StartIndex:9}
+03:26:14.850606 leader(2) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:4 Success:true} from server(1)
+03:26:14.850648 matchIndex[1]:14 nextIndex[1]:15
+03:26:14.864579 server(0) is alive
+03:26:14.864644 server(1) is not dead lock
+03:26:14.864668 server(2) is alive
+03:26:14.864680 server(1) is not dead lock
+03:26:14.864722 server(1) is alive
+03:26:14.865819 server(2) is not dead lock
+03:26:14.865857 server(1) is alive
+03:26:14.865905 server(0) is not dead lock
+03:26:14.873450 leader(2) beat heart
+03:26:14.873509 lastIndex:14, index0:9, nextIndex:[15 15 15], matchIndex:[14 14 14]
+03:26:14.873571 leader(2) update log of server(1)
+03:26:14.873651 leader(2) update log of server(0)
+03:26:14.877479 server(1) get AppendEntriesMsg, args:&{Term:4 LeaderId:2 PrevLogIndex:14 PrevLogTerm:4 Entries:[] LeaderCommit:14}, server.lastIndex: 14, lastTerm:4
+03:26:14.877567 server(1) new log:{Entries:[{Command:<nil> Index:9 Term:1} {Command:2761212402830017127 Index:10 Term:1} {Command:2960811755736821203 Index:11 Term:1} {Command:3384610909169051224 Index:12 Term:4} {Command:3839034595656059631 Index:13 Term:4} {Command:852545324706437940 Index:14 Term:4}] StartIndex:9}
+03:26:14.877689 server(1) apply entry, lastApplied:13 log:{Entries:[{Command:<nil> Index:9 Term:1} {Command:2761212402830017127 Index:10 Term:1} {Command:2960811755736821203 Index:11 Term:1} {Command:3384610909169051224 Index:12 Term:4} {Command:3839034595656059631 Index:13 Term:4} {Command:852545324706437940 Index:14 Term:4}] StartIndex:9}
+03:26:14.877953 leader(2) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:4 Success:true} from server(1)
+03:26:14.877972 matchIndex[1]:14 nextIndex[1]:15
+03:26:14.881229 server(0) is not dead lock
+03:26:14.881253 server(0) is alive
+03:26:14.895220 server(0) get AppendEntriesMsg, args:&{Term:4 LeaderId:2 PrevLogIndex:14 PrevLogTerm:4 Entries:[] LeaderCommit:14}, server.lastIndex: 14, lastTerm:4
+03:26:14.895331 server(0) new log:{Entries:[{Command:8314954164924564877 Index:9 Term:1} {Command:2761212402830017127 Index:10 Term:1} {Command:2960811755736821203 Index:11 Term:1} {Command:3384610909169051224 Index:12 Term:4} {Command:3839034595656059631 Index:13 Term:4} {Command:852545324706437940 Index:14 Term:4}] StartIndex:9}
+03:26:14.895456 server(0) apply entry, lastApplied:13 log:{Entries:[{Command:8314954164924564877 Index:9 Term:1} {Command:2761212402830017127 Index:10 Term:1} {Command:2960811755736821203 Index:11 Term:1} {Command:3384610909169051224 Index:12 Term:4} {Command:3839034595656059631 Index:13 Term:4} {Command:852545324706437940 Index:14 Term:4}] StartIndex:9}
+03:26:14.964772 server(1) is not dead lock
+03:26:14.964836 server(0) is alive
+03:26:14.964855 server(1) is alive
+03:26:14.964861 server(2) is alive
+03:26:14.964869 server(1) is not dead lock
+03:26:14.966072 server(0) is not dead lock
+03:26:14.966167 server(2) is not dead lock
+03:26:14.966196 server(1) is alive
+03:26:14.974430 leader(2) beat heart
+03:26:14.974499 lastIndex:14, index0:9, nextIndex:[15 15 15], matchIndex:[14 14 14]
+03:26:14.974569 leader(2) update log of server(0)
+03:26:14.974613 leader(2) update log of server(1)
+03:26:14.979266 server(0) get AppendEntriesMsg, args:&{Term:4 LeaderId:2 PrevLogIndex:14 PrevLogTerm:4 Entries:[] LeaderCommit:14}, server.lastIndex: 14, lastTerm:4
+03:26:14.979357 server(0) new log:{Entries:[{Command:8314954164924564877 Index:9 Term:1} {Command:2761212402830017127 Index:10 Term:1} {Command:2960811755736821203 Index:11 Term:1} {Command:3384610909169051224 Index:12 Term:4} {Command:3839034595656059631 Index:13 Term:4} {Command:852545324706437940 Index:14 Term:4}] StartIndex:9}
+03:26:14.979620 leader(2) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:4 Success:true} from server(0)
+03:26:14.979640 matchIndex[0]:14 nextIndex[0]:15
+03:26:14.982284 server(0) is not dead lock
+03:26:14.982327 server(0) is alive
+03:26:14.999395 server(1) get AppendEntriesMsg, args:&{Term:4 LeaderId:2 PrevLogIndex:14 PrevLogTerm:4 Entries:[] LeaderCommit:14}, server.lastIndex: 14, lastTerm:4
+03:26:14.999505 server(1) new log:{Entries:[{Command:<nil> Index:9 Term:1} {Command:2761212402830017127 Index:10 Term:1} {Command:2960811755736821203 Index:11 Term:1} {Command:3384610909169051224 Index:12 Term:4} {Command:3839034595656059631 Index:13 Term:4} {Command:852545324706437940 Index:14 Term:4}] StartIndex:9}
+03:26:14.999851 leader(2) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:4 Success:true} from server(1)
+03:26:14.999879 matchIndex[1]:14 nextIndex[1]:15
+03:26:15.065426 server(1) is not dead lock
+03:26:15.065462 server(1) is alive
+03:26:15.065469 server(2) is alive
+03:26:15.065475 server(1) is not dead lock
+03:26:15.065480 server(0) is alive
+03:26:15.066647 server(2) is not dead lock
+03:26:15.066672 server(1) is alive
+03:26:15.066720 server(0) is not dead lock
+03:26:15.074963 leader(2) beat heart
+03:26:15.075020 lastIndex:14, index0:9, nextIndex:[15 15 15], matchIndex:[14 14 14]
+03:26:15.075069 leader(2) update log of server(0)
+03:26:15.075096 leader(2) update log of server(1)
+03:26:15.082683 server(0) is alive
+03:26:15.082741 server(0) is not dead lock
+03:26:15.085301 server(1) get AppendEntriesMsg, args:&{Term:4 LeaderId:2 PrevLogIndex:14 PrevLogTerm:4 Entries:[] LeaderCommit:14}, server.lastIndex: 14, lastTerm:4
+03:26:15.085373 server(1) new log:{Entries:[{Command:<nil> Index:9 Term:1} {Command:2761212402830017127 Index:10 Term:1} {Command:2960811755736821203 Index:11 Term:1} {Command:3384610909169051224 Index:12 Term:4} {Command:3839034595656059631 Index:13 Term:4} {Command:852545324706437940 Index:14 Term:4}] StartIndex:9}
+03:26:15.085654 leader(2) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:4 Success:true} from server(1)
+03:26:15.085674 matchIndex[1]:14 nextIndex[1]:15
+03:26:15.099583 server(0) get AppendEntriesMsg, args:&{Term:4 LeaderId:2 PrevLogIndex:14 PrevLogTerm:4 Entries:[] LeaderCommit:14}, server.lastIndex: 14, lastTerm:4
+03:26:15.099682 server(0) new log:{Entries:[{Command:8314954164924564877 Index:9 Term:1} {Command:2761212402830017127 Index:10 Term:1} {Command:2960811755736821203 Index:11 Term:1} {Command:3384610909169051224 Index:12 Term:4} {Command:3839034595656059631 Index:13 Term:4} {Command:852545324706437940 Index:14 Term:4}] StartIndex:9}
+03:26:15.099977 leader(2) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:4 Success:true} from server(0)
+03:26:15.100019 matchIndex[0]:14 nextIndex[0]:15
+03:26:15.166161 server(2) is alive
+03:26:15.166211 server(1) is not dead lock
+03:26:15.166225 server(0) is alive
+03:26:15.166254 server(1) is not dead lock
+03:26:15.166254 server(1) is alive
+03:26:15.167384 server(0) is not dead lock
+03:26:15.167422 server(1) is alive
+03:26:15.167424 server(2) is not dead lock
+03:26:15.175830 leader(2) beat heart
+03:26:15.175895 lastIndex:14, index0:9, nextIndex:[15 15 15], matchIndex:[14 14 14]
+03:26:15.175937 leader(2) update log of server(0)
+03:26:15.175975 leader(2) update log of server(1)
+03:26:15.183523 server(0) is alive
+03:26:15.183584 server(0) is not dead lock
+03:26:15.187520 server(0) get AppendEntriesMsg, args:&{Term:4 LeaderId:2 PrevLogIndex:14 PrevLogTerm:4 Entries:[] LeaderCommit:14}, server.lastIndex: 14, lastTerm:4
+03:26:15.187607 server(0) new log:{Entries:[{Command:8314954164924564877 Index:9 Term:1} {Command:2761212402830017127 Index:10 Term:1} {Command:2960811755736821203 Index:11 Term:1} {Command:3384610909169051224 Index:12 Term:4} {Command:3839034595656059631 Index:13 Term:4} {Command:852545324706437940 Index:14 Term:4}] StartIndex:9}
+03:26:15.188039 leader(2) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:4 Success:true} from server(0)
+03:26:15.188059 matchIndex[0]:14 nextIndex[0]:15
+03:26:15.198982 server(1) get AppendEntriesMsg, args:&{Term:4 LeaderId:2 PrevLogIndex:14 PrevLogTerm:4 Entries:[] LeaderCommit:14}, server.lastIndex: 14, lastTerm:4
+03:26:15.199075 server(1) new log:{Entries:[{Command:<nil> Index:9 Term:1} {Command:2761212402830017127 Index:10 Term:1} {Command:2960811755736821203 Index:11 Term:1} {Command:3384610909169051224 Index:12 Term:4} {Command:3839034595656059631 Index:13 Term:4} {Command:852545324706437940 Index:14 Term:4}] StartIndex:9}
+03:26:15.199400 leader(2) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:4 Success:true} from server(1)
+03:26:15.199417 matchIndex[1]:14 nextIndex[1]:15
+03:26:15.267156 server(1) is not dead lock
+03:26:15.267180 server(1) is not dead lock
+03:26:15.267185 server(2) is alive
+03:26:15.267190 server(1) is alive
+03:26:15.267172 server(0) is alive
+03:26:15.268488 server(0) is not dead lock
+03:26:15.268514 server(2) is not dead lock
+03:26:15.268529 server(1) is alive
+03:26:15.276747 leader(2) beat heart
+03:26:15.276819 lastIndex:14, index0:9, nextIndex:[15 15 15], matchIndex:[14 14 14]
+03:26:15.276898 leader(2) update log of server(1)
+03:26:15.276972 leader(2) update log of server(0)
+03:26:15.280707 server(0) get AppendEntriesMsg, args:&{Term:4 LeaderId:2 PrevLogIndex:14 PrevLogTerm:4 Entries:[] LeaderCommit:14}, server.lastIndex: 14, lastTerm:4
+03:26:15.280823 server(0) new log:{Entries:[{Command:8314954164924564877 Index:9 Term:1} {Command:2761212402830017127 Index:10 Term:1} {Command:2960811755736821203 Index:11 Term:1} {Command:3384610909169051224 Index:12 Term:4} {Command:3839034595656059631 Index:13 Term:4} {Command:852545324706437940 Index:14 Term:4}] StartIndex:9}
+03:26:15.281156 leader(2) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:4 Success:true} from server(0)
+03:26:15.281196 matchIndex[0]:14 nextIndex[0]:15
+03:26:15.284715 server(0) is not dead lock
+03:26:15.284739 server(0) is alive
+03:26:15.367950 server(1) is not dead lock
+03:26:15.367987 server(2) is alive
+03:26:15.367996 server(1) is not dead lock
+03:26:15.368000 server(1) is alive
+03:26:15.368015 server(0) is alive
+03:26:15.369172 server(1) is alive
+03:26:15.369260 server(2) is not dead lock
+03:26:15.369282 server(0) is not dead lock
+03:26:15.377485 leader(2) beat heart
+03:26:15.377547 lastIndex:14, index0:9, nextIndex:[15 15 15], matchIndex:[14 14 14]
+03:26:15.377625 leader(2) update log of server(1)
+03:26:15.377683 leader(2) update log of server(0)
+03:26:15.384851 server(0) is not dead lock
+03:26:15.384906 server(0) is alive
+03:26:15.397000 server(0) get AppendEntriesMsg, args:&{Term:4 LeaderId:2 PrevLogIndex:14 PrevLogTerm:4 Entries:[] LeaderCommit:14}, server.lastIndex: 14, lastTerm:4
+03:26:15.397090 server(0) new log:{Entries:[{Command:8314954164924564877 Index:9 Term:1} {Command:2761212402830017127 Index:10 Term:1} {Command:2960811755736821203 Index:11 Term:1} {Command:3384610909169051224 Index:12 Term:4} {Command:3839034595656059631 Index:13 Term:4} {Command:852545324706437940 Index:14 Term:4}] StartIndex:9}
+03:26:15.397369 leader(2) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:4 Success:true} from server(0)
+03:26:15.397388 matchIndex[0]:14 nextIndex[0]:15
+03:26:15.403119 server(1) get AppendEntriesMsg, args:&{Term:4 LeaderId:2 PrevLogIndex:14 PrevLogTerm:4 Entries:[] LeaderCommit:14}, server.lastIndex: 14, lastTerm:4
+03:26:15.403204 server(1) new log:{Entries:[{Command:<nil> Index:9 Term:1} {Command:2761212402830017127 Index:10 Term:1} {Command:2960811755736821203 Index:11 Term:1} {Command:3384610909169051224 Index:12 Term:4} {Command:3839034595656059631 Index:13 Term:4} {Command:852545324706437940 Index:14 Term:4}] StartIndex:9}
+03:26:15.403458 leader(2) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:4 Success:true} from server(1)
+03:26:15.403476 matchIndex[1]:14 nextIndex[1]:15
+03:26:15.461016 =====Start!=====  cmd:595086309318486039
+03:26:15.461230 lastIndex:15, index0:9, nextIndex:[15 15 16], matchIndex:[14 14 15]
+03:26:15.461279 leader(2) update log of server(0)
+03:26:15.461303 leader(2) update log of server(1)
+03:26:15.468371 server(1) is not dead lock
+03:26:15.468414 server(1) is not dead lock
+03:26:15.468431 server(1) is alive
+03:26:15.468442 server(0) is alive
+03:26:15.468474 server(2) is alive
+03:26:15.469631 server(1) is alive
+03:26:15.469682 server(2) is not dead lock
+03:26:15.469685 server(0) is not dead lock
+03:26:15.478305 leader(2) beat heart
+03:26:15.478364 lastIndex:15, index0:9, nextIndex:[15 15 16], matchIndex:[14 14 15]
+03:26:15.478438 leader(2) update log of server(0)
+03:26:15.478483 leader(2) update log of server(1)
+03:26:15.482028 server(1) get AppendEntriesMsg, args:&{Term:4 LeaderId:2 PrevLogIndex:14 PrevLogTerm:4 Entries:[{Command:595086309318486039 Index:15 Term:4}] LeaderCommit:14}, server.lastIndex: 14, lastTerm:4
+03:26:15.482354 server(1) new log:{Entries:[{Command:<nil> Index:9 Term:1} {Command:2761212402830017127 Index:10 Term:1} {Command:2960811755736821203 Index:11 Term:1} {Command:3384610909169051224 Index:12 Term:4} {Command:3839034595656059631 Index:13 Term:4} {Command:852545324706437940 Index:14 Term:4} {Command:595086309318486039 Index:15 Term:4}] StartIndex:9}
+03:26:15.482616 leader(2) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:4 Success:true} from server(1)
+03:26:15.482633 matchIndex[1]:15 nextIndex[1]:16
+03:26:15.482744 server(2) apply entry, lastApplied:14 log:{Entries:[{Command:8314954164924564877 Index:9 Term:1} {Command:2761212402830017127 Index:10 Term:1} {Command:2960811755736821203 Index:11 Term:1} {Command:3384610909169051224 Index:12 Term:4} {Command:3839034595656059631 Index:13 Term:4} {Command:852545324706437940 Index:14 Term:4} {Command:595086309318486039 Index:15 Term:4}] StartIndex:9}
+03:26:15.485807 server(0) is alive
+03:26:15.485886 server(0) is not dead lock
+03:26:15.505339 server(1) get AppendEntriesMsg, args:&{Term:4 LeaderId:2 PrevLogIndex:14 PrevLogTerm:4 Entries:[{Command:595086309318486039 Index:15 Term:4}] LeaderCommit:14}, server.lastIndex: 15, lastTerm:4
+03:26:15.505480 server(1) new log:{Entries:[{Command:<nil> Index:9 Term:1} {Command:2761212402830017127 Index:10 Term:1} {Command:2960811755736821203 Index:11 Term:1} {Command:3384610909169051224 Index:12 Term:4} {Command:3839034595656059631 Index:13 Term:4} {Command:852545324706437940 Index:14 Term:4} {Command:595086309318486039 Index:15 Term:4}] StartIndex:9}
+03:26:15.505719 leader(2) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:4 Success:true} from server(1)
+03:26:15.505737 matchIndex[1]:15 nextIndex[1]:16
+03:26:15.569441 server(2) is alive
+03:26:15.569513 server(1) is alive
+03:26:15.569517 server(0) is alive
+03:26:15.569531 server(1) is not dead lock
+03:26:15.569538 server(1) is not dead lock
+03:26:15.570930 server(0) is not dead lock
+03:26:15.570998 server(2) is not dead lock
+03:26:15.571003 server(1) is alive
+03:26:15.579295 leader(2) beat heart
+03:26:15.579365 lastIndex:15, index0:9, nextIndex:[15 16 16], matchIndex:[14 15 15]
+03:26:15.579440 leader(2) update log of server(1)
+03:26:15.579524 leader(2) update log of server(0)
+03:26:15.586547 server(0) is not dead lock
+03:26:15.586577 server(0) is alive
+03:26:15.590274 server(1) get AppendEntriesMsg, args:&{Term:4 LeaderId:2 PrevLogIndex:15 PrevLogTerm:4 Entries:[] LeaderCommit:15}, server.lastIndex: 15, lastTerm:4
+03:26:15.590436 server(1) new log:{Entries:[{Command:<nil> Index:9 Term:1} {Command:2761212402830017127 Index:10 Term:1} {Command:2960811755736821203 Index:11 Term:1} {Command:3384610909169051224 Index:12 Term:4} {Command:3839034595656059631 Index:13 Term:4} {Command:852545324706437940 Index:14 Term:4} {Command:595086309318486039 Index:15 Term:4}] StartIndex:9}
+03:26:15.590538 server(1) apply entry, lastApplied:14 log:{Entries:[{Command:<nil> Index:9 Term:1} {Command:2761212402830017127 Index:10 Term:1} {Command:2960811755736821203 Index:11 Term:1} {Command:3384610909169051224 Index:12 Term:4} {Command:3839034595656059631 Index:13 Term:4} {Command:852545324706437940 Index:14 Term:4} {Command:595086309318486039 Index:15 Term:4}] StartIndex:9}
+03:26:15.590743 leader(2) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:4 Success:true} from server(1)
+03:26:15.590767 matchIndex[1]:15 nextIndex[1]:16
+03:26:15.605067 =====Start!=====  cmd:8493519637676004975
+03:26:15.605417 lastIndex:16, index0:9, nextIndex:[15 16 17], matchIndex:[14 15 16]
+03:26:15.605519 =====Start!=====  cmd:5599222741489802330
+03:26:15.605623 leader(2) update log of server(1)
+03:26:15.605784 lastIndex:17, index0:9, nextIndex:[15 16 18], matchIndex:[14 15 17]
+03:26:15.605830 =====Start!=====  cmd:3641515755883781942
+03:26:15.605867 leader(2) update log of server(0)
+03:26:15.605937 leader(2) update log of server(0)
+03:26:15.605991 lastIndex:18, index0:9, nextIndex:[15 16 19], matchIndex:[14 15 18]
+03:26:15.606014 =====Start!=====  cmd:1110610180649819340
+03:26:15.606053 leader(2) update log of server(0)
+03:26:15.606111 leader(2) update log of server(1)
+03:26:15.606165 lastIndex:19, index0:9, nextIndex:[15 16 20], matchIndex:[14 15 19]
+03:26:15.606186 =====Start!=====  cmd:8098177520439061533
+03:26:15.606196 leader(2) update log of server(0)
+03:26:15.606236 leader(2) update log of server(1)
+03:26:15.606350 lastIndex:20, index0:9, nextIndex:[15 16 21], matchIndex:[14 15 20]
+03:26:15.606384 =====Start!=====  cmd:9027975340787856540
+03:26:15.606513 leader(2) update log of server(1)
+03:26:15.606546 lastIndex:21, index0:9, nextIndex:[15 16 22], matchIndex:[14 15 21]
+03:26:15.606571 =====Start!=====  cmd:4340316860289549224
+03:26:15.606584 leader(2) update log of server(0)
+03:26:15.606689 leader(2) update log of server(1)
+03:26:15.606774 lastIndex:22, index0:9, nextIndex:[15 16 23], matchIndex:[14 15 22]
+03:26:15.606575 leader(2) update log of server(0)
+03:26:15.606812 =====Start!=====  cmd:2275675709589001866
+03:26:15.606858 leader(2) update log of server(0)
+03:26:15.606774 leader(2) update log of server(1)
+03:26:15.607069 lastIndex:23, index0:9, nextIndex:[15 16 24], matchIndex:[14 15 23]
+03:26:15.607102 leader(2) update log of server(1)
+03:26:15.607138 leader(2) update log of server(0)
+03:26:15.607218 leader(2) update log of server(1)
+03:26:15.610955 server(1) get AppendEntriesMsg, args:&{Term:4 LeaderId:2 PrevLogIndex:15 PrevLogTerm:4 Entries:[{Command:8493519637676004975 Index:16 Term:4} {Command:5599222741489802330 Index:17 Term:4} {Command:3641515755883781942 Index:18 Term:4} {Command:1110610180649819340 Index:19 Term:4} {Command:8098177520439061533 Index:20 Term:4} {Command:9027975340787856540 Index:21 Term:4} {Command:4340316860289549224 Index:22 Term:4}] LeaderCommit:15}, server.lastIndex: 15, lastTerm:4
+03:26:15.611264 server(1) new log:{Entries:[{Command:<nil> Index:9 Term:1} {Command:2761212402830017127 Index:10 Term:1} {Command:2960811755736821203 Index:11 Term:1} {Command:3384610909169051224 Index:12 Term:4} {Command:3839034595656059631 Index:13 Term:4} {Command:852545324706437940 Index:14 Term:4} {Command:595086309318486039 Index:15 Term:4} {Command:8493519637676004975 Index:16 Term:4} {Command:5599222741489802330 Index:17 Term:4} {Command:3641515755883781942 Index:18 Term:4} {Command:1110610180649819340 Index:19 Term:4} {Command:8098177520439061533 Index:20 Term:4} {Command:9027975340787856540 Index:21 Term:4} {Command:4340316860289549224 Index:22 Term:4}] StartIndex:9}
+03:26:15.611508 leader(2) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:4 Success:true} from server(1)
+03:26:15.611556 matchIndex[1]:22 nextIndex[1]:23
+03:26:15.611689 server(2) apply entry, lastApplied:15 log:{Entries:[{Command:8314954164924564877 Index:9 Term:1} {Command:2761212402830017127 Index:10 Term:1} {Command:2960811755736821203 Index:11 Term:1} {Command:3384610909169051224 Index:12 Term:4} {Command:3839034595656059631 Index:13 Term:4} {Command:852545324706437940 Index:14 Term:4} {Command:595086309318486039 Index:15 Term:4} {Command:8493519637676004975 Index:16 Term:4} {Command:5599222741489802330 Index:17 Term:4} {Command:3641515755883781942 Index:18 Term:4} {Command:1110610180649819340 Index:19 Term:4} {Command:8098177520439061533 Index:20 Term:4} {Command:9027975340787856540 Index:21 Term:4} {Command:4340316860289549224 Index:22 Term:4} {Command:2275675709589001866 Index:23 Term:4}] StartIndex:9}
+03:26:15.611863 server(2) apply entry, lastApplied:16 log:{Entries:[{Command:8314954164924564877 Index:9 Term:1} {Command:2761212402830017127 Index:10 Term:1} {Command:2960811755736821203 Index:11 Term:1} {Command:3384610909169051224 Index:12 Term:4} {Command:3839034595656059631 Index:13 Term:4} {Command:852545324706437940 Index:14 Term:4} {Command:595086309318486039 Index:15 Term:4} {Command:8493519637676004975 Index:16 Term:4} {Command:5599222741489802330 Index:17 Term:4} {Command:3641515755883781942 Index:18 Term:4} {Command:1110610180649819340 Index:19 Term:4} {Command:8098177520439061533 Index:20 Term:4} {Command:9027975340787856540 Index:21 Term:4} {Command:4340316860289549224 Index:22 Term:4} {Command:2275675709589001866 Index:23 Term:4}] StartIndex:9}
+03:26:15.611932 server(1) get AppendEntriesMsg, args:&{Term:4 LeaderId:2 PrevLogIndex:15 PrevLogTerm:4 Entries:[{Command:8493519637676004975 Index:16 Term:4} {Command:5599222741489802330 Index:17 Term:4} {Command:3641515755883781942 Index:18 Term:4} {Command:1110610180649819340 Index:19 Term:4} {Command:8098177520439061533 Index:20 Term:4} {Command:9027975340787856540 Index:21 Term:4} {Command:4340316860289549224 Index:22 Term:4} {Command:2275675709589001866 Index:23 Term:4}] LeaderCommit:15}, server.lastIndex: 22, lastTerm:4
+03:26:15.612069 server(2) apply entry, lastApplied:17 log:{Entries:[{Command:8314954164924564877 Index:9 Term:1} {Command:2761212402830017127 Index:10 Term:1} {Command:2960811755736821203 Index:11 Term:1} {Command:3384610909169051224 Index:12 Term:4} {Command:3839034595656059631 Index:13 Term:4} {Command:852545324706437940 Index:14 Term:4} {Command:595086309318486039 Index:15 Term:4} {Command:8493519637676004975 Index:16 Term:4} {Command:5599222741489802330 Index:17 Term:4} {Command:3641515755883781942 Index:18 Term:4} {Command:1110610180649819340 Index:19 Term:4} {Command:8098177520439061533 Index:20 Term:4} {Command:9027975340787856540 Index:21 Term:4} {Command:4340316860289549224 Index:22 Term:4} {Command:2275675709589001866 Index:23 Term:4}] StartIndex:9}
+03:26:15.612257 server(1) new log:{Entries:[{Command:<nil> Index:9 Term:1} {Command:2761212402830017127 Index:10 Term:1} {Command:2960811755736821203 Index:11 Term:1} {Command:3384610909169051224 Index:12 Term:4} {Command:3839034595656059631 Index:13 Term:4} {Command:852545324706437940 Index:14 Term:4} {Command:595086309318486039 Index:15 Term:4} {Command:8493519637676004975 Index:16 Term:4} {Command:5599222741489802330 Index:17 Term:4} {Command:3641515755883781942 Index:18 Term:4} {Command:1110610180649819340 Index:19 Term:4} {Command:8098177520439061533 Index:20 Term:4} {Command:9027975340787856540 Index:21 Term:4} {Command:4340316860289549224 Index:22 Term:4} {Command:2275675709589001866 Index:23 Term:4}] StartIndex:9}
+03:26:15.612261 server(2) apply entry, lastApplied:18 log:{Entries:[{Command:8314954164924564877 Index:9 Term:1} {Command:2761212402830017127 Index:10 Term:1} {Command:2960811755736821203 Index:11 Term:1} {Command:3384610909169051224 Index:12 Term:4} {Command:3839034595656059631 Index:13 Term:4} {Command:852545324706437940 Index:14 Term:4} {Command:595086309318486039 Index:15 Term:4} {Command:8493519637676004975 Index:16 Term:4} {Command:5599222741489802330 Index:17 Term:4} {Command:3641515755883781942 Index:18 Term:4} {Command:1110610180649819340 Index:19 Term:4} {Command:8098177520439061533 Index:20 Term:4} {Command:9027975340787856540 Index:21 Term:4} {Command:4340316860289549224 Index:22 Term:4} {Command:2275675709589001866 Index:23 Term:4}] StartIndex:9}
+03:26:15.612366 server(1) get AppendEntriesMsg, args:&{Term:4 LeaderId:2 PrevLogIndex:15 PrevLogTerm:4 Entries:[{Command:8493519637676004975 Index:16 Term:4} {Command:5599222741489802330 Index:17 Term:4} {Command:3641515755883781942 Index:18 Term:4} {Command:1110610180649819340 Index:19 Term:4} {Command:8098177520439061533 Index:20 Term:4}] LeaderCommit:15}, server.lastIndex: 23, lastTerm:4
+03:26:15.612420 server(2) apply entry, lastApplied:19 log:{Entries:[{Command:8314954164924564877 Index:9 Term:1} {Command:2761212402830017127 Index:10 Term:1} {Command:2960811755736821203 Index:11 Term:1} {Command:3384610909169051224 Index:12 Term:4} {Command:3839034595656059631 Index:13 Term:4} {Command:852545324706437940 Index:14 Term:4} {Command:595086309318486039 Index:15 Term:4} {Command:8493519637676004975 Index:16 Term:4} {Command:5599222741489802330 Index:17 Term:4} {Command:3641515755883781942 Index:18 Term:4} {Command:1110610180649819340 Index:19 Term:4} {Command:8098177520439061533 Index:20 Term:4} {Command:9027975340787856540 Index:21 Term:4} {Command:4340316860289549224 Index:22 Term:4} {Command:2275675709589001866 Index:23 Term:4}] StartIndex:9}
+03:26:15.612479 server(1) new log:{Entries:[{Command:<nil> Index:9 Term:1} {Command:2761212402830017127 Index:10 Term:1} {Command:2960811755736821203 Index:11 Term:1} {Command:3384610909169051224 Index:12 Term:4} {Command:3839034595656059631 Index:13 Term:4} {Command:852545324706437940 Index:14 Term:4} {Command:595086309318486039 Index:15 Term:4} {Command:8493519637676004975 Index:16 Term:4} {Command:5599222741489802330 Index:17 Term:4} {Command:3641515755883781942 Index:18 Term:4} {Command:1110610180649819340 Index:19 Term:4} {Command:8098177520439061533 Index:20 Term:4} {Command:9027975340787856540 Index:21 Term:4} {Command:4340316860289549224 Index:22 Term:4} {Command:2275675709589001866 Index:23 Term:4}] StartIndex:9}
+03:26:15.612752 server(2) snapshot index:19, new log:{Entries:[{Command:1110610180649819340 Index:19 Term:4} {Command:8098177520439061533 Index:20 Term:4} {Command:9027975340787856540 Index:21 Term:4} {Command:4340316860289549224 Index:22 Term:4} {Command:2275675709589001866 Index:23 Term:4}] StartIndex:19}
+03:26:15.612835 server(2) apply entry, lastApplied:20 log:{Entries:[{Command:1110610180649819340 Index:19 Term:4} {Command:8098177520439061533 Index:20 Term:4} {Command:9027975340787856540 Index:21 Term:4} {Command:4340316860289549224 Index:22 Term:4} {Command:2275675709589001866 Index:23 Term:4}] StartIndex:19}
+03:26:15.612918 server(2) apply entry, lastApplied:21 log:{Entries:[{Command:1110610180649819340 Index:19 Term:4} {Command:8098177520439061533 Index:20 Term:4} {Command:9027975340787856540 Index:21 Term:4} {Command:4340316860289549224 Index:22 Term:4} {Command:2275675709589001866 Index:23 Term:4}] StartIndex:19}
+03:26:15.617849 server(1) get AppendEntriesMsg, args:&{Term:4 LeaderId:2 PrevLogIndex:15 PrevLogTerm:4 Entries:[{Command:8493519637676004975 Index:16 Term:4}] LeaderCommit:15}, server.lastIndex: 23, lastTerm:4
+03:26:15.617999 server(1) new log:{Entries:[{Command:<nil> Index:9 Term:1} {Command:2761212402830017127 Index:10 Term:1} {Command:2960811755736821203 Index:11 Term:1} {Command:3384610909169051224 Index:12 Term:4} {Command:3839034595656059631 Index:13 Term:4} {Command:852545324706437940 Index:14 Term:4} {Command:595086309318486039 Index:15 Term:4} {Command:8493519637676004975 Index:16 Term:4} {Command:5599222741489802330 Index:17 Term:4} {Command:3641515755883781942 Index:18 Term:4} {Command:1110610180649819340 Index:19 Term:4} {Command:8098177520439061533 Index:20 Term:4} {Command:9027975340787856540 Index:21 Term:4} {Command:4340316860289549224 Index:22 Term:4} {Command:2275675709589001866 Index:23 Term:4}] StartIndex:9}
+03:26:15.618265 leader(2) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:4 Success:true} from server(1)
+03:26:15.618283 matchIndex[1]:22 nextIndex[1]:23
+03:26:15.623433 server(1) get AppendEntriesMsg, args:&{Term:4 LeaderId:2 PrevLogIndex:15 PrevLogTerm:4 Entries:[{Command:8493519637676004975 Index:16 Term:4} {Command:5599222741489802330 Index:17 Term:4} {Command:3641515755883781942 Index:18 Term:4} {Command:1110610180649819340 Index:19 Term:4}] LeaderCommit:15}, server.lastIndex: 23, lastTerm:4
+03:26:15.623600 server(1) new log:{Entries:[{Command:<nil> Index:9 Term:1} {Command:2761212402830017127 Index:10 Term:1} {Command:2960811755736821203 Index:11 Term:1} {Command:3384610909169051224 Index:12 Term:4} {Command:3839034595656059631 Index:13 Term:4} {Command:852545324706437940 Index:14 Term:4} {Command:595086309318486039 Index:15 Term:4} {Command:8493519637676004975 Index:16 Term:4} {Command:5599222741489802330 Index:17 Term:4} {Command:3641515755883781942 Index:18 Term:4} {Command:1110610180649819340 Index:19 Term:4} {Command:8098177520439061533 Index:20 Term:4} {Command:9027975340787856540 Index:21 Term:4} {Command:4340316860289549224 Index:22 Term:4} {Command:2275675709589001866 Index:23 Term:4}] StartIndex:9}
+03:26:15.623762 server(1) get AppendEntriesMsg, args:&{Term:4 LeaderId:2 PrevLogIndex:15 PrevLogTerm:4 Entries:[{Command:8493519637676004975 Index:16 Term:4} {Command:5599222741489802330 Index:17 Term:4} {Command:3641515755883781942 Index:18 Term:4}] LeaderCommit:15}, server.lastIndex: 23, lastTerm:4
+03:26:15.623883 server(1) new log:{Entries:[{Command:<nil> Index:9 Term:1} {Command:2761212402830017127 Index:10 Term:1} {Command:2960811755736821203 Index:11 Term:1} {Command:3384610909169051224 Index:12 Term:4} {Command:3839034595656059631 Index:13 Term:4} {Command:852545324706437940 Index:14 Term:4} {Command:595086309318486039 Index:15 Term:4} {Command:8493519637676004975 Index:16 Term:4} {Command:5599222741489802330 Index:17 Term:4} {Command:3641515755883781942 Index:18 Term:4} {Command:1110610180649819340 Index:19 Term:4} {Command:8098177520439061533 Index:20 Term:4} {Command:9027975340787856540 Index:21 Term:4} {Command:4340316860289549224 Index:22 Term:4} {Command:2275675709589001866 Index:23 Term:4}] StartIndex:9}
+03:26:15.623911 leader(2) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:4 Success:true} from server(1)
+03:26:15.623933 matchIndex[1]:22 nextIndex[1]:23
+03:26:15.624127 leader(2) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:4 Success:true} from server(1)
+03:26:15.624150 matchIndex[1]:22 nextIndex[1]:23
+03:26:15.658133 =====Start!=====  cmd:3507933054013990186
+03:26:15.658464 lastIndex:24, index0:19, nextIndex:[15 23 25], matchIndex:[14 22 24]
+03:26:15.658526 leader(2) update snapshot of server(0)
+03:26:15.658607 leader(2) send snapshot to server(0)
+03:26:15.658698 leader(2) update log of server(1)
+03:26:15.670405 server(2) is alive
+03:26:15.670475 server(1) is alive
+03:26:15.670503 server(0) is alive
+03:26:15.670526 server(1) is not dead lock
+03:26:15.670529 server(1) is not dead lock
+03:26:15.671652 server(1) is alive
+03:26:15.671677 server(0) is not dead lock
+03:26:15.671687 server(2) is not dead lock
+03:26:15.680481 leader(2) beat heart
+03:26:15.680557 lastIndex:24, index0:19, nextIndex:[15 23 25], matchIndex:[14 22 24]
+03:26:15.680576 leader(2) update snapshot of server(0), nextIndex:15, IndexStart:19
+03:26:15.680633 leader(2) update log of server(1)
+03:26:15.680703 leader(2) send snapshot to server(0)
+03:26:15.685080 server(1) get AppendEntriesMsg, args:&{Term:4 LeaderId:2 PrevLogIndex:22 PrevLogTerm:4 Entries:[{Command:2275675709589001866 Index:23 Term:4} {Command:3507933054013990186 Index:24 Term:4}] LeaderCommit:22}, server.lastIndex: 23, lastTerm:4
+03:26:15.685478 server(1) new log:{Entries:[{Command:<nil> Index:9 Term:1} {Command:2761212402830017127 Index:10 Term:1} {Command:2960811755736821203 Index:11 Term:1} {Command:3384610909169051224 Index:12 Term:4} {Command:3839034595656059631 Index:13 Term:4} {Command:852545324706437940 Index:14 Term:4} {Command:595086309318486039 Index:15 Term:4} {Command:8493519637676004975 Index:16 Term:4} {Command:5599222741489802330 Index:17 Term:4} {Command:3641515755883781942 Index:18 Term:4} {Command:1110610180649819340 Index:19 Term:4} {Command:8098177520439061533 Index:20 Term:4} {Command:9027975340787856540 Index:21 Term:4} {Command:4340316860289549224 Index:22 Term:4} {Command:2275675709589001866 Index:23 Term:4} {Command:3507933054013990186 Index:24 Term:4}] StartIndex:9}
+03:26:15.685708 server(1) apply entry, lastApplied:15 log:{Entries:[{Command:<nil> Index:9 Term:1} {Command:2761212402830017127 Index:10 Term:1} {Command:2960811755736821203 Index:11 Term:1} {Command:3384610909169051224 Index:12 Term:4} {Command:3839034595656059631 Index:13 Term:4} {Command:852545324706437940 Index:14 Term:4} {Command:595086309318486039 Index:15 Term:4} {Command:8493519637676004975 Index:16 Term:4} {Command:5599222741489802330 Index:17 Term:4} {Command:3641515755883781942 Index:18 Term:4} {Command:1110610180649819340 Index:19 Term:4} {Command:8098177520439061533 Index:20 Term:4} {Command:9027975340787856540 Index:21 Term:4} {Command:4340316860289549224 Index:22 Term:4} {Command:2275675709589001866 Index:23 Term:4} {Command:3507933054013990186 Index:24 Term:4}] StartIndex:9}
+03:26:15.685816 server(1) apply entry, lastApplied:16 log:{Entries:[{Command:<nil> Index:9 Term:1} {Command:2761212402830017127 Index:10 Term:1} {Command:2960811755736821203 Index:11 Term:1} {Command:3384610909169051224 Index:12 Term:4} {Command:3839034595656059631 Index:13 Term:4} {Command:852545324706437940 Index:14 Term:4} {Command:595086309318486039 Index:15 Term:4} {Command:8493519637676004975 Index:16 Term:4} {Command:5599222741489802330 Index:17 Term:4} {Command:3641515755883781942 Index:18 Term:4} {Command:1110610180649819340 Index:19 Term:4} {Command:8098177520439061533 Index:20 Term:4} {Command:9027975340787856540 Index:21 Term:4} {Command:4340316860289549224 Index:22 Term:4} {Command:2275675709589001866 Index:23 Term:4} {Command:3507933054013990186 Index:24 Term:4}] StartIndex:9}
+03:26:15.686026 leader(2) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:4 Success:true} from server(1)
+03:26:15.686071 matchIndex[1]:24 nextIndex[1]:25
+03:26:15.686128 server(2) apply entry, lastApplied:22 log:{Entries:[{Command:1110610180649819340 Index:19 Term:4} {Command:8098177520439061533 Index:20 Term:4} {Command:9027975340787856540 Index:21 Term:4} {Command:4340316860289549224 Index:22 Term:4} {Command:2275675709589001866 Index:23 Term:4} {Command:3507933054013990186 Index:24 Term:4}] StartIndex:19}
+03:26:15.686196 server(2) apply entry, lastApplied:23 log:{Entries:[{Command:1110610180649819340 Index:19 Term:4} {Command:8098177520439061533 Index:20 Term:4} {Command:9027975340787856540 Index:21 Term:4} {Command:4340316860289549224 Index:22 Term:4} {Command:2275675709589001866 Index:23 Term:4} {Command:3507933054013990186 Index:24 Term:4}] StartIndex:19}
+03:26:15.686773 server(0) is alive
+03:26:15.686799 server(0) is not dead lock
+03:26:15.688653 server(1) apply entry, lastApplied:17 log:{Entries:[{Command:<nil> Index:9 Term:1} {Command:2761212402830017127 Index:10 Term:1} {Command:2960811755736821203 Index:11 Term:1} {Command:3384610909169051224 Index:12 Term:4} {Command:3839034595656059631 Index:13 Term:4} {Command:852545324706437940 Index:14 Term:4} {Command:595086309318486039 Index:15 Term:4} {Command:8493519637676004975 Index:16 Term:4} {Command:5599222741489802330 Index:17 Term:4} {Command:3641515755883781942 Index:18 Term:4} {Command:1110610180649819340 Index:19 Term:4} {Command:8098177520439061533 Index:20 Term:4} {Command:9027975340787856540 Index:21 Term:4} {Command:4340316860289549224 Index:22 Term:4} {Command:2275675709589001866 Index:23 Term:4} {Command:3507933054013990186 Index:24 Term:4}] StartIndex:9}
+03:26:15.688818 server(1) apply entry, lastApplied:18 log:{Entries:[{Command:<nil> Index:9 Term:1} {Command:2761212402830017127 Index:10 Term:1} {Command:2960811755736821203 Index:11 Term:1} {Command:3384610909169051224 Index:12 Term:4} {Command:3839034595656059631 Index:13 Term:4} {Command:852545324706437940 Index:14 Term:4} {Command:595086309318486039 Index:15 Term:4} {Command:8493519637676004975 Index:16 Term:4} {Command:5599222741489802330 Index:17 Term:4} {Command:3641515755883781942 Index:18 Term:4} {Command:1110610180649819340 Index:19 Term:4} {Command:8098177520439061533 Index:20 Term:4} {Command:9027975340787856540 Index:21 Term:4} {Command:4340316860289549224 Index:22 Term:4} {Command:2275675709589001866 Index:23 Term:4} {Command:3507933054013990186 Index:24 Term:4}] StartIndex:9}
+03:26:15.689047 server(1) apply entry, lastApplied:19 log:{Entries:[{Command:<nil> Index:9 Term:1} {Command:2761212402830017127 Index:10 Term:1} {Command:2960811755736821203 Index:11 Term:1} {Command:3384610909169051224 Index:12 Term:4} {Command:3839034595656059631 Index:13 Term:4} {Command:852545324706437940 Index:14 Term:4} {Command:595086309318486039 Index:15 Term:4} {Command:8493519637676004975 Index:16 Term:4} {Command:5599222741489802330 Index:17 Term:4} {Command:3641515755883781942 Index:18 Term:4} {Command:1110610180649819340 Index:19 Term:4} {Command:8098177520439061533 Index:20 Term:4} {Command:9027975340787856540 Index:21 Term:4} {Command:4340316860289549224 Index:22 Term:4} {Command:2275675709589001866 Index:23 Term:4} {Command:3507933054013990186 Index:24 Term:4}] StartIndex:9}
+03:26:15.689343 server(1) snapshot index:19, new log:{Entries:[{Command:1110610180649819340 Index:19 Term:4} {Command:8098177520439061533 Index:20 Term:4} {Command:9027975340787856540 Index:21 Term:4} {Command:4340316860289549224 Index:22 Term:4} {Command:2275675709589001866 Index:23 Term:4} {Command:3507933054013990186 Index:24 Term:4}] StartIndex:19}
+03:26:15.689429 server(1) apply entry, lastApplied:20 log:{Entries:[{Command:1110610180649819340 Index:19 Term:4} {Command:8098177520439061533 Index:20 Term:4} {Command:9027975340787856540 Index:21 Term:4} {Command:4340316860289549224 Index:22 Term:4} {Command:2275675709589001866 Index:23 Term:4} {Command:3507933054013990186 Index:24 Term:4}] StartIndex:19}
+03:26:15.689502 server(1) apply entry, lastApplied:21 log:{Entries:[{Command:1110610180649819340 Index:19 Term:4} {Command:8098177520439061533 Index:20 Term:4} {Command:9027975340787856540 Index:21 Term:4} {Command:4340316860289549224 Index:22 Term:4} {Command:2275675709589001866 Index:23 Term:4} {Command:3507933054013990186 Index:24 Term:4}] StartIndex:19}
+03:26:15.700056 server(1) get AppendEntriesMsg, args:&{Term:4 LeaderId:2 PrevLogIndex:22 PrevLogTerm:4 Entries:[{Command:2275675709589001866 Index:23 Term:4} {Command:3507933054013990186 Index:24 Term:4}] LeaderCommit:22}, server.lastIndex: 24, lastTerm:4
+03:26:15.700166 server(1) new log:{Entries:[{Command:1110610180649819340 Index:19 Term:4} {Command:8098177520439061533 Index:20 Term:4} {Command:9027975340787856540 Index:21 Term:4} {Command:4340316860289549224 Index:22 Term:4} {Command:2275675709589001866 Index:23 Term:4} {Command:3507933054013990186 Index:24 Term:4}] StartIndex:19}
+03:26:15.700409 leader(2) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:4 Success:true} from server(1)
+03:26:15.700431 matchIndex[1]:24 nextIndex[1]:25
+03:26:15.770620 server(0) is alive
+03:26:15.770668 server(2) is alive
+03:26:15.770683 server(1) is not dead lock
+03:26:15.770690 server(1) is alive
+03:26:15.770699 server(1) is not dead lock
+03:26:15.771995 server(2) is not dead lock
+03:26:15.772017 server(1) is alive
+03:26:15.772029 server(0) is not dead lock
+03:26:15.781408 leader(2) beat heart
+03:26:15.781525 lastIndex:24, index0:19, nextIndex:[15 25 25], matchIndex:[14 24 24]
+03:26:15.781546 leader(2) update snapshot of server(0), nextIndex:15, IndexStart:19
+03:26:15.781602 leader(2) send snapshot to server(0)
+03:26:15.781632 leader(2) update log of server(1)
+03:26:15.787024 server(0) is alive
+03:26:15.787068 server(0) is not dead lock
+03:26:15.871746 server(1) is alive
+03:26:15.871804 server(1) is not dead lock
+03:26:15.871820 server(0) is alive
+03:26:15.871825 server(1) is not dead lock
+03:26:15.871831 server(2) is alive
+03:26:15.873023 server(1) is alive
+03:26:15.873048 server(0) is not dead lock
+03:26:15.873050 server(2) is not dead lock
+03:26:15.882360 leader(2) beat heart
+03:26:15.882420 lastIndex:24, index0:19, nextIndex:[15 25 25], matchIndex:[14 24 24]
+03:26:15.882436 leader(2) update snapshot of server(0), nextIndex:15, IndexStart:19
+03:26:15.882470 leader(2) send snapshot to server(0)
+03:26:15.882604 leader(2) update log of server(1)
+03:26:15.887789 server(0) is alive
+03:26:15.887855 server(0) is not dead lock
+03:26:15.899573 server(1) get AppendEntriesMsg, args:&{Term:4 LeaderId:2 PrevLogIndex:24 PrevLogTerm:4 Entries:[] LeaderCommit:24}, server.lastIndex: 24, lastTerm:4
+03:26:15.899727 server(1) new log:{Entries:[{Command:1110610180649819340 Index:19 Term:4} {Command:8098177520439061533 Index:20 Term:4} {Command:9027975340787856540 Index:21 Term:4} {Command:4340316860289549224 Index:22 Term:4} {Command:2275675709589001866 Index:23 Term:4} {Command:3507933054013990186 Index:24 Term:4}] StartIndex:19}
+03:26:15.899883 server(1) apply entry, lastApplied:22 log:{Entries:[{Command:1110610180649819340 Index:19 Term:4} {Command:8098177520439061533 Index:20 Term:4} {Command:9027975340787856540 Index:21 Term:4} {Command:4340316860289549224 Index:22 Term:4} {Command:2275675709589001866 Index:23 Term:4} {Command:3507933054013990186 Index:24 Term:4}] StartIndex:19}
+03:26:15.899939 server(1) apply entry, lastApplied:23 log:{Entries:[{Command:1110610180649819340 Index:19 Term:4} {Command:8098177520439061533 Index:20 Term:4} {Command:9027975340787856540 Index:21 Term:4} {Command:4340316860289549224 Index:22 Term:4} {Command:2275675709589001866 Index:23 Term:4} {Command:3507933054013990186 Index:24 Term:4}] StartIndex:19}
+03:26:15.900150 leader(2) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:4 Success:true} from server(1)
+03:26:15.900175 matchIndex[1]:24 nextIndex[1]:25
+03:26:15.905922 server(0) start!
+03:26:15.906075 server(0) apply snapshot, lastApplied:9 log:{Entries:[{Command:8314954164924564877 Index:9 Term:1} {Command:2761212402830017127 Index:10 Term:1} {Command:2960811755736821203 Index:11 Term:1} {Command:3384610909169051224 Index:12 Term:4} {Command:3839034595656059631 Index:13 Term:4} {Command:852545324706437940 Index:14 Term:4}] StartIndex:9}
+03:26:15.957203 =====Start!=====  cmd:5318161818273379637
+03:26:15.957437 lastIndex:25, index0:19, nextIndex:[15 25 26], matchIndex:[14 24 25]
+03:26:15.957453 leader(2) update snapshot of server(0)
+03:26:15.957514 leader(2) update log of server(1)
+03:26:15.957585 leader(2) send snapshot to server(0)
+03:26:15.961390 server(0) get InstallSnapshotRPC from leader(2)
+03:26:15.961697 args:&{Term:4 LeaderId:2 LastIncludedIndex:19 LastIncludedTerm:4 Offset:0 Data:[3 4 0 38 12 255 143 2 1 2 255 144 0 1 16 0 0 254 1 53 255 144 0 20 0 3 105 110 116 4 10 0 248 111 88 198 201 9 87 202 156 3 105 110 116 4 10 0 248 153 132 170 119 215 16 11 172 3 105 110 116 4 10 0 248 121 244 168 72 45 55 49 54 3 105 110 116 4 10 0 248 66 199 158 249 168 126 143 100 3 105 110 116 4 10 0 248 74 154 18 92 241 81 15 118 3 105 110 116 4 10 0 248 69 20 85 117 214 44 253 208 3 105 110 116 4 10 0 248 248 208 108 14 210 236 19 218 3 105 110 116 4 10 0 248 86 82 118 125 212 43 68 66 3 105 110 116 4 10 0 248 230 201 77 132 87 247 139 26 3 105 110 116 4 10 0 248 76 163 152 26 8 44 4 206 3 105 110 116 4 10 0 248 82 45 213 53 166 252 219 166 3 105 110 116 4 10 0 248 93 241 27 96 255 221 204 176 3 105 110 116 4 10 0 248 106 141 251 63 213 7 149 222 3 105 110 116 4 10 0 248 23 169 178 233 100 24 54 104 3 105 110 116 4 10 0 248 16 132 87 176 219 64 208 46 3 105 110 116 4 10 0 248 235 190 22 56 64 247 44 222 3 105 110 116 4 10 0 248 155 104 222 213 185 147 184 180 3 105 110 116 4 10 0 248 101 18 134 146 162 225 190 108 3 105 110 116 4 10 0 248 30 211 92 38 107 33 57 152] Done:true}
+03:26:15.972416 server(2) is alive
+03:26:15.972473 server(0) is alive
+03:26:15.972474 server(1) is not dead lock
+03:26:15.972481 server(1) is alive
+03:26:15.972487 server(1) is not dead lock
+03:26:15.973758 server(0) is not dead lock
+03:26:15.973778 server(1) is alive
+03:26:15.973807 server(2) is not dead lock
+03:26:15.980701 server(1) get AppendEntriesMsg, args:&{Term:4 LeaderId:2 PrevLogIndex:24 PrevLogTerm:4 Entries:[{Command:5318161818273379637 Index:25 Term:4}] LeaderCommit:24}, server.lastIndex: 24, lastTerm:4
+03:26:15.980960 server(1) new log:{Entries:[{Command:1110610180649819340 Index:19 Term:4} {Command:8098177520439061533 Index:20 Term:4} {Command:9027975340787856540 Index:21 Term:4} {Command:4340316860289549224 Index:22 Term:4} {Command:2275675709589001866 Index:23 Term:4} {Command:3507933054013990186 Index:24 Term:4} {Command:5318161818273379637 Index:25 Term:4}] StartIndex:19}
+03:26:15.981196 leader(2) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:4 Success:true} from server(1)
+03:26:15.981214 matchIndex[1]:25 nextIndex[1]:26
+03:26:15.981282 server(2) apply entry, lastApplied:24 log:{Entries:[{Command:1110610180649819340 Index:19 Term:4} {Command:8098177520439061533 Index:20 Term:4} {Command:9027975340787856540 Index:21 Term:4} {Command:4340316860289549224 Index:22 Term:4} {Command:2275675709589001866 Index:23 Term:4} {Command:3507933054013990186 Index:24 Term:4} {Command:5318161818273379637 Index:25 Term:4}] StartIndex:19}
+03:26:15.982670 leader(2) beat heart
+03:26:15.982751 lastIndex:25, index0:19, nextIndex:[20 26 26], matchIndex:[19 25 25]
+03:26:15.982815 leader(2) update log of server(1)
+03:26:15.982886 leader(2) update log of server(0)
+03:26:15.988929 server(0) is not dead lock
+03:26:15.988956 server(0) is alive
+03:26:15.995650 server(0) get AppendEntriesMsg, args:&{Term:4 LeaderId:2 PrevLogIndex:19 PrevLogTerm:4 Entries:[{Command:8098177520439061533 Index:20 Term:4} {Command:9027975340787856540 Index:21 Term:4} {Command:4340316860289549224 Index:22 Term:4} {Command:2275675709589001866 Index:23 Term:4} {Command:3507933054013990186 Index:24 Term:4} {Command:5318161818273379637 Index:25 Term:4}] LeaderCommit:25}, server.lastIndex: 19, lastTerm:4
+03:26:15.996052 server(0) new log:{Entries:[{Command:<nil> Index:19 Term:4} {Command:8098177520439061533 Index:20 Term:4} {Command:9027975340787856540 Index:21 Term:4} {Command:4340316860289549224 Index:22 Term:4} {Command:2275675709589001866 Index:23 Term:4} {Command:3507933054013990186 Index:24 Term:4} {Command:5318161818273379637 Index:25 Term:4}] StartIndex:19}
+03:26:15.996216 server(0) apply snapshot, lastApplied:9 log:{Entries:[{Command:<nil> Index:19 Term:4} {Command:8098177520439061533 Index:20 Term:4} {Command:9027975340787856540 Index:21 Term:4} {Command:4340316860289549224 Index:22 Term:4} {Command:2275675709589001866 Index:23 Term:4} {Command:3507933054013990186 Index:24 Term:4} {Command:5318161818273379637 Index:25 Term:4}] StartIndex:19}
+03:26:15.996284 leader(2) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:4 Success:true} from server(0)
+03:26:15.996302 matchIndex[0]:25 nextIndex[0]:26
+03:26:16.004332 server(1) get AppendEntriesMsg, args:&{Term:4 LeaderId:2 PrevLogIndex:25 PrevLogTerm:4 Entries:[] LeaderCommit:25}, server.lastIndex: 25, lastTerm:4
+03:26:16.004444 server(1) new log:{Entries:[{Command:1110610180649819340 Index:19 Term:4} {Command:8098177520439061533 Index:20 Term:4} {Command:9027975340787856540 Index:21 Term:4} {Command:4340316860289549224 Index:22 Term:4} {Command:2275675709589001866 Index:23 Term:4} {Command:3507933054013990186 Index:24 Term:4} {Command:5318161818273379637 Index:25 Term:4}] StartIndex:19}
+03:26:16.004536 server(1) apply entry, lastApplied:24 log:{Entries:[{Command:1110610180649819340 Index:19 Term:4} {Command:8098177520439061533 Index:20 Term:4} {Command:9027975340787856540 Index:21 Term:4} {Command:4340316860289549224 Index:22 Term:4} {Command:2275675709589001866 Index:23 Term:4} {Command:3507933054013990186 Index:24 Term:4} {Command:5318161818273379637 Index:25 Term:4}] StartIndex:19}
+03:26:16.004679 leader(2) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:4 Success:true} from server(1)
+03:26:16.004719 matchIndex[1]:25 nextIndex[1]:26
+03:26:16.006536 server(0) is alive
+03:26:16.006629 server(0) is not dead lock
+03:26:16.072555 server(2) is alive
+03:26:16.072645 server(1) is not dead lock
+03:26:16.072646 server(0) is alive
+03:26:16.072674 server(1) is alive
+03:26:16.072751 server(1) is not dead lock
+03:26:16.075053 server(1) is alive
+03:26:16.075103 server(0) is not dead lock
+03:26:16.075110 server(2) is not dead lock
+03:26:16.083904 leader(2) beat heart
+03:26:16.083968 lastIndex:25, index0:19, nextIndex:[26 26 26], matchIndex:[25 25 25]
+03:26:16.084048 leader(2) update log of server(0)
+03:26:16.084125 leader(2) update log of server(1)
+03:26:16.084549 server(0) get AppendEntriesMsg, args:&{Term:4 LeaderId:2 PrevLogIndex:25 PrevLogTerm:4 Entries:[] LeaderCommit:25}, server.lastIndex: 25, lastTerm:4
+03:26:16.084675 server(0) new log:{Entries:[{Command:<nil> Index:19 Term:4} {Command:8098177520439061533 Index:20 Term:4} {Command:9027975340787856540 Index:21 Term:4} {Command:4340316860289549224 Index:22 Term:4} {Command:2275675709589001866 Index:23 Term:4} {Command:3507933054013990186 Index:24 Term:4} {Command:5318161818273379637 Index:25 Term:4}] StartIndex:19}
+03:26:16.084756 server(0) apply entry, lastApplied:19 log:{Entries:[{Command:<nil> Index:19 Term:4} {Command:8098177520439061533 Index:20 Term:4} {Command:9027975340787856540 Index:21 Term:4} {Command:4340316860289549224 Index:22 Term:4} {Command:2275675709589001866 Index:23 Term:4} {Command:3507933054013990186 Index:24 Term:4} {Command:5318161818273379637 Index:25 Term:4}] StartIndex:19}
+03:26:16.084814 server(0) apply entry, lastApplied:20 log:{Entries:[{Command:<nil> Index:19 Term:4} {Command:8098177520439061533 Index:20 Term:4} {Command:9027975340787856540 Index:21 Term:4} {Command:4340316860289549224 Index:22 Term:4} {Command:2275675709589001866 Index:23 Term:4} {Command:3507933054013990186 Index:24 Term:4} {Command:5318161818273379637 Index:25 Term:4}] StartIndex:19}
+03:26:16.084897 server(0) apply entry, lastApplied:21 log:{Entries:[{Command:<nil> Index:19 Term:4} {Command:8098177520439061533 Index:20 Term:4} {Command:9027975340787856540 Index:21 Term:4} {Command:4340316860289549224 Index:22 Term:4} {Command:2275675709589001866 Index:23 Term:4} {Command:3507933054013990186 Index:24 Term:4} {Command:5318161818273379637 Index:25 Term:4}] StartIndex:19}
+03:26:16.084945 leader(2) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:4 Success:true} from server(0)
+03:26:16.084970 server(0) apply entry, lastApplied:22 log:{Entries:[{Command:<nil> Index:19 Term:4} {Command:8098177520439061533 Index:20 Term:4} {Command:9027975340787856540 Index:21 Term:4} {Command:4340316860289549224 Index:22 Term:4} {Command:2275675709589001866 Index:23 Term:4} {Command:3507933054013990186 Index:24 Term:4} {Command:5318161818273379637 Index:25 Term:4}] StartIndex:19}
+03:26:16.084970 matchIndex[0]:25 nextIndex[0]:26
+03:26:16.085028 server(0) apply entry, lastApplied:23 log:{Entries:[{Command:<nil> Index:19 Term:4} {Command:8098177520439061533 Index:20 Term:4} {Command:9027975340787856540 Index:21 Term:4} {Command:4340316860289549224 Index:22 Term:4} {Command:2275675709589001866 Index:23 Term:4} {Command:3507933054013990186 Index:24 Term:4} {Command:5318161818273379637 Index:25 Term:4}] StartIndex:19}
+03:26:16.085121 server(0) apply entry, lastApplied:24 log:{Entries:[{Command:<nil> Index:19 Term:4} {Command:8098177520439061533 Index:20 Term:4} {Command:9027975340787856540 Index:21 Term:4} {Command:4340316860289549224 Index:22 Term:4} {Command:2275675709589001866 Index:23 Term:4} {Command:3507933054013990186 Index:24 Term:4} {Command:5318161818273379637 Index:25 Term:4}] StartIndex:19}
+03:26:16.089042 server(0) is alive
+03:26:16.089094 server(0) is not dead lock
+03:26:16.106996 server(0) is not dead lock
+03:26:16.107017 server(0) is alive
+03:26:16.173722 server(1) is not dead lock
+03:26:16.173781 server(0) is alive
+03:26:16.173795 server(2) is alive
+03:26:16.173803 server(1) is alive
+03:26:16.173808 server(1) is not dead lock
+03:26:16.176107 server(1) is alive
+03:26:16.176140 server(0) is not dead lock
+03:26:16.176160 server(2) is not dead lock
+03:26:16.184581 leader(2) beat heart
+03:26:16.184660 lastIndex:25, index0:19, nextIndex:[26 26 26], matchIndex:[25 25 25]
+03:26:16.184720 leader(2) update log of server(1)
+03:26:16.184776 leader(2) update log of server(0)
+03:26:16.189477 server(0) is not dead lock
+03:26:16.189524 server(0) is alive
+03:26:16.205320 server(1) get AppendEntriesMsg, args:&{Term:4 LeaderId:2 PrevLogIndex:25 PrevLogTerm:4 Entries:[] LeaderCommit:25}, server.lastIndex: 25, lastTerm:4
+03:26:16.205443 server(1) new log:{Entries:[{Command:1110610180649819340 Index:19 Term:4} {Command:8098177520439061533 Index:20 Term:4} {Command:9027975340787856540 Index:21 Term:4} {Command:4340316860289549224 Index:22 Term:4} {Command:2275675709589001866 Index:23 Term:4} {Command:3507933054013990186 Index:24 Term:4} {Command:5318161818273379637 Index:25 Term:4}] StartIndex:19}
+03:26:16.205754 leader(2) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:4 Success:true} from server(1)
+03:26:16.205780 matchIndex[1]:25 nextIndex[1]:26
+03:26:16.207741 server(0) is alive
+03:26:16.207818 server(0) is not dead lock
+03:26:16.274685 server(1) is alive
+03:26:16.274759 server(1) is not dead lock
+03:26:16.274773 server(0) is alive
+03:26:16.274777 server(2) is alive
+03:26:16.274767 server(1) is not dead lock
+03:26:16.277174 server(0) is not dead lock
+03:26:16.277238 server(1) is alive
+03:26:16.277286 server(2) is not dead lock
+03:26:16.285607 leader(2) beat heart
+03:26:16.285666 lastIndex:25, index0:19, nextIndex:[26 26 26], matchIndex:[25 25 25]
+03:26:16.285751 leader(2) update log of server(0)
+03:26:16.285805 leader(2) update log of server(1)
+03:26:16.289494 server(0) get AppendEntriesMsg, args:&{Term:4 LeaderId:2 PrevLogIndex:25 PrevLogTerm:4 Entries:[] LeaderCommit:25}, server.lastIndex: 25, lastTerm:4
+03:26:16.289579 server(0) new log:{Entries:[{Command:<nil> Index:19 Term:4} {Command:8098177520439061533 Index:20 Term:4} {Command:9027975340787856540 Index:21 Term:4} {Command:4340316860289549224 Index:22 Term:4} {Command:2275675709589001866 Index:23 Term:4} {Command:3507933054013990186 Index:24 Term:4} {Command:5318161818273379637 Index:25 Term:4}] StartIndex:19}
+03:26:16.289711 server(0) is alive
+03:26:16.289740 server(0) is not dead lock
+03:26:16.289849 leader(2) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:4 Success:true} from server(0)
+03:26:16.289875 matchIndex[0]:25 nextIndex[0]:26
+03:26:16.308366 server(0) is not dead lock
+03:26:16.308413 server(0) is alive
+03:26:16.375208 server(1) is not dead lock
+03:26:16.375284 server(2) is alive
+03:26:16.375300 server(1) is not dead lock
+03:26:16.375313 server(0) is alive
+03:26:16.375321 server(1) is alive
+03:26:16.377711 server(0) is not dead lock
+03:26:16.377743 server(2) is not dead lock
+03:26:16.377809 server(1) is alive
+03:26:16.386064 leader(2) beat heart
+03:26:16.386123 lastIndex:25, index0:19, nextIndex:[26 26 26], matchIndex:[25 25 25]
+03:26:16.386186 leader(2) update log of server(1)
+03:26:16.386205 leader(2) update log of server(0)
+03:26:16.390622 server(0) is not dead lock
+03:26:16.390665 server(0) is alive
+03:26:16.390976 server(1) get AppendEntriesMsg, args:&{Term:4 LeaderId:2 PrevLogIndex:25 PrevLogTerm:4 Entries:[] LeaderCommit:25}, server.lastIndex: 25, lastTerm:4
+03:26:16.391060 server(1) new log:{Entries:[{Command:1110610180649819340 Index:19 Term:4} {Command:8098177520439061533 Index:20 Term:4} {Command:9027975340787856540 Index:21 Term:4} {Command:4340316860289549224 Index:22 Term:4} {Command:2275675709589001866 Index:23 Term:4} {Command:3507933054013990186 Index:24 Term:4} {Command:5318161818273379637 Index:25 Term:4}] StartIndex:19}
+03:26:16.391336 leader(2) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:4 Success:true} from server(1)
+03:26:16.391377 matchIndex[1]:25 nextIndex[1]:26
+03:26:16.396175 server(0) get AppendEntriesMsg, args:&{Term:4 LeaderId:2 PrevLogIndex:25 PrevLogTerm:4 Entries:[] LeaderCommit:25}, server.lastIndex: 25, lastTerm:4
+03:26:16.396265 server(0) new log:{Entries:[{Command:<nil> Index:19 Term:4} {Command:8098177520439061533 Index:20 Term:4} {Command:9027975340787856540 Index:21 Term:4} {Command:4340316860289549224 Index:22 Term:4} {Command:2275675709589001866 Index:23 Term:4} {Command:3507933054013990186 Index:24 Term:4} {Command:5318161818273379637 Index:25 Term:4}] StartIndex:19}
+03:26:16.396496 leader(2) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:4 Success:true} from server(0)
+03:26:16.396514 matchIndex[0]:25 nextIndex[0]:26
+03:26:16.409497 server(0) is alive
+03:26:16.409588 server(0) is not dead lock
+03:26:16.475806 server(1) is alive
+03:26:16.475858 server(1) is not dead lock
+03:26:16.475873 server(0) is alive
+03:26:16.475882 server(2) is alive
+03:26:16.475885 server(1) is not dead lock
+03:26:16.478157 server(0) is not dead lock
+03:26:16.478182 server(2) is not dead lock
+03:26:16.478246 server(1) is alive
+03:26:16.486511 leader(2) beat heart
+03:26:16.486567 lastIndex:25, index0:19, nextIndex:[26 26 26], matchIndex:[25 25 25]
+03:26:16.486628 leader(2) update log of server(0)
+03:26:16.486694 leader(2) update log of server(1)
+03:26:16.490555 server(1) get AppendEntriesMsg, args:&{Term:4 LeaderId:2 PrevLogIndex:25 PrevLogTerm:4 Entries:[] LeaderCommit:25}, server.lastIndex: 25, lastTerm:4
+03:26:16.490664 server(1) new log:{Entries:[{Command:1110610180649819340 Index:19 Term:4} {Command:8098177520439061533 Index:20 Term:4} {Command:9027975340787856540 Index:21 Term:4} {Command:4340316860289549224 Index:22 Term:4} {Command:2275675709589001866 Index:23 Term:4} {Command:3507933054013990186 Index:24 Term:4} {Command:5318161818273379637 Index:25 Term:4}] StartIndex:19}
+03:26:16.490809 server(0) is not dead lock
+03:26:16.490837 server(0) is alive
+03:26:16.510724 server(0) is not dead lock
+03:26:16.510835 server(0) is alive
+03:26:16.576423 server(0) is alive
+03:26:16.576469 server(1) is alive
+03:26:16.576483 server(1) is not dead lock
+03:26:16.576498 server(2) is alive
+03:26:16.576527 server(1) is not dead lock
+03:26:16.578982 server(0) is not dead lock
+03:26:16.579025 server(2) is not dead lock
+03:26:16.579070 server(1) is alive
+03:26:16.586995 leader(2) beat heart
+03:26:16.587087 lastIndex:25, index0:19, nextIndex:[26 26 26], matchIndex:[25 25 25]
+03:26:16.587152 leader(2) update log of server(0)
+03:26:16.587181 leader(2) update log of server(1)
+03:26:16.587906 server(1) get AppendEntriesMsg, args:&{Term:4 LeaderId:2 PrevLogIndex:25 PrevLogTerm:4 Entries:[] LeaderCommit:25}, server.lastIndex: 25, lastTerm:4
+03:26:16.587995 server(1) new log:{Entries:[{Command:1110610180649819340 Index:19 Term:4} {Command:8098177520439061533 Index:20 Term:4} {Command:9027975340787856540 Index:21 Term:4} {Command:4340316860289549224 Index:22 Term:4} {Command:2275675709589001866 Index:23 Term:4} {Command:3507933054013990186 Index:24 Term:4} {Command:5318161818273379637 Index:25 Term:4}] StartIndex:19}
+03:26:16.588263 leader(2) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:4 Success:true} from server(1)
+03:26:16.588283 matchIndex[1]:25 nextIndex[1]:26
+03:26:16.591324 server(0) is alive
+03:26:16.591370 server(0) is not dead lock
+03:26:16.611647 server(0) is not dead lock
+03:26:16.611739 server(0) is alive
+03:26:16.634061 =====Start!=====  cmd:4083013830176651235
+03:26:16.634541 lastIndex:26, index0:19, nextIndex:[26 26 27], matchIndex:[25 25 26]
+03:26:16.634687 leader(2) update log of server(0)
+03:26:16.634691 leader(2) update log of server(1)
+03:26:16.650674 server(1) get AppendEntriesMsg, args:&{Term:4 LeaderId:2 PrevLogIndex:25 PrevLogTerm:4 Entries:[{Command:4083013830176651235 Index:26 Term:4}] LeaderCommit:25}, server.lastIndex: 25, lastTerm:4
+03:26:16.650976 server(1) new log:{Entries:[{Command:1110610180649819340 Index:19 Term:4} {Command:8098177520439061533 Index:20 Term:4} {Command:9027975340787856540 Index:21 Term:4} {Command:4340316860289549224 Index:22 Term:4} {Command:2275675709589001866 Index:23 Term:4} {Command:3507933054013990186 Index:24 Term:4} {Command:5318161818273379637 Index:25 Term:4} {Command:4083013830176651235 Index:26 Term:4}] StartIndex:19}
+03:26:16.651224 leader(2) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:4 Success:true} from server(1)
+03:26:16.651243 matchIndex[1]:26 nextIndex[1]:27
+03:26:16.651352 server(2) apply entry, lastApplied:25 log:{Entries:[{Command:1110610180649819340 Index:19 Term:4} {Command:8098177520439061533 Index:20 Term:4} {Command:9027975340787856540 Index:21 Term:4} {Command:4340316860289549224 Index:22 Term:4} {Command:2275675709589001866 Index:23 Term:4} {Command:3507933054013990186 Index:24 Term:4} {Command:5318161818273379637 Index:25 Term:4} {Command:4083013830176651235 Index:26 Term:4}] StartIndex:19}
+03:26:16.677651 server(0) is alive
+03:26:16.677715 server(1) is not dead lock
+03:26:16.677734 server(2) is alive
+03:26:16.677741 server(1) is alive
+03:26:16.677758 server(1) is not dead lock
+03:26:16.680254 server(1) is alive
+03:26:16.680347 server(0) is not dead lock
+03:26:16.680382 server(2) is not dead lock
+03:26:16.687229 leader(2) beat heart
+03:26:16.687306 lastIndex:26, index0:19, nextIndex:[26 27 27], matchIndex:[25 26 26]
+03:26:16.687404 leader(2) update log of server(0)
+03:26:16.687482 leader(2) update log of server(1)
+03:26:16.690934 server(1) get AppendEntriesMsg, args:&{Term:4 LeaderId:2 PrevLogIndex:26 PrevLogTerm:4 Entries:[] LeaderCommit:26}, server.lastIndex: 26, lastTerm:4
+03:26:16.691056 server(1) new log:{Entries:[{Command:1110610180649819340 Index:19 Term:4} {Command:8098177520439061533 Index:20 Term:4} {Command:9027975340787856540 Index:21 Term:4} {Command:4340316860289549224 Index:22 Term:4} {Command:2275675709589001866 Index:23 Term:4} {Command:3507933054013990186 Index:24 Term:4} {Command:5318161818273379637 Index:25 Term:4} {Command:4083013830176651235 Index:26 Term:4}] StartIndex:19}
+03:26:16.691290 leader(2) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:4 Success:true} from server(1)
+03:26:16.691311 matchIndex[1]:26 nextIndex[1]:27
+03:26:16.691386 server(1) apply entry, lastApplied:25 log:{Entries:[{Command:1110610180649819340 Index:19 Term:4} {Command:8098177520439061533 Index:20 Term:4} {Command:9027975340787856540 Index:21 Term:4} {Command:4340316860289549224 Index:22 Term:4} {Command:2275675709589001866 Index:23 Term:4} {Command:3507933054013990186 Index:24 Term:4} {Command:5318161818273379637 Index:25 Term:4} {Command:4083013830176651235 Index:26 Term:4}] StartIndex:19}
+03:26:16.691422 server(0) is alive
+03:26:16.691431 server(0) is not dead lock
+03:26:16.696149 =====Start!=====  cmd:4571591064692632689
+03:26:16.696552 lastIndex:27, index0:19, nextIndex:[26 27 28], matchIndex:[25 26 27]
+03:26:16.696597 =====Start!=====  cmd:272234103266531102
+03:26:16.696644 leader(2) update log of server(0)
+03:26:16.696816 leader(2) update log of server(1)
+03:26:16.696855 lastIndex:28, index0:19, nextIndex:[26 27 29], matchIndex:[25 26 28]
+03:26:16.696905 =====Start!=====  cmd:2064239909864567657
+03:26:16.697014 leader(2) update log of server(0)
+03:26:16.697143 lastIndex:29, index0:19, nextIndex:[26 27 30], matchIndex:[25 26 29]
+03:26:16.697194 =====Start!=====  cmd:1992493962019639678
+03:26:16.697209 leader(2) update log of server(0)
+03:26:16.697299 leader(2) update log of server(1)
+03:26:16.697494 lastIndex:30, index0:19, nextIndex:[26 27 31], matchIndex:[25 26 30]
+03:26:16.697500 leader(2) update log of server(1)
+03:26:16.697590 leader(2) update log of server(1)
+03:26:16.697579 =====Start!=====  cmd:3489997743362098210
+03:26:16.697585 leader(2) update log of server(0)
+03:26:16.698029 lastIndex:31, index0:19, nextIndex:[26 27 32], matchIndex:[25 26 31]
+03:26:16.698066 =====Start!=====  cmd:132317563140470549
+03:26:16.698076 leader(2) update log of server(0)
+03:26:16.698238 lastIndex:32, index0:19, nextIndex:[26 27 33], matchIndex:[25 26 32]
+03:26:16.698280 =====Start!=====  cmd:5468330248273879155
+03:26:16.698292 leader(2) update log of server(1)
+03:26:16.698322 leader(2) update log of server(0)
+03:26:16.698437 lastIndex:33, index0:19, nextIndex:[26 27 34], matchIndex:[25 26 33]
+03:26:16.698464 =====Start!=====  cmd:5497002199892118289
+03:26:16.698495 leader(2) update log of server(1)
+03:26:16.698527 leader(2) update log of server(0)
+03:26:16.698653 lastIndex:34, index0:19, nextIndex:[26 27 35], matchIndex:[25 26 34]
+03:26:16.698679 =====Start!=====  cmd:6277576246712434594
+03:26:16.698780 leader(2) update log of server(1)
+03:26:16.698815 leader(2) update log of server(0)
+03:26:16.698871 lastIndex:35, index0:19, nextIndex:[26 27 36], matchIndex:[25 26 35]
+03:26:16.698939 =====Start!=====  cmd:2194024172835291683
+03:26:16.698972 leader(2) update log of server(1)
+03:26:16.699003 leader(2) update log of server(1)
+03:26:16.699156 lastIndex:36, index0:19, nextIndex:[26 27 37], matchIndex:[25 26 36]
+03:26:16.699191 =====Start!=====  cmd:6218663993117790930
+03:26:16.699252 leader(2) update log of server(0)
+03:26:16.699268 leader(2) update log of server(0)
+03:26:16.699413 server(1) get AppendEntriesMsg, args:&{Term:4 LeaderId:2 PrevLogIndex:26 PrevLogTerm:4 Entries:[{Command:4571591064692632689 Index:27 Term:4}] LeaderCommit:26}, server.lastIndex: 26, lastTerm:4
+03:26:16.699415 lastIndex:37, index0:19, nextIndex:[26 27 38], matchIndex:[25 26 37]
+03:26:16.699669 server(1) new log:{Entries:[{Command:1110610180649819340 Index:19 Term:4} {Command:8098177520439061533 Index:20 Term:4} {Command:9027975340787856540 Index:21 Term:4} {Command:4340316860289549224 Index:22 Term:4} {Command:2275675709589001866 Index:23 Term:4} {Command:3507933054013990186 Index:24 Term:4} {Command:5318161818273379637 Index:25 Term:4} {Command:4083013830176651235 Index:26 Term:4} {Command:4571591064692632689 Index:27 Term:4}] StartIndex:19}
+03:26:16.699687 leader(2) update log of server(0)
+03:26:16.699717 leader(2) update log of server(1)
+03:26:16.699424 leader(2) update log of server(1)
+03:26:16.699927 leader(2) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:4 Success:true} from server(1)
+03:26:16.699948 matchIndex[1]:27 nextIndex[1]:28
+03:26:16.700064 server(2) apply entry, lastApplied:26 log:{Entries:[{Command:1110610180649819340 Index:19 Term:4} {Command:8098177520439061533 Index:20 Term:4} {Command:9027975340787856540 Index:21 Term:4} {Command:4340316860289549224 Index:22 Term:4} {Command:2275675709589001866 Index:23 Term:4} {Command:3507933054013990186 Index:24 Term:4} {Command:5318161818273379637 Index:25 Term:4} {Command:4083013830176651235 Index:26 Term:4} {Command:4571591064692632689 Index:27 Term:4} {Command:272234103266531102 Index:28 Term:4} {Command:2064239909864567657 Index:29 Term:4} {Command:1992493962019639678 Index:30 Term:4} {Command:3489997743362098210 Index:31 Term:4} {Command:132317563140470549 Index:32 Term:4} {Command:5468330248273879155 Index:33 Term:4} {Command:5497002199892118289 Index:34 Term:4} {Command:6277576246712434594 Index:35 Term:4} {Command:2194024172835291683 Index:36 Term:4} {Command:6218663993117790930 Index:37 Term:4}] StartIndex:19}
+03:26:16.706998 server(1) get AppendEntriesMsg, args:&{Term:4 LeaderId:2 PrevLogIndex:26 PrevLogTerm:4 Entries:[{Command:4571591064692632689 Index:27 Term:4} {Command:272234103266531102 Index:28 Term:4} {Command:2064239909864567657 Index:29 Term:4} {Command:1992493962019639678 Index:30 Term:4} {Command:3489997743362098210 Index:31 Term:4} {Command:132317563140470549 Index:32 Term:4} {Command:5468330248273879155 Index:33 Term:4}] LeaderCommit:26}, server.lastIndex: 27, lastTerm:4
+03:26:16.707304 server(1) new log:{Entries:[{Command:1110610180649819340 Index:19 Term:4} {Command:8098177520439061533 Index:20 Term:4} {Command:9027975340787856540 Index:21 Term:4} {Command:4340316860289549224 Index:22 Term:4} {Command:2275675709589001866 Index:23 Term:4} {Command:3507933054013990186 Index:24 Term:4} {Command:5318161818273379637 Index:25 Term:4} {Command:4083013830176651235 Index:26 Term:4} {Command:4571591064692632689 Index:27 Term:4} {Command:272234103266531102 Index:28 Term:4} {Command:2064239909864567657 Index:29 Term:4} {Command:1992493962019639678 Index:30 Term:4} {Command:3489997743362098210 Index:31 Term:4} {Command:132317563140470549 Index:32 Term:4} {Command:5468330248273879155 Index:33 Term:4}] StartIndex:19}
+03:26:16.707616 leader(2) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:4 Success:true} from server(1)
+03:26:16.707635 matchIndex[1]:33 nextIndex[1]:34
+03:26:16.707763 server(2) apply entry, lastApplied:27 log:{Entries:[{Command:1110610180649819340 Index:19 Term:4} {Command:8098177520439061533 Index:20 Term:4} {Command:9027975340787856540 Index:21 Term:4} {Command:4340316860289549224 Index:22 Term:4} {Command:2275675709589001866 Index:23 Term:4} {Command:3507933054013990186 Index:24 Term:4} {Command:5318161818273379637 Index:25 Term:4} {Command:4083013830176651235 Index:26 Term:4} {Command:4571591064692632689 Index:27 Term:4} {Command:272234103266531102 Index:28 Term:4} {Command:2064239909864567657 Index:29 Term:4} {Command:1992493962019639678 Index:30 Term:4} {Command:3489997743362098210 Index:31 Term:4} {Command:132317563140470549 Index:32 Term:4} {Command:5468330248273879155 Index:33 Term:4} {Command:5497002199892118289 Index:34 Term:4} {Command:6277576246712434594 Index:35 Term:4} {Command:2194024172835291683 Index:36 Term:4} {Command:6218663993117790930 Index:37 Term:4}] StartIndex:19}
+03:26:16.707847 server(1) get AppendEntriesMsg, args:&{Term:4 LeaderId:2 PrevLogIndex:26 PrevLogTerm:4 Entries:[{Command:4571591064692632689 Index:27 Term:4} {Command:272234103266531102 Index:28 Term:4} {Command:2064239909864567657 Index:29 Term:4} {Command:1992493962019639678 Index:30 Term:4} {Command:3489997743362098210 Index:31 Term:4} {Command:132317563140470549 Index:32 Term:4} {Command:5468330248273879155 Index:33 Term:4} {Command:5497002199892118289 Index:34 Term:4} {Command:6277576246712434594 Index:35 Term:4}] LeaderCommit:26}, server.lastIndex: 33, lastTerm:4
+03:26:16.707930 server(2) apply entry, lastApplied:28 log:{Entries:[{Command:1110610180649819340 Index:19 Term:4} {Command:8098177520439061533 Index:20 Term:4} {Command:9027975340787856540 Index:21 Term:4} {Command:4340316860289549224 Index:22 Term:4} {Command:2275675709589001866 Index:23 Term:4} {Command:3507933054013990186 Index:24 Term:4} {Command:5318161818273379637 Index:25 Term:4} {Command:4083013830176651235 Index:26 Term:4} {Command:4571591064692632689 Index:27 Term:4} {Command:272234103266531102 Index:28 Term:4} {Command:2064239909864567657 Index:29 Term:4} {Command:1992493962019639678 Index:30 Term:4} {Command:3489997743362098210 Index:31 Term:4} {Command:132317563140470549 Index:32 Term:4} {Command:5468330248273879155 Index:33 Term:4} {Command:5497002199892118289 Index:34 Term:4} {Command:6277576246712434594 Index:35 Term:4} {Command:2194024172835291683 Index:36 Term:4} {Command:6218663993117790930 Index:37 Term:4}] StartIndex:19}
+03:26:16.708064 server(2) apply entry, lastApplied:29 log:{Entries:[{Command:1110610180649819340 Index:19 Term:4} {Command:8098177520439061533 Index:20 Term:4} {Command:9027975340787856540 Index:21 Term:4} {Command:4340316860289549224 Index:22 Term:4} {Command:2275675709589001866 Index:23 Term:4} {Command:3507933054013990186 Index:24 Term:4} {Command:5318161818273379637 Index:25 Term:4} {Command:4083013830176651235 Index:26 Term:4} {Command:4571591064692632689 Index:27 Term:4} {Command:272234103266531102 Index:28 Term:4} {Command:2064239909864567657 Index:29 Term:4} {Command:1992493962019639678 Index:30 Term:4} {Command:3489997743362098210 Index:31 Term:4} {Command:132317563140470549 Index:32 Term:4} {Command:5468330248273879155 Index:33 Term:4} {Command:5497002199892118289 Index:34 Term:4} {Command:6277576246712434594 Index:35 Term:4} {Command:2194024172835291683 Index:36 Term:4} {Command:6218663993117790930 Index:37 Term:4}] StartIndex:19}
+03:26:16.708110 server(1) new log:{Entries:[{Command:1110610180649819340 Index:19 Term:4} {Command:8098177520439061533 Index:20 Term:4} {Command:9027975340787856540 Index:21 Term:4} {Command:4340316860289549224 Index:22 Term:4} {Command:2275675709589001866 Index:23 Term:4} {Command:3507933054013990186 Index:24 Term:4} {Command:5318161818273379637 Index:25 Term:4} {Command:4083013830176651235 Index:26 Term:4} {Command:4571591064692632689 Index:27 Term:4} {Command:272234103266531102 Index:28 Term:4} {Command:2064239909864567657 Index:29 Term:4} {Command:1992493962019639678 Index:30 Term:4} {Command:3489997743362098210 Index:31 Term:4} {Command:132317563140470549 Index:32 Term:4} {Command:5468330248273879155 Index:33 Term:4} {Command:5497002199892118289 Index:34 Term:4} {Command:6277576246712434594 Index:35 Term:4}] StartIndex:19}
+03:26:16.708446 server(2) snapshot index:29, new log:{Entries:[{Command:2064239909864567657 Index:29 Term:4} {Command:1992493962019639678 Index:30 Term:4} {Command:3489997743362098210 Index:31 Term:4} {Command:132317563140470549 Index:32 Term:4} {Command:5468330248273879155 Index:33 Term:4} {Command:5497002199892118289 Index:34 Term:4} {Command:6277576246712434594 Index:35 Term:4} {Command:2194024172835291683 Index:36 Term:4} {Command:6218663993117790930 Index:37 Term:4}] StartIndex:29}
+03:26:16.708506 leader(2) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:4 Success:true} from server(1)
+03:26:16.708524 matchIndex[1]:35 nextIndex[1]:36
+03:26:16.708613 server(2) apply entry, lastApplied:30 log:{Entries:[{Command:2064239909864567657 Index:29 Term:4} {Command:1992493962019639678 Index:30 Term:4} {Command:3489997743362098210 Index:31 Term:4} {Command:132317563140470549 Index:32 Term:4} {Command:5468330248273879155 Index:33 Term:4} {Command:5497002199892118289 Index:34 Term:4} {Command:6277576246712434594 Index:35 Term:4} {Command:2194024172835291683 Index:36 Term:4} {Command:6218663993117790930 Index:37 Term:4}] StartIndex:29}
+03:26:16.708706 server(2) apply entry, lastApplied:31 log:{Entries:[{Command:2064239909864567657 Index:29 Term:4} {Command:1992493962019639678 Index:30 Term:4} {Command:3489997743362098210 Index:31 Term:4} {Command:132317563140470549 Index:32 Term:4} {Command:5468330248273879155 Index:33 Term:4} {Command:5497002199892118289 Index:34 Term:4} {Command:6277576246712434594 Index:35 Term:4} {Command:2194024172835291683 Index:36 Term:4} {Command:6218663993117790930 Index:37 Term:4}] StartIndex:29}
+03:26:16.708790 server(2) apply entry, lastApplied:32 log:{Entries:[{Command:2064239909864567657 Index:29 Term:4} {Command:1992493962019639678 Index:30 Term:4} {Command:3489997743362098210 Index:31 Term:4} {Command:132317563140470549 Index:32 Term:4} {Command:5468330248273879155 Index:33 Term:4} {Command:5497002199892118289 Index:34 Term:4} {Command:6277576246712434594 Index:35 Term:4} {Command:2194024172835291683 Index:36 Term:4} {Command:6218663993117790930 Index:37 Term:4}] StartIndex:29}
+03:26:16.708887 server(2) apply entry, lastApplied:33 log:{Entries:[{Command:2064239909864567657 Index:29 Term:4} {Command:1992493962019639678 Index:30 Term:4} {Command:3489997743362098210 Index:31 Term:4} {Command:132317563140470549 Index:32 Term:4} {Command:5468330248273879155 Index:33 Term:4} {Command:5497002199892118289 Index:34 Term:4} {Command:6277576246712434594 Index:35 Term:4} {Command:2194024172835291683 Index:36 Term:4} {Command:6218663993117790930 Index:37 Term:4}] StartIndex:29}
+03:26:16.708796 server(1) get AppendEntriesMsg, args:&{Term:4 LeaderId:2 PrevLogIndex:26 PrevLogTerm:4 Entries:[{Command:4571591064692632689 Index:27 Term:4} {Command:272234103266531102 Index:28 Term:4}] LeaderCommit:26}, server.lastIndex: 35, lastTerm:4
+03:26:16.708982 server(2) apply entry, lastApplied:34 log:{Entries:[{Command:2064239909864567657 Index:29 Term:4} {Command:1992493962019639678 Index:30 Term:4} {Command:3489997743362098210 Index:31 Term:4} {Command:132317563140470549 Index:32 Term:4} {Command:5468330248273879155 Index:33 Term:4} {Command:5497002199892118289 Index:34 Term:4} {Command:6277576246712434594 Index:35 Term:4} {Command:2194024172835291683 Index:36 Term:4} {Command:6218663993117790930 Index:37 Term:4}] StartIndex:29}
+03:26:16.708995 server(1) new log:{Entries:[{Command:1110610180649819340 Index:19 Term:4} {Command:8098177520439061533 Index:20 Term:4} {Command:9027975340787856540 Index:21 Term:4} {Command:4340316860289549224 Index:22 Term:4} {Command:2275675709589001866 Index:23 Term:4} {Command:3507933054013990186 Index:24 Term:4} {Command:5318161818273379637 Index:25 Term:4} {Command:4083013830176651235 Index:26 Term:4} {Command:4571591064692632689 Index:27 Term:4} {Command:272234103266531102 Index:28 Term:4} {Command:2064239909864567657 Index:29 Term:4} {Command:1992493962019639678 Index:30 Term:4} {Command:3489997743362098210 Index:31 Term:4} {Command:132317563140470549 Index:32 Term:4} {Command:5468330248273879155 Index:33 Term:4} {Command:5497002199892118289 Index:34 Term:4} {Command:6277576246712434594 Index:35 Term:4}] StartIndex:19}
+03:26:16.709343 server(1) get AppendEntriesMsg, args:&{Term:4 LeaderId:2 PrevLogIndex:26 PrevLogTerm:4 Entries:[{Command:4571591064692632689 Index:27 Term:4} {Command:272234103266531102 Index:28 Term:4} {Command:2064239909864567657 Index:29 Term:4} {Command:1992493962019639678 Index:30 Term:4} {Command:3489997743362098210 Index:31 Term:4} {Command:132317563140470549 Index:32 Term:4} {Command:5468330248273879155 Index:33 Term:4} {Command:5497002199892118289 Index:34 Term:4} {Command:6277576246712434594 Index:35 Term:4} {Command:2194024172835291683 Index:36 Term:4}] LeaderCommit:26}, server.lastIndex: 35, lastTerm:4
+03:26:16.709635 server(1) new log:{Entries:[{Command:1110610180649819340 Index:19 Term:4} {Command:8098177520439061533 Index:20 Term:4} {Command:9027975340787856540 Index:21 Term:4} {Command:4340316860289549224 Index:22 Term:4} {Command:2275675709589001866 Index:23 Term:4} {Command:3507933054013990186 Index:24 Term:4} {Command:5318161818273379637 Index:25 Term:4} {Command:4083013830176651235 Index:26 Term:4} {Command:4571591064692632689 Index:27 Term:4} {Command:272234103266531102 Index:28 Term:4} {Command:2064239909864567657 Index:29 Term:4} {Command:1992493962019639678 Index:30 Term:4} {Command:3489997743362098210 Index:31 Term:4} {Command:132317563140470549 Index:32 Term:4} {Command:5468330248273879155 Index:33 Term:4} {Command:5497002199892118289 Index:34 Term:4} {Command:6277576246712434594 Index:35 Term:4} {Command:2194024172835291683 Index:36 Term:4}] StartIndex:19}
+03:26:16.709863 leader(2) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:4 Success:true} from server(1)
+03:26:16.709883 matchIndex[1]:36 nextIndex[1]:37
+03:26:16.709978 server(2) apply entry, lastApplied:35 log:{Entries:[{Command:2064239909864567657 Index:29 Term:4} {Command:1992493962019639678 Index:30 Term:4} {Command:3489997743362098210 Index:31 Term:4} {Command:132317563140470549 Index:32 Term:4} {Command:5468330248273879155 Index:33 Term:4} {Command:5497002199892118289 Index:34 Term:4} {Command:6277576246712434594 Index:35 Term:4} {Command:2194024172835291683 Index:36 Term:4} {Command:6218663993117790930 Index:37 Term:4}] StartIndex:29}
+03:26:16.711570 server(1) get AppendEntriesMsg, args:&{Term:4 LeaderId:2 PrevLogIndex:26 PrevLogTerm:4 Entries:[{Command:4571591064692632689 Index:27 Term:4} {Command:272234103266531102 Index:28 Term:4} {Command:2064239909864567657 Index:29 Term:4} {Command:1992493962019639678 Index:30 Term:4}] LeaderCommit:26}, server.lastIndex: 36, lastTerm:4
+03:26:16.711730 server(1) new log:{Entries:[{Command:1110610180649819340 Index:19 Term:4} {Command:8098177520439061533 Index:20 Term:4} {Command:9027975340787856540 Index:21 Term:4} {Command:4340316860289549224 Index:22 Term:4} {Command:2275675709589001866 Index:23 Term:4} {Command:3507933054013990186 Index:24 Term:4} {Command:5318161818273379637 Index:25 Term:4} {Command:4083013830176651235 Index:26 Term:4} {Command:4571591064692632689 Index:27 Term:4} {Command:272234103266531102 Index:28 Term:4} {Command:2064239909864567657 Index:29 Term:4} {Command:1992493962019639678 Index:30 Term:4} {Command:3489997743362098210 Index:31 Term:4} {Command:132317563140470549 Index:32 Term:4} {Command:5468330248273879155 Index:33 Term:4} {Command:5497002199892118289 Index:34 Term:4} {Command:6277576246712434594 Index:35 Term:4} {Command:2194024172835291683 Index:36 Term:4}] StartIndex:19}
+03:26:16.711896 server(0) is alive
+03:26:16.711953 leader(2) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:4 Success:true} from server(1)
+03:26:16.711971 matchIndex[1]:36 nextIndex[1]:37
+03:26:16.711958 server(0) is not dead lock
+03:26:16.715184 server(1) get AppendEntriesMsg, args:&{Term:4 LeaderId:2 PrevLogIndex:26 PrevLogTerm:4 Entries:[{Command:4571591064692632689 Index:27 Term:4} {Command:272234103266531102 Index:28 Term:4} {Command:2064239909864567657 Index:29 Term:4}] LeaderCommit:26}, server.lastIndex: 36, lastTerm:4
+03:26:16.715320 server(1) new log:{Entries:[{Command:1110610180649819340 Index:19 Term:4} {Command:8098177520439061533 Index:20 Term:4} {Command:9027975340787856540 Index:21 Term:4} {Command:4340316860289549224 Index:22 Term:4} {Command:2275675709589001866 Index:23 Term:4} {Command:3507933054013990186 Index:24 Term:4} {Command:5318161818273379637 Index:25 Term:4} {Command:4083013830176651235 Index:26 Term:4} {Command:4571591064692632689 Index:27 Term:4} {Command:272234103266531102 Index:28 Term:4} {Command:2064239909864567657 Index:29 Term:4} {Command:1992493962019639678 Index:30 Term:4} {Command:3489997743362098210 Index:31 Term:4} {Command:132317563140470549 Index:32 Term:4} {Command:5468330248273879155 Index:33 Term:4} {Command:5497002199892118289 Index:34 Term:4} {Command:6277576246712434594 Index:35 Term:4} {Command:2194024172835291683 Index:36 Term:4}] StartIndex:19}
+03:26:16.715490 server(1) get AppendEntriesMsg, args:&{Term:4 LeaderId:2 PrevLogIndex:26 PrevLogTerm:4 Entries:[{Command:4571591064692632689 Index:27 Term:4} {Command:272234103266531102 Index:28 Term:4} {Command:2064239909864567657 Index:29 Term:4} {Command:1992493962019639678 Index:30 Term:4} {Command:3489997743362098210 Index:31 Term:4} {Command:132317563140470549 Index:32 Term:4} {Command:5468330248273879155 Index:33 Term:4} {Command:5497002199892118289 Index:34 Term:4} {Command:6277576246712434594 Index:35 Term:4} {Command:2194024172835291683 Index:36 Term:4} {Command:6218663993117790930 Index:37 Term:4}] LeaderCommit:26}, server.lastIndex: 36, lastTerm:4
+03:26:16.715564 leader(2) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:4 Success:true} from server(1)
+03:26:16.715592 matchIndex[1]:36 nextIndex[1]:37
+03:26:16.715876 server(1) new log:{Entries:[{Command:1110610180649819340 Index:19 Term:4} {Command:8098177520439061533 Index:20 Term:4} {Command:9027975340787856540 Index:21 Term:4} {Command:4340316860289549224 Index:22 Term:4} {Command:2275675709589001866 Index:23 Term:4} {Command:3507933054013990186 Index:24 Term:4} {Command:5318161818273379637 Index:25 Term:4} {Command:4083013830176651235 Index:26 Term:4} {Command:4571591064692632689 Index:27 Term:4} {Command:272234103266531102 Index:28 Term:4} {Command:2064239909864567657 Index:29 Term:4} {Command:1992493962019639678 Index:30 Term:4} {Command:3489997743362098210 Index:31 Term:4} {Command:132317563140470549 Index:32 Term:4} {Command:5468330248273879155 Index:33 Term:4} {Command:5497002199892118289 Index:34 Term:4} {Command:6277576246712434594 Index:35 Term:4} {Command:2194024172835291683 Index:36 Term:4} {Command:6218663993117790930 Index:37 Term:4}] StartIndex:19}
+03:26:16.716146 leader(2) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:4 Success:true} from server(1)
+03:26:16.716164 matchIndex[1]:37 nextIndex[1]:38
+03:26:16.716254 server(2) apply entry, lastApplied:36 log:{Entries:[{Command:2064239909864567657 Index:29 Term:4} {Command:1992493962019639678 Index:30 Term:4} {Command:3489997743362098210 Index:31 Term:4} {Command:132317563140470549 Index:32 Term:4} {Command:5468330248273879155 Index:33 Term:4} {Command:5497002199892118289 Index:34 Term:4} {Command:6277576246712434594 Index:35 Term:4} {Command:2194024172835291683 Index:36 Term:4} {Command:6218663993117790930 Index:37 Term:4}] StartIndex:29}
+03:26:16.719737 server(1) get AppendEntriesMsg, args:&{Term:4 LeaderId:2 PrevLogIndex:26 PrevLogTerm:4 Entries:[{Command:4571591064692632689 Index:27 Term:4} {Command:272234103266531102 Index:28 Term:4} {Command:2064239909864567657 Index:29 Term:4} {Command:1992493962019639678 Index:30 Term:4} {Command:3489997743362098210 Index:31 Term:4}] LeaderCommit:26}, server.lastIndex: 37, lastTerm:4
+03:26:16.719984 server(1) new log:{Entries:[{Command:1110610180649819340 Index:19 Term:4} {Command:8098177520439061533 Index:20 Term:4} {Command:9027975340787856540 Index:21 Term:4} {Command:4340316860289549224 Index:22 Term:4} {Command:2275675709589001866 Index:23 Term:4} {Command:3507933054013990186 Index:24 Term:4} {Command:5318161818273379637 Index:25 Term:4} {Command:4083013830176651235 Index:26 Term:4} {Command:4571591064692632689 Index:27 Term:4} {Command:272234103266531102 Index:28 Term:4} {Command:2064239909864567657 Index:29 Term:4} {Command:1992493962019639678 Index:30 Term:4} {Command:3489997743362098210 Index:31 Term:4} {Command:132317563140470549 Index:32 Term:4} {Command:5468330248273879155 Index:33 Term:4} {Command:5497002199892118289 Index:34 Term:4} {Command:6277576246712434594 Index:35 Term:4} {Command:2194024172835291683 Index:36 Term:4} {Command:6218663993117790930 Index:37 Term:4}] StartIndex:19}
+03:26:16.720177 server(1) get AppendEntriesMsg, args:&{Term:4 LeaderId:2 PrevLogIndex:26 PrevLogTerm:4 Entries:[{Command:4571591064692632689 Index:27 Term:4} {Command:272234103266531102 Index:28 Term:4} {Command:2064239909864567657 Index:29 Term:4} {Command:1992493962019639678 Index:30 Term:4} {Command:3489997743362098210 Index:31 Term:4} {Command:132317563140470549 Index:32 Term:4}] LeaderCommit:26}, server.lastIndex: 37, lastTerm:4
+03:26:16.720298 server(1) new log:{Entries:[{Command:1110610180649819340 Index:19 Term:4} {Command:8098177520439061533 Index:20 Term:4} {Command:9027975340787856540 Index:21 Term:4} {Command:4340316860289549224 Index:22 Term:4} {Command:2275675709589001866 Index:23 Term:4} {Command:3507933054013990186 Index:24 Term:4} {Command:5318161818273379637 Index:25 Term:4} {Command:4083013830176651235 Index:26 Term:4} {Command:4571591064692632689 Index:27 Term:4} {Command:272234103266531102 Index:28 Term:4} {Command:2064239909864567657 Index:29 Term:4} {Command:1992493962019639678 Index:30 Term:4} {Command:3489997743362098210 Index:31 Term:4} {Command:132317563140470549 Index:32 Term:4} {Command:5468330248273879155 Index:33 Term:4} {Command:5497002199892118289 Index:34 Term:4} {Command:6277576246712434594 Index:35 Term:4} {Command:2194024172835291683 Index:36 Term:4} {Command:6218663993117790930 Index:37 Term:4}] StartIndex:19}
+03:26:16.720475 leader(2) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:4 Success:true} from server(1)
+03:26:16.720496 matchIndex[1]:37 nextIndex[1]:38
+03:26:16.720554 leader(2) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:4 Success:true} from server(1)
+03:26:16.720572 matchIndex[1]:37 nextIndex[1]:38
+03:26:16.722274 server(1) get AppendEntriesMsg, args:&{Term:4 LeaderId:2 PrevLogIndex:26 PrevLogTerm:4 Entries:[{Command:4571591064692632689 Index:27 Term:4} {Command:272234103266531102 Index:28 Term:4} {Command:2064239909864567657 Index:29 Term:4} {Command:1992493962019639678 Index:30 Term:4} {Command:3489997743362098210 Index:31 Term:4} {Command:132317563140470549 Index:32 Term:4} {Command:5468330248273879155 Index:33 Term:4} {Command:5497002199892118289 Index:34 Term:4}] LeaderCommit:26}, server.lastIndex: 37, lastTerm:4
+03:26:16.722378 server(1) new log:{Entries:[{Command:1110610180649819340 Index:19 Term:4} {Command:8098177520439061533 Index:20 Term:4} {Command:9027975340787856540 Index:21 Term:4} {Command:4340316860289549224 Index:22 Term:4} {Command:2275675709589001866 Index:23 Term:4} {Command:3507933054013990186 Index:24 Term:4} {Command:5318161818273379637 Index:25 Term:4} {Command:4083013830176651235 Index:26 Term:4} {Command:4571591064692632689 Index:27 Term:4} {Command:272234103266531102 Index:28 Term:4} {Command:2064239909864567657 Index:29 Term:4} {Command:1992493962019639678 Index:30 Term:4} {Command:3489997743362098210 Index:31 Term:4} {Command:132317563140470549 Index:32 Term:4} {Command:5468330248273879155 Index:33 Term:4} {Command:5497002199892118289 Index:34 Term:4} {Command:6277576246712434594 Index:35 Term:4} {Command:2194024172835291683 Index:36 Term:4} {Command:6218663993117790930 Index:37 Term:4}] StartIndex:19}
+03:26:16.722699 leader(2) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:4 Success:true} from server(1)
+03:26:16.722722 matchIndex[1]:37 nextIndex[1]:38
+03:26:16.750414 =====Start!=====  cmd:9157176523403756590
+03:26:16.750679 lastIndex:38, index0:29, nextIndex:[26 38 39], matchIndex:[25 37 38]
+03:26:16.750701 leader(2) update snapshot of server(0)
+03:26:16.750803 leader(2) update log of server(1)
+03:26:16.750803 leader(2) send snapshot to server(0)
+03:26:16.758614 server(1) get AppendEntriesMsg, args:&{Term:4 LeaderId:2 PrevLogIndex:37 PrevLogTerm:4 Entries:[{Command:9157176523403756590 Index:38 Term:4}] LeaderCommit:37}, server.lastIndex: 37, lastTerm:4
+03:26:16.759046 server(1) new log:{Entries:[{Command:1110610180649819340 Index:19 Term:4} {Command:8098177520439061533 Index:20 Term:4} {Command:9027975340787856540 Index:21 Term:4} {Command:4340316860289549224 Index:22 Term:4} {Command:2275675709589001866 Index:23 Term:4} {Command:3507933054013990186 Index:24 Term:4} {Command:5318161818273379637 Index:25 Term:4} {Command:4083013830176651235 Index:26 Term:4} {Command:4571591064692632689 Index:27 Term:4} {Command:272234103266531102 Index:28 Term:4} {Command:2064239909864567657 Index:29 Term:4} {Command:1992493962019639678 Index:30 Term:4} {Command:3489997743362098210 Index:31 Term:4} {Command:132317563140470549 Index:32 Term:4} {Command:5468330248273879155 Index:33 Term:4} {Command:5497002199892118289 Index:34 Term:4} {Command:6277576246712434594 Index:35 Term:4} {Command:2194024172835291683 Index:36 Term:4} {Command:6218663993117790930 Index:37 Term:4} {Command:9157176523403756590 Index:38 Term:4}] StartIndex:19}
+03:26:16.759259 server(1) apply entry, lastApplied:26 log:{Entries:[{Command:1110610180649819340 Index:19 Term:4} {Command:8098177520439061533 Index:20 Term:4} {Command:9027975340787856540 Index:21 Term:4} {Command:4340316860289549224 Index:22 Term:4} {Command:2275675709589001866 Index:23 Term:4} {Command:3507933054013990186 Index:24 Term:4} {Command:5318161818273379637 Index:25 Term:4} {Command:4083013830176651235 Index:26 Term:4} {Command:4571591064692632689 Index:27 Term:4} {Command:272234103266531102 Index:28 Term:4} {Command:2064239909864567657 Index:29 Term:4} {Command:1992493962019639678 Index:30 Term:4} {Command:3489997743362098210 Index:31 Term:4} {Command:132317563140470549 Index:32 Term:4} {Command:5468330248273879155 Index:33 Term:4} {Command:5497002199892118289 Index:34 Term:4} {Command:6277576246712434594 Index:35 Term:4} {Command:2194024172835291683 Index:36 Term:4} {Command:6218663993117790930 Index:37 Term:4} {Command:9157176523403756590 Index:38 Term:4}] StartIndex:19}
+03:26:16.759397 server(1) apply entry, lastApplied:27 log:{Entries:[{Command:1110610180649819340 Index:19 Term:4} {Command:8098177520439061533 Index:20 Term:4} {Command:9027975340787856540 Index:21 Term:4} {Command:4340316860289549224 Index:22 Term:4} {Command:2275675709589001866 Index:23 Term:4} {Command:3507933054013990186 Index:24 Term:4} {Command:5318161818273379637 Index:25 Term:4} {Command:4083013830176651235 Index:26 Term:4} {Command:4571591064692632689 Index:27 Term:4} {Command:272234103266531102 Index:28 Term:4} {Command:2064239909864567657 Index:29 Term:4} {Command:1992493962019639678 Index:30 Term:4} {Command:3489997743362098210 Index:31 Term:4} {Command:132317563140470549 Index:32 Term:4} {Command:5468330248273879155 Index:33 Term:4} {Command:5497002199892118289 Index:34 Term:4} {Command:6277576246712434594 Index:35 Term:4} {Command:2194024172835291683 Index:36 Term:4} {Command:6218663993117790930 Index:37 Term:4} {Command:9157176523403756590 Index:38 Term:4}] StartIndex:19}
+03:26:16.759288 leader(2) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:4 Success:true} from server(1)
+03:26:16.759424 matchIndex[1]:38 nextIndex[1]:39
+03:26:16.759488 server(2) apply entry, lastApplied:37 log:{Entries:[{Command:2064239909864567657 Index:29 Term:4} {Command:1992493962019639678 Index:30 Term:4} {Command:3489997743362098210 Index:31 Term:4} {Command:132317563140470549 Index:32 Term:4} {Command:5468330248273879155 Index:33 Term:4} {Command:5497002199892118289 Index:34 Term:4} {Command:6277576246712434594 Index:35 Term:4} {Command:2194024172835291683 Index:36 Term:4} {Command:6218663993117790930 Index:37 Term:4} {Command:9157176523403756590 Index:38 Term:4}] StartIndex:29}
+03:26:16.759562 server(1) apply entry, lastApplied:28 log:{Entries:[{Command:1110610180649819340 Index:19 Term:4} {Command:8098177520439061533 Index:20 Term:4} {Command:9027975340787856540 Index:21 Term:4} {Command:4340316860289549224 Index:22 Term:4} {Command:2275675709589001866 Index:23 Term:4} {Command:3507933054013990186 Index:24 Term:4} {Command:5318161818273379637 Index:25 Term:4} {Command:4083013830176651235 Index:26 Term:4} {Command:4571591064692632689 Index:27 Term:4} {Command:272234103266531102 Index:28 Term:4} {Command:2064239909864567657 Index:29 Term:4} {Command:1992493962019639678 Index:30 Term:4} {Command:3489997743362098210 Index:31 Term:4} {Command:132317563140470549 Index:32 Term:4} {Command:5468330248273879155 Index:33 Term:4} {Command:5497002199892118289 Index:34 Term:4} {Command:6277576246712434594 Index:35 Term:4} {Command:2194024172835291683 Index:36 Term:4} {Command:6218663993117790930 Index:37 Term:4} {Command:9157176523403756590 Index:38 Term:4}] StartIndex:19}
+03:26:16.759694 server(1) apply entry, lastApplied:29 log:{Entries:[{Command:1110610180649819340 Index:19 Term:4} {Command:8098177520439061533 Index:20 Term:4} {Command:9027975340787856540 Index:21 Term:4} {Command:4340316860289549224 Index:22 Term:4} {Command:2275675709589001866 Index:23 Term:4} {Command:3507933054013990186 Index:24 Term:4} {Command:5318161818273379637 Index:25 Term:4} {Command:4083013830176651235 Index:26 Term:4} {Command:4571591064692632689 Index:27 Term:4} {Command:272234103266531102 Index:28 Term:4} {Command:2064239909864567657 Index:29 Term:4} {Command:1992493962019639678 Index:30 Term:4} {Command:3489997743362098210 Index:31 Term:4} {Command:132317563140470549 Index:32 Term:4} {Command:5468330248273879155 Index:33 Term:4} {Command:5497002199892118289 Index:34 Term:4} {Command:6277576246712434594 Index:35 Term:4} {Command:2194024172835291683 Index:36 Term:4} {Command:6218663993117790930 Index:37 Term:4} {Command:9157176523403756590 Index:38 Term:4}] StartIndex:19}
+03:26:16.760017 server(1) snapshot index:29, new log:{Entries:[{Command:2064239909864567657 Index:29 Term:4} {Command:1992493962019639678 Index:30 Term:4} {Command:3489997743362098210 Index:31 Term:4} {Command:132317563140470549 Index:32 Term:4} {Command:5468330248273879155 Index:33 Term:4} {Command:5497002199892118289 Index:34 Term:4} {Command:6277576246712434594 Index:35 Term:4} {Command:2194024172835291683 Index:36 Term:4} {Command:6218663993117790930 Index:37 Term:4} {Command:9157176523403756590 Index:38 Term:4}] StartIndex:29}
+03:26:16.760144 server(1) apply entry, lastApplied:30 log:{Entries:[{Command:2064239909864567657 Index:29 Term:4} {Command:1992493962019639678 Index:30 Term:4} {Command:3489997743362098210 Index:31 Term:4} {Command:132317563140470549 Index:32 Term:4} {Command:5468330248273879155 Index:33 Term:4} {Command:5497002199892118289 Index:34 Term:4} {Command:6277576246712434594 Index:35 Term:4} {Command:2194024172835291683 Index:36 Term:4} {Command:6218663993117790930 Index:37 Term:4} {Command:9157176523403756590 Index:38 Term:4}] StartIndex:29}
+03:26:16.760237 server(1) apply entry, lastApplied:31 log:{Entries:[{Command:2064239909864567657 Index:29 Term:4} {Command:1992493962019639678 Index:30 Term:4} {Command:3489997743362098210 Index:31 Term:4} {Command:132317563140470549 Index:32 Term:4} {Command:5468330248273879155 Index:33 Term:4} {Command:5497002199892118289 Index:34 Term:4} {Command:6277576246712434594 Index:35 Term:4} {Command:2194024172835291683 Index:36 Term:4} {Command:6218663993117790930 Index:37 Term:4} {Command:9157176523403756590 Index:38 Term:4}] StartIndex:29}
+03:26:16.760323 server(1) apply entry, lastApplied:32 log:{Entries:[{Command:2064239909864567657 Index:29 Term:4} {Command:1992493962019639678 Index:30 Term:4} {Command:3489997743362098210 Index:31 Term:4} {Command:132317563140470549 Index:32 Term:4} {Command:5468330248273879155 Index:33 Term:4} {Command:5497002199892118289 Index:34 Term:4} {Command:6277576246712434594 Index:35 Term:4} {Command:2194024172835291683 Index:36 Term:4} {Command:6218663993117790930 Index:37 Term:4} {Command:9157176523403756590 Index:38 Term:4}] StartIndex:29}
+03:26:16.760415 server(1) apply entry, lastApplied:33 log:{Entries:[{Command:2064239909864567657 Index:29 Term:4} {Command:1992493962019639678 Index:30 Term:4} {Command:3489997743362098210 Index:31 Term:4} {Command:132317563140470549 Index:32 Term:4} {Command:5468330248273879155 Index:33 Term:4} {Command:5497002199892118289 Index:34 Term:4} {Command:6277576246712434594 Index:35 Term:4} {Command:2194024172835291683 Index:36 Term:4} {Command:6218663993117790930 Index:37 Term:4} {Command:9157176523403756590 Index:38 Term:4}] StartIndex:29}
+03:26:16.760482 server(1) apply entry, lastApplied:34 log:{Entries:[{Command:2064239909864567657 Index:29 Term:4} {Command:1992493962019639678 Index:30 Term:4} {Command:3489997743362098210 Index:31 Term:4} {Command:132317563140470549 Index:32 Term:4} {Command:5468330248273879155 Index:33 Term:4} {Command:5497002199892118289 Index:34 Term:4} {Command:6277576246712434594 Index:35 Term:4} {Command:2194024172835291683 Index:36 Term:4} {Command:6218663993117790930 Index:37 Term:4} {Command:9157176523403756590 Index:38 Term:4}] StartIndex:29}
+03:26:16.760536 server(1) apply entry, lastApplied:35 log:{Entries:[{Command:2064239909864567657 Index:29 Term:4} {Command:1992493962019639678 Index:30 Term:4} {Command:3489997743362098210 Index:31 Term:4} {Command:132317563140470549 Index:32 Term:4} {Command:5468330248273879155 Index:33 Term:4} {Command:5497002199892118289 Index:34 Term:4} {Command:6277576246712434594 Index:35 Term:4} {Command:2194024172835291683 Index:36 Term:4} {Command:6218663993117790930 Index:37 Term:4} {Command:9157176523403756590 Index:38 Term:4}] StartIndex:29}
+03:26:16.760590 server(1) apply entry, lastApplied:36 log:{Entries:[{Command:2064239909864567657 Index:29 Term:4} {Command:1992493962019639678 Index:30 Term:4} {Command:3489997743362098210 Index:31 Term:4} {Command:132317563140470549 Index:32 Term:4} {Command:5468330248273879155 Index:33 Term:4} {Command:5497002199892118289 Index:34 Term:4} {Command:6277576246712434594 Index:35 Term:4} {Command:2194024172835291683 Index:36 Term:4} {Command:6218663993117790930 Index:37 Term:4} {Command:9157176523403756590 Index:38 Term:4}] StartIndex:29}
+03:26:16.778534 server(1) is alive
+03:26:16.778626 server(0) is alive
+03:26:16.778654 server(1) is not dead lock
+03:26:16.778670 server(1) is not dead lock
+03:26:16.778674 server(2) is alive
+03:26:16.781211 server(1) is alive
+03:26:16.781297 server(0) is not dead lock
+03:26:16.781334 server(2) is not dead lock
+03:26:16.787841 leader(2) beat heart
+03:26:16.787935 lastIndex:38, index0:29, nextIndex:[26 39 39], matchIndex:[25 38 38]
+03:26:16.787955 leader(2) update snapshot of server(0), nextIndex:26, IndexStart:29
+03:26:16.788021 leader(2) send snapshot to server(0)
+03:26:16.788137 leader(2) update log of server(1)
+03:26:16.792414 server(0) is not dead lock
+03:26:16.792438 server(0) is alive
+03:26:16.806612 server(1) get AppendEntriesMsg, args:&{Term:4 LeaderId:2 PrevLogIndex:38 PrevLogTerm:4 Entries:[] LeaderCommit:38}, server.lastIndex: 38, lastTerm:4
+03:26:16.806741 server(1) new log:{Entries:[{Command:2064239909864567657 Index:29 Term:4} {Command:1992493962019639678 Index:30 Term:4} {Command:3489997743362098210 Index:31 Term:4} {Command:132317563140470549 Index:32 Term:4} {Command:5468330248273879155 Index:33 Term:4} {Command:5497002199892118289 Index:34 Term:4} {Command:6277576246712434594 Index:35 Term:4} {Command:2194024172835291683 Index:36 Term:4} {Command:6218663993117790930 Index:37 Term:4} {Command:9157176523403756590 Index:38 Term:4}] StartIndex:29}
+03:26:16.806969 server(1) apply entry, lastApplied:37 log:{Entries:[{Command:2064239909864567657 Index:29 Term:4} {Command:1992493962019639678 Index:30 Term:4} {Command:3489997743362098210 Index:31 Term:4} {Command:132317563140470549 Index:32 Term:4} {Command:5468330248273879155 Index:33 Term:4} {Command:5497002199892118289 Index:34 Term:4} {Command:6277576246712434594 Index:35 Term:4} {Command:2194024172835291683 Index:36 Term:4} {Command:6218663993117790930 Index:37 Term:4} {Command:9157176523403756590 Index:38 Term:4}] StartIndex:29}
+03:26:16.807013 leader(2) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:4 Success:true} from server(1)
+03:26:16.807033 matchIndex[1]:38 nextIndex[1]:39
+03:26:16.813121 server(0) is alive
+03:26:16.813167 server(0) is not dead lock
+03:26:16.813605 server(0) start!
+03:26:16.813714 server(0) apply snapshot, lastApplied:19 log:{Entries:[{Command:<nil> Index:19 Term:4} {Command:8098177520439061533 Index:20 Term:4} {Command:9027975340787856540 Index:21 Term:4} {Command:4340316860289549224 Index:22 Term:4} {Command:2275675709589001866 Index:23 Term:4} {Command:3507933054013990186 Index:24 Term:4} {Command:5318161818273379637 Index:25 Term:4}] StartIndex:19}
+03:26:16.864829 =====Start!=====  cmd:6386789626724526728
+03:26:16.865107 lastIndex:39, index0:29, nextIndex:[26 39 40], matchIndex:[25 38 39]
+03:26:16.865124 leader(2) update snapshot of server(0)
+03:26:16.865187 leader(2) send snapshot to server(0)
+03:26:16.865275 leader(2) update log of server(1)
+03:26:16.865692 server(1) get AppendEntriesMsg, args:&{Term:4 LeaderId:2 PrevLogIndex:38 PrevLogTerm:4 Entries:[{Command:6386789626724526728 Index:39 Term:4}] LeaderCommit:38}, server.lastIndex: 38, lastTerm:4
+03:26:16.866032 server(1) new log:{Entries:[{Command:2064239909864567657 Index:29 Term:4} {Command:1992493962019639678 Index:30 Term:4} {Command:3489997743362098210 Index:31 Term:4} {Command:132317563140470549 Index:32 Term:4} {Command:5468330248273879155 Index:33 Term:4} {Command:5497002199892118289 Index:34 Term:4} {Command:6277576246712434594 Index:35 Term:4} {Command:2194024172835291683 Index:36 Term:4} {Command:6218663993117790930 Index:37 Term:4} {Command:9157176523403756590 Index:38 Term:4} {Command:6386789626724526728 Index:39 Term:4}] StartIndex:29}
+03:26:16.866279 leader(2) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:4 Success:true} from server(1)
+03:26:16.866297 matchIndex[1]:39 nextIndex[1]:40
+03:26:16.866398 server(2) apply entry, lastApplied:38 log:{Entries:[{Command:2064239909864567657 Index:29 Term:4} {Command:1992493962019639678 Index:30 Term:4} {Command:3489997743362098210 Index:31 Term:4} {Command:132317563140470549 Index:32 Term:4} {Command:5468330248273879155 Index:33 Term:4} {Command:5497002199892118289 Index:34 Term:4} {Command:6277576246712434594 Index:35 Term:4} {Command:2194024172835291683 Index:36 Term:4} {Command:6218663993117790930 Index:37 Term:4} {Command:9157176523403756590 Index:38 Term:4} {Command:6386789626724526728 Index:39 Term:4}] StartIndex:29}
+03:26:16.866720 server(2) snapshot index:39, new log:{Entries:[{Command:6386789626724526728 Index:39 Term:4}] StartIndex:39}
+03:26:16.871038 server(0) get InstallSnapshotRPC from leader(2)
+03:26:16.871433 args:&{Term:4 LeaderId:2 LastIncludedIndex:29 LastIncludedTerm:4 Offset:0 Data:[3 4 0 58 12 255 143 2 1 2 255 144 0 1 16 0 0 254 1 213 255 144 0 30 0 3 105 110 116 4 10 0 248 111 88 198 201 9 87 202 156 3 105 110 116 4 10 0 248 153 132 170 119 215 16 11 172 3 105 110 116 4 10 0 248 121 244 168 72 45 55 49 54 3 105 110 116 4 10 0 248 66 199 158 249 168 126 143 100 3 105 110 116 4 10 0 248 74 154 18 92 241 81 15 118 3 105 110 116 4 10 0 248 69 20 85 117 214 44 253 208 3 105 110 116 4 10 0 248 248 208 108 14 210 236 19 218 3 105 110 116 4 10 0 248 86 82 118 125 212 43 68 66 3 105 110 116 4 10 0 248 230 201 77 132 87 247 139 26 3 105 110 116 4 10 0 248 76 163 152 26 8 44 4 206 3 105 110 116 4 10 0 248 82 45 213 53 166 252 219 166 3 105 110 116 4 10 0 248 93 241 27 96 255 221 204 176 3 105 110 116 4 10 0 248 106 141 251 63 213 7 149 222 3 105 110 116 4 10 0 248 23 169 178 233 100 24 54 104 3 105 110 116 4 10 0 248 16 132 87 176 219 64 208 46 3 105 110 116 4 10 0 248 235 190 22 56 64 247 44 222 3 105 110 116 4 10 0 248 155 104 222 213 185 147 184 180 3 105 110 116 4 10 0 248 101 18 134 146 162 225 190 108 3 105 110 116 4 10 0 248 30 211 92 38 107 33 57 152 3 105 110 116 4 10 0 248 224 197 3 25 3 165 216 58 3 105 110 116 4 10 0 248 250 147 159 122 249 74 233 56 3 105 110 116 4 10 0 248 120 119 206 96 124 101 7 80 3 105 110 116 4 10 0 248 63 41 166 0 108 19 45 20 3 105 110 116 4 10 0 248 97 93 93 13 184 181 202 84 3 105 110 116 4 10 0 248 147 155 207 254 104 117 234 106 3 105 110 116 4 10 0 248 113 83 142 228 65 95 111 198 3 105 110 116 4 10 0 248 126 227 27 180 58 181 88 226 3 105 110 116 4 10 0 248 7 142 86 242 249 229 174 60 3 105 110 116 4 10 0 248 57 75 78 133 189 82 230 210] Done:true}
+03:26:16.879189 server(2) is alive
+03:26:16.879228 server(1) is alive
+03:26:16.879241 server(1) is not dead lock
+03:26:16.879255 server(1) is not dead lock
+03:26:16.879262 server(0) is alive
+03:26:16.881616 server(0) is not dead lock
+03:26:16.881739 server(2) is not dead lock
+03:26:16.881778 server(1) is alive
+03:26:16.888518 leader(2) beat heart
+03:26:16.888607 lastIndex:39, index0:39, nextIndex:[30 40 40], matchIndex:[29 39 39]
+03:26:16.888629 leader(2) update snapshot of server(0), nextIndex:30, IndexStart:39
+03:26:16.888704 leader(2) update log of server(1)
+03:26:16.888782 leader(2) send snapshot to server(0)
+03:26:16.892990 server(0) is alive
+03:26:16.893008 server(0) is not dead lock
+03:26:16.894385 server(0) get InstallSnapshotRPC from leader(2)
+03:26:16.894956 args:&{Term:4 LeaderId:2 LastIncludedIndex:39 LastIncludedTerm:4 Offset:0 Data:[3 4 0 78 12 255 143 2 1 2 255 144 0 1 16 0 0 254 2 117 255 144 0 40 0 3 105 110 116 4 10 0 248 111 88 198 201 9 87 202 156 3 105 110 116 4 10 0 248 153 132 170 119 215 16 11 172 3 105 110 116 4 10 0 248 121 244 168 72 45 55 49 54 3 105 110 116 4 10 0 248 66 199 158 249 168 126 143 100 3 105 110 116 4 10 0 248 74 154 18 92 241 81 15 118 3 105 110 116 4 10 0 248 69 20 85 117 214 44 253 208 3 105 110 116 4 10 0 248 248 208 108 14 210 236 19 218 3 105 110 116 4 10 0 248 86 82 118 125 212 43 68 66 3 105 110 116 4 10 0 248 230 201 77 132 87 247 139 26 3 105 110 116 4 10 0 248 76 163 152 26 8 44 4 206 3 105 110 116 4 10 0 248 82 45 213 53 166 252 219 166 3 105 110 116 4 10 0 248 93 241 27 96 255 221 204 176 3 105 110 116 4 10 0 248 106 141 251 63 213 7 149 222 3 105 110 116 4 10 0 248 23 169 178 233 100 24 54 104 3 105 110 116 4 10 0 248 16 132 87 176 219 64 208 46 3 105 110 116 4 10 0 248 235 190 22 56 64 247 44 222 3 105 110 116 4 10 0 248 155 104 222 213 185 147 184 180 3 105 110 116 4 10 0 248 101 18 134 146 162 225 190 108 3 105 110 116 4 10 0 248 30 211 92 38 107 33 57 152 3 105 110 116 4 10 0 248 224 197 3 25 3 165 216 58 3 105 110 116 4 10 0 248 250 147 159 122 249 74 233 56 3 105 110 116 4 10 0 248 120 119 206 96 124 101 7 80 3 105 110 116 4 10 0 248 63 41 166 0 108 19 45 20 3 105 110 116 4 10 0 248 97 93 93 13 184 181 202 84 3 105 110 116 4 10 0 248 147 155 207 254 104 117 234 106 3 105 110 116 4 10 0 248 113 83 142 228 65 95 111 198 3 105 110 116 4 10 0 248 126 227 27 180 58 181 88 226 3 105 110 116 4 10 0 248 7 142 86 242 249 229 174 60 3 105 110 116 4 10 0 248 57 75 78 133 189 82 230 210 3 105 110 116 4 10 0 248 55 77 133 103 78 149 34 252 3 105 110 116 4 10 0 248 96 221 236 233 224 6 136 68 3 105 110 116 4 10 0 248 3 172 44 62 201 16 238 42 3 105 110 116 4 10 0 248 151 198 210 198 213 198 192 230 3 105 110 116 4 10 0 248 152 146 140 192 188 56 150 34 3 105 110 116 4 10 0 248 174 60 220 172 55 114 255 68 3 105 110 116 4 10 0 248 60 229 122 184 180 239 132 70 3 105 110 116 4 10 0 248 172 154 67 232 94 152 165 164 3 105 110 116 4 10 0 248 254 41 167 15 254 14 8 92 3 105 110 116 4 10 0 248 177 68 222 167 88 33 85 16] Done:true}
+03:26:16.913751 server(0) is alive
+03:26:16.913812 server(0) is alive
+03:26:16.913827 server(0) is not dead lock
+03:26:16.913834 server(0) is not dead lock
+03:26:16.915416 server(1) get AppendEntriesMsg, args:&{Term:4 LeaderId:2 PrevLogIndex:39 PrevLogTerm:4 Entries:[] LeaderCommit:39}, server.lastIndex: 39, lastTerm:4
+03:26:16.915586 server(1) new log:{Entries:[{Command:2064239909864567657 Index:29 Term:4} {Command:1992493962019639678 Index:30 Term:4} {Command:3489997743362098210 Index:31 Term:4} {Command:132317563140470549 Index:32 Term:4} {Command:5468330248273879155 Index:33 Term:4} {Command:5497002199892118289 Index:34 Term:4} {Command:6277576246712434594 Index:35 Term:4} {Command:2194024172835291683 Index:36 Term:4} {Command:6218663993117790930 Index:37 Term:4} {Command:9157176523403756590 Index:38 Term:4} {Command:6386789626724526728 Index:39 Term:4}] StartIndex:29}
+03:26:16.915720 server(1) apply entry, lastApplied:38 log:{Entries:[{Command:2064239909864567657 Index:29 Term:4} {Command:1992493962019639678 Index:30 Term:4} {Command:3489997743362098210 Index:31 Term:4} {Command:132317563140470549 Index:32 Term:4} {Command:5468330248273879155 Index:33 Term:4} {Command:5497002199892118289 Index:34 Term:4} {Command:6277576246712434594 Index:35 Term:4} {Command:2194024172835291683 Index:36 Term:4} {Command:6218663993117790930 Index:37 Term:4} {Command:9157176523403756590 Index:38 Term:4} {Command:6386789626724526728 Index:39 Term:4}] StartIndex:29}
+03:26:16.916032 server(1) snapshot index:39, new log:{Entries:[{Command:6386789626724526728 Index:39 Term:4}] StartIndex:39}
+03:26:16.980528 server(0) is alive
+03:26:16.980602 server(2) is alive
+03:26:16.980623 server(1) is alive
+03:26:16.980595 server(1) is not dead lock
+03:26:16.980617 server(1) is not dead lock
+03:26:16.981772 server(0) is not dead lock
+03:26:16.981813 server(1) is alive
+03:26:16.981865 server(2) is not dead lock
+03:26:16.989624 leader(2) beat heart
+03:26:16.989711 lastIndex:39, index0:39, nextIndex:[40 40 40], matchIndex:[39 39 39]
+03:26:16.989810 leader(2) update log of server(0)
+03:26:16.989896 leader(2) update log of server(1)
+03:26:16.993886 server(0) is alive
+03:26:16.993988 server(0) is not dead lock
+03:26:16.996457 server(0) get AppendEntriesMsg, args:&{Term:4 LeaderId:2 PrevLogIndex:39 PrevLogTerm:4 Entries:[] LeaderCommit:39}, server.lastIndex: 39, lastTerm:4
+03:26:16.996619 server(1) get AppendEntriesMsg, args:&{Term:4 LeaderId:2 PrevLogIndex:39 PrevLogTerm:4 Entries:[] LeaderCommit:39}, server.lastIndex: 39, lastTerm:4
+03:26:16.996731 leader(2) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:4 Success:true} from server(0)
+03:26:16.996751 matchIndex[0]:39 nextIndex[0]:40
+03:26:16.996884 leader(2) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:4 Success:true} from server(1)
+03:26:16.996901 matchIndex[1]:39 nextIndex[1]:40
+03:26:17.013951 server(0) is not dead lock
+03:26:17.014003 server(0) is not dead lock
+03:26:17.014031 server(0) is alive
+03:26:17.014033 server(0) is alive
+03:26:17.081432 server(2) is alive
+03:26:17.081538 server(1) is not dead lock
+03:26:17.081556 server(0) is alive
+03:26:17.081567 server(1) is not dead lock
+03:26:17.081569 server(1) is alive
+03:26:17.082744 server(0) is not dead lock
+03:26:17.082766 server(2) is not dead lock
+03:26:17.082771 server(1) is alive
+03:26:17.090079 leader(2) beat heart
+03:26:17.090139 lastIndex:39, index0:39, nextIndex:[40 40 40], matchIndex:[39 39 39]
+03:26:17.090194 leader(2) update log of server(1)
+03:26:17.090228 leader(2) update log of server(0)
+03:26:17.094300 server(0) is alive
+03:26:17.094378 server(0) is not dead lock
+03:26:17.109542 server(0) get AppendEntriesMsg, args:&{Term:4 LeaderId:2 PrevLogIndex:39 PrevLogTerm:4 Entries:[] LeaderCommit:39}, server.lastIndex: 39, lastTerm:4
+03:26:17.109801 leader(2) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:4 Success:true} from server(0)
+03:26:17.109821 matchIndex[0]:39 nextIndex[0]:40
+03:26:17.110060 server(1) get AppendEntriesMsg, args:&{Term:4 LeaderId:2 PrevLogIndex:39 PrevLogTerm:4 Entries:[] LeaderCommit:39}, server.lastIndex: 39, lastTerm:4
+03:26:17.110283 leader(2) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:4 Success:true} from server(1)
+03:26:17.110301 matchIndex[1]:39 nextIndex[1]:40
+03:26:17.114104 server(0) is not dead lock
+03:26:17.114145 server(0) is not dead lock
+03:26:17.114155 server(0) is alive
+03:26:17.114159 server(0) is alive
+03:26:17.182558 server(1) is not dead lock
+03:26:17.182605 server(0) is alive
+03:26:17.182629 server(1) is not dead lock
+03:26:17.182647 server(1) is alive
+03:26:17.182678 server(2) is alive
+03:26:17.183713 server(1) is alive
+03:26:17.183740 server(2) is not dead lock
+03:26:17.183766 server(0) is not dead lock
+03:26:17.191042 leader(2) beat heart
+03:26:17.191122 lastIndex:39, index0:39, nextIndex:[40 40 40], matchIndex:[39 39 39]
+03:26:17.191174 leader(2) update log of server(0)
+03:26:17.191314 leader(2) update log of server(1)
+03:26:17.191673 server(1) get AppendEntriesMsg, args:&{Term:4 LeaderId:2 PrevLogIndex:39 PrevLogTerm:4 Entries:[] LeaderCommit:39}, server.lastIndex: 39, lastTerm:4
+03:26:17.191891 leader(2) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:4 Success:true} from server(1)
+03:26:17.191909 matchIndex[1]:39 nextIndex[1]:40
+03:26:17.195407 server(0) is alive
+03:26:17.195464 server(0) is not dead lock
+03:26:17.214826 server(0) is alive
+03:26:17.214853 server(0) is not dead lock
+03:26:17.214866 server(0) is alive
+03:26:17.214876 server(0) is not dead lock
+03:26:17.283643 server(1) is alive
+03:26:17.283701 server(1) is not dead lock
+03:26:17.283718 server(1) is not dead lock
+03:26:17.283725 server(0) is alive
+03:26:17.283739 server(1) is alive
+03:26:17.283733 server(2) is alive
+03:26:17.283824 server(0) is not dead lock
+03:26:17.283855 server(2) is not dead lock
+03:26:17.292323 leader(2) beat heart
+03:26:17.292390 lastIndex:39, index0:39, nextIndex:[40 40 40], matchIndex:[39 39 39]
+03:26:17.292467 leader(2) update log of server(1)
+03:26:17.292535 leader(2) update log of server(0)
+03:26:17.295711 server(0) is alive
+03:26:17.295801 server(0) is not dead lock
+03:26:17.311561 server(1) get AppendEntriesMsg, args:&{Term:4 LeaderId:2 PrevLogIndex:39 PrevLogTerm:4 Entries:[] LeaderCommit:39}, server.lastIndex: 39, lastTerm:4
+03:26:17.311856 leader(2) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:4 Success:true} from server(1)
+03:26:17.311883 matchIndex[1]:39 nextIndex[1]:40
+03:26:17.314932 server(0) is not dead lock
+03:26:17.314940 server(0) is alive
+03:26:17.314956 server(0) is alive
+03:26:17.314957 server(0) is not dead lock
+03:26:17.383782 server(1) is not dead lock
+03:26:17.383859 server(1) is not dead lock
+03:26:17.383860 server(0) is alive
+03:26:17.383827 server(1) is alive
+03:26:17.385062 server(1) is alive
+03:26:17.385147 server(2) is alive
+03:26:17.385175 server(0) is not dead lock
+03:26:17.385179 server(2) is not dead lock
+03:26:17.386763 server(0) become candidate of term5 because of time out!
+03:26:17.393226 leader(2) beat heart
+03:26:17.393317 lastIndex:39, index0:39, nextIndex:[40 40 40], matchIndex:[39 39 39]
+03:26:17.393462 leader(2) update log of server(1)
+03:26:17.393615 leader(2) update log of server(0)
+03:26:17.394580 server(1) get RequestVoteArgs({Term:5 CandidateId:0 LastLogIndex:39 LastLogTerm:4}) from candidate(0)
+03:26:17.394696 server(1) become follower
+03:26:17.394795 args(&{Term:5 CandidateId:0 LastLogIndex:39 LastLogTerm:4}) is more new than term:4 index:39
+03:26:17.395097 candidate(0) get reply(&{Term:5 VoteGranted:true}) from server(1)
+03:26:17.395113 candidate(0) get vote from server(1)
+03:26:17.395133 lastIndex:39, index0:39, nextIndex:[40 40 40], matchIndex:[39 0 0]
+03:26:17.395172 candidate(0) become leader of term5
+03:26:17.395795 server(0) is alive
+03:26:17.395876 server(0) is not dead lock
+03:26:17.400558 server(0) get AppendEntriesMsg, args:&{Term:4 LeaderId:2 PrevLogIndex:39 PrevLogTerm:4 Entries:[] LeaderCommit:39}, server.lastIndex: 39, lastTerm:4
+03:26:17.400947 leader(2) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:5 Success:false} from server(0)
+03:26:17.401173 leader(2) become follower of term5 because AppendEntriesReply(&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:5 Success:false}) of server(0)
+03:26:17.416034 server(0) is alive
+03:26:17.416078 server(0) is alive
+03:26:17.416085 server(0) is not dead lock
+03:26:17.416090 server(0) is not dead lock
+03:26:17.484852 server(1) is not dead lock
+03:26:17.484906 server(1) is not dead lock
+03:26:17.484913 server(0) is alive
+03:26:17.484919 server(1) is alive
+03:26:17.486125 server(2) is alive
+03:26:17.486168 server(0) is not dead lock
+03:26:17.486174 server(1) is alive
+03:26:17.486184 server(2) is not dead lock
+03:26:17.496108 server(0) is not dead lock
+03:26:17.496166 server(0) is alive
+03:26:17.496188 leader(0) beat heart
+03:26:17.496255 lastIndex:39, index0:39, nextIndex:[40 40 40], matchIndex:[39 0 0]
+03:26:17.496282 leader(0) update log of server(1)
+03:26:17.496406 leader(0) update log of server(2)
+03:26:17.498862 server(2) get AppendEntriesMsg, args:&{Term:5 LeaderId:0 PrevLogIndex:39 PrevLogTerm:4 Entries:[] LeaderCommit:19}, server.lastIndex: 39, lastTerm:4
+03:26:17.499122 leader(0) get appendEntriesReply:&{ConflictTerm:0 ConflictMinIndex:0 ConflictMaxIndex:0 Term:5 Success:true} from server(2)
+03:26:17.499141 matchIndex[2]:39 nextIndex[2]:40
+panic: runtime error: index out of range [-19]
+
+goroutine 569 [running]:
+6.824/raft.(*Log).getLogTermByIndex(...)
+	/home/idiot/Documents/6.824/src/raft/log.go:23
+6.824/raft.(*Raft).getLogTermByIndexL(...)
+	/home/idiot/Documents/6.824/src/raft/raft.go:107
+6.824/raft.(*Raft).leaderCommitL(0xc0003e61c0)
+	/home/idiot/Documents/6.824/src/raft/raft.go:905 +0x257
+6.824/raft.(*Raft).heartBeatOnceL.func1(0x2)
+	/home/idiot/Documents/6.824/src/raft/raft.go:871 +0x6d7
+created by 6.824/raft.(*Raft).heartBeatOnceL
+	/home/idiot/Documents/6.824/src/raft/raft.go:843 +0xc6f
+exit status 2
+FAIL	6.824/raft	5.773s
