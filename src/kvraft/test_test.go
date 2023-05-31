@@ -196,6 +196,7 @@ func partitioner(t *testing.T, cfg *config, ch chan bool, done *int32) {
 			}
 		}
 		cfg.partition(pa[0], pa[1])
+		DPrintf("partition:%v,%v", pa[0], pa[1])
 		time.Sleep(electionTimeout + time.Duration(rand.Int63()%200)*time.Millisecond)
 	}
 }
@@ -418,7 +419,6 @@ func GenericTestSpeed(t *testing.T, part string, maxraftstate int) {
 	if dur > numOps*timePerOp {
 		t.Fatalf("Operations completed too slowly %v/op > %v/op\n", dur/numOps, timePerOp)
 	}
-
 	cfg.end()
 }
 
@@ -489,9 +489,12 @@ func TestOnePartition3A(t *testing.T) {
 	p1, p2 := cfg.make_partition()
 	cfg.partition(p1, p2)
 
-	ckp1 := cfg.makeClient(p1)  // connect ckp1 to p1
+	ckp1 := cfg.makeClient(p1) // connect ckp1 to p1
+	DPrintf("ckp1:%d", ckp1.ID)
 	ckp2a := cfg.makeClient(p2) // connect ckp2a to p2
+	DPrintf("ckp2a:%d", ckp2a.ID)
 	ckp2b := cfg.makeClient(p2) // connect ckp2b to p2
+	DPrintf("ckp2b:%d", ckp2b.ID)
 
 	Put(cfg, ckp1, "1", "14", nil, -1)
 	check(cfg, t, ckp1, "1", "14")
@@ -591,12 +594,10 @@ func TestPersistPartitionUnreliableLinearizable3A(t *testing.T) {
 	GenericTest(t, "3A", 15, 7, true, true, true, -1, true)
 }
 
-//
 // if one server falls behind, then rejoins, does it
 // recover by using the InstallSnapshot RPC?
 // also checks that majority discards committed log entries
 // even if minority doesn't respond.
-//
 func TestSnapshotRPC3B(t *testing.T) {
 	const nservers = 3
 	maxraftstate := 1000
