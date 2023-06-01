@@ -24,7 +24,7 @@ const (
 	PutMethod    = "Put"
 	AppendMethod = "Append"
 	useCond      = true
-	useSnapshot  = false
+	useSnapshot  = true
 )
 
 type Op struct {
@@ -56,6 +56,10 @@ type KVServer struct {
 	//commandSet        map[int64]struct{}
 }
 
+func (kv *KVServer) PingTest(args *TestArgs, reply *TestReply) {
+	time.Sleep(time.Second * 1)
+}
+
 func (kv *KVServer) Get(args *GetArgs, reply *GetReply) {
 	// Your code here.
 	kv.mu.Lock()
@@ -69,7 +73,7 @@ func (kv *KVServer) Get(args *GetArgs, reply *GetReply) {
 		LastCommandID: args.LastCommandID,
 		LastCallCount: args.LastCallCount,
 	}
-	index, _, isLeader := kv.rf.Start(op)
+	index, startTerm, isLeader := kv.rf.Start(op)
 	if !isLeader {
 		reply.Err = ErrWrongLeader
 		return
@@ -85,14 +89,14 @@ func (kv *KVServer) Get(args *GetArgs, reply *GetReply) {
 		if kv.killed() {
 			DPrintf("kvServer(%d) is killed", kv.me)
 		}
-		if _, isLeader = kv.rf.GetState(); !isLeader {
+		if term, isLeader := kv.rf.GetState(); !isLeader || startTerm != term {
 			reply.Err = ErrWrongLeader
 			return
 		}
 		if index <= kv.commitIndex {
 			break
 		}
-		DPrintf("check command(%d),index:%d rf.GetLastLogIndexL:%d", op.ID, index, kv.rf.GetLastLogIndex())
+		DPrintf("server(%d):check command(%d),index:%d kv.commitIndex:%d rf.GetLastLogIndexL:%d", kv.me, op.ID, index, kv.commitIndex, kv.rf.GetLastLogIndex())
 	}
 	v, ok := kv.kVMap[args.Key]
 	if !ok {
@@ -132,7 +136,7 @@ func (kv *KVServer) PutAppend(args *PutAppendArgs, reply *PutAppendReply) {
 	} else {
 		panic("args err")
 	}
-	index, _, isLeader := kv.rf.Start(op)
+	index, startTerm, isLeader := kv.rf.Start(op)
 	if !isLeader {
 		reply.Err = ErrWrongLeader
 		return
@@ -145,14 +149,14 @@ func (kv *KVServer) PutAppend(args *PutAppendArgs, reply *PutAppendReply) {
 			time.Sleep(time.Millisecond * 5)
 			kv.mu.Lock()
 		}
-		if _, isLeader = kv.rf.GetState(); !isLeader {
+		if term, isLeader := kv.rf.GetState(); !isLeader || startTerm != term {
 			reply.Err = ErrWrongLeader
 			return
 		}
 		if index <= kv.commitIndex {
 			break
 		}
-		DPrintf("check command(%d),index:%d rf.GetLastLogIndexL:%d", op.ID, index, kv.rf.GetLastLogIndex())
+		DPrintf("server(%d):check command(%d),index:%d kv.commitIndex:%d rf.GetLastLogIndexL:%d", kv.me, op.ID, index, kv.commitIndex, kv.rf.GetLastLogIndex())
 	}
 	reply.Err = OK
 	DPrintf("command(%d) complete", op.ID)
@@ -222,12 +226,12 @@ func (kv *KVServer) applier() {
 			if op.Operation == AppendMethod {
 				if _, ok := kv.commandReplyCount[op.ID]; !ok {
 					kv.kVMap[op.Key] = string(append([]byte(kv.kVMap[op.Key]), op.Value...))
-					DPrintf("KVMap:%v", kv.kVMap)
+					DPrintf("KVMap(%d):%v", kv.me, kv.kVMap)
 				}
 			} else if op.Operation == PutMethod {
 				if _, ok := kv.commandReplyCount[op.ID]; !ok {
 					kv.kVMap[op.Key] = op.Value
-					DPrintf("KVMap:%v", kv.kVMap)
+					DPrintf("KVMap(%d):%v", kv.me, kv.kVMap)
 				}
 			}
 			kv.commandReplyCount[op.ID]--

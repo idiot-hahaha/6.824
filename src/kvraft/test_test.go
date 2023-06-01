@@ -1,6 +1,8 @@
 package kvraft
 
-import "6.824/porcupine"
+import (
+	"6.824/porcupine"
+)
 import "6.824/models"
 import "testing"
 import "strconv"
@@ -315,19 +317,20 @@ func GenericTest(t *testing.T, part string, nclients int, nservers int, unreliab
 			// won't return until that server discovers a new term
 			// has started.
 			cfg.ConnectAll()
+			DPrintf("connect all")
 			// wait for a while so that we have a new term
 			time.Sleep(electionTimeout)
 		}
 
 		if crash {
-			// log.Printf("shutdown servers\n")
+			DPrintf("shutdown servers\n")
 			for i := 0; i < nservers; i++ {
 				cfg.ShutdownServer(i)
 			}
 			// Wait for a while for servers to shutdown, since
 			// shutdown isn't a real crash and isn't instantaneous
 			time.Sleep(electionTimeout)
-			// log.Printf("restart servers\n")
+			DPrintf("restart servers\n")
 			// crash and re-start all
 			for i := 0; i < nservers; i++ {
 				cfg.StartServer(i)

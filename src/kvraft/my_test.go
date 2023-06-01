@@ -152,3 +152,14 @@ func TestPersist(t *testing.T) {
 	sd.Decode(&snapshot2)
 	fmt.Println(snapshot2)
 }
+
+func TestRPCTImeOut(t *testing.T) {
+	cfg := make_config(t, 3, false, -1)
+	ck := cfg.makeClient(cfg.All())
+	ck.PingLeader()
+	cfg.disconnect(0, cfg.All())
+	cfg.disconnect(1, cfg.All())
+	cfg.disconnect(2, cfg.All())
+	cfg.DisconnectClient(ck, cfg.All())
+	ck.PingLeader()
+}

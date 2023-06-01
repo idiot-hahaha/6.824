@@ -36,6 +36,18 @@ func MakeClerk(servers []*labrpc.ClientEnd) *Clerk {
 	return ck
 }
 
+func (ck *Clerk) PingLeader() {
+	ck.checkLeader()
+	args := &TestArgs{}
+	reply := &TestReply{}
+	ok := ck.servers[ck.leaderIndex].Call("KVServer.PingTest", args, reply)
+	for !ok {
+		DPrintf("time out, try again")
+		ok = ck.servers[ck.leaderIndex].Call("KVServer.PingTest", args, reply)
+	}
+	DPrintf("ping success")
+}
+
 func (ck *Clerk) checkLeader() {
 	for ck.leaderIndex == -1 {
 		DPrintf("client(%d) check leader", ck.ID)
@@ -86,6 +98,7 @@ func (ck *Clerk) Get(key string) string {
 		Err:   "",
 		Value: "",
 	}
+	DPrintf("client(%d) send getMsg to server(%d), msg:%+v", ck.ID, ck.leaderIndex, args)
 	for {
 		DPrintf("client(%d):Get(%s)", ck.ID, key)
 		if ck.leaderIndex == -1 {
@@ -95,11 +108,16 @@ func (ck *Clerk) Get(key string) string {
 		for !ok {
 			ck.lastCallCount++
 			DPrintf("call Get fail, try again")
+			if ck.lastCallCount%10 == 0 {
+				reply.Err = ErrWrongLeader
+				break
+			}
 			ok = ck.servers[ck.leaderIndex].Call("KVServer.Get", args, reply)
 		}
 		if reply.Err == OK {
 			DPrintf("call Get success")
 		} else if reply.Err == ErrWrongLeader {
+			ck.lastCallCount--
 			DPrintf("ErrWrongLeader")
 			ck.leaderIndex = -1
 			continue
@@ -138,15 +156,21 @@ func (ck *Clerk) PutAppend(key string, value string, op string) {
 		if ck.leaderIndex == -1 {
 			ck.checkLeader()
 		}
+		DPrintf("client(%d) send PutAppendMsg to server(%d), msg:%+v", ck.ID, ck.leaderIndex, args)
 		ok := ck.servers[ck.leaderIndex].Call("KVServer.PutAppend", args, reply)
 		for !ok {
 			ck.lastCallCount++
+			if ck.lastCallCount%10 == 0 {
+				reply.Err = ErrWrongLeader
+				break
+			}
 			DPrintf("PutAppend fail, try again")
 			ok = ck.servers[ck.leaderIndex].Call("KVServer.PutAppend", args, reply)
 		}
 		if reply.Err == OK {
 			DPrintf("PutAppend(%d) success", args.ID)
 		} else if reply.Err == ErrWrongLeader {
+			ck.lastCallCount--
 			DPrintf("client(%d) get reply:ErrWrongLeader", ck.ID)
 			ck.leaderIndex = -1
 			continue
