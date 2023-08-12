@@ -20,9 +20,7 @@ func check(t *testing.T, ck *Clerk, key string, value string) {
 	}
 }
 
-//
 // test static 2-way sharding, without shard movement.
-//
 func TestStaticShards(t *testing.T) {
 	fmt.Printf("Test: static shards ...\n")
 
@@ -44,6 +42,7 @@ func TestStaticShards(t *testing.T) {
 	}
 	for i := 0; i < n; i++ {
 		check(t, ck, ka[i], va[i])
+		DPrintf("n = %d", i)
 	}
 
 	// make sure that the data really is sharded by
@@ -51,7 +50,6 @@ func TestStaticShards(t *testing.T) {
 	// Get()s don't succeed.
 	cfg.ShutdownGroup(1)
 	cfg.checklogs() // forbid snapshots
-
 	ch := make(chan string)
 	for xi := 0; xi < n; xi++ {
 		ck1 := cfg.makeClient() // only one call allowed per client
@@ -117,6 +115,7 @@ func TestJoinLeave(t *testing.T) {
 	}
 
 	cfg.join(1)
+	DPrintf("join 1")
 
 	for i := 0; i < n; i++ {
 		check(t, ck, ka[i], va[i])
@@ -126,6 +125,7 @@ func TestJoinLeave(t *testing.T) {
 	}
 
 	cfg.leave(0)
+	DPrintf("leave 0")
 
 	for i := 0; i < n; i++ {
 		check(t, ck, ka[i], va[i])
@@ -378,10 +378,8 @@ func TestConcurrent1(t *testing.T) {
 	fmt.Printf("  ... Passed\n")
 }
 
-//
 // this tests the various sources from which a re-starting
 // group might need to fetch shard contents.
-//
 func TestConcurrent2(t *testing.T) {
 	fmt.Printf("Test: more concurrent puts and configuration changes...\n")
 
@@ -731,10 +729,8 @@ func TestUnreliable3(t *testing.T) {
 	fmt.Printf("  ... Passed\n")
 }
 
-//
 // optional test to see whether servers are deleting
 // shards for which they are no longer responsible.
-//
 func TestChallenge1Delete(t *testing.T) {
 	fmt.Printf("Test: shard deletion (challenge 1) ...\n")
 
@@ -816,11 +812,9 @@ func TestChallenge1Delete(t *testing.T) {
 	fmt.Printf("  ... Passed\n")
 }
 
-//
 // optional test to see whether servers can handle
 // shards that are not affected by a config change
 // while the config change is underway
-//
 func TestChallenge2Unaffected(t *testing.T) {
 	fmt.Printf("Test: unaffected shard access (challenge 2) ...\n")
 
@@ -886,11 +880,9 @@ func TestChallenge2Unaffected(t *testing.T) {
 	fmt.Printf("  ... Passed\n")
 }
 
-//
 // optional test to see whether servers can handle operations on shards that
 // have been received as a part of a config migration when the entire migration
 // has not yet completed.
-//
 func TestChallenge2Partial(t *testing.T) {
 	fmt.Printf("Test: partial migration shard access (challenge 2) ...\n")
 

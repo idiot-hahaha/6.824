@@ -154,6 +154,7 @@ func (cfg *config) deleteClient(ck *Clerk) {
 
 // Shutdown i'th server of gi'th group, by isolating it
 func (cfg *config) ShutdownServer(gi int, i int) {
+	DPrintf("shutdown server-%d-%d", gi, i)
 	cfg.mu.Lock()
 	defer cfg.mu.Unlock()
 
@@ -202,8 +203,8 @@ func (cfg *config) ShutdownGroup(gi int) {
 
 // start i'th server in gi'th group
 func (cfg *config) StartServer(gi int, i int) {
+	DPrintf("Start server-%d-%d", gi, i)
 	cfg.mu.Lock()
-
 	gg := cfg.groups[gi]
 
 	// a fresh set of outgoing ClientEnd names
