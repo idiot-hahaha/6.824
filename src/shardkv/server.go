@@ -353,14 +353,20 @@ func (kv *ShardKV) applier() {
 func (kv *ShardKV) updateShard() {
 	for !kv.Killed() {
 		if _, isLeader := kv.rf.GetState(); isLeader {
+			wg := sync.WaitGroup{}
 			kv.mu.Lock()
 			for i := 0; i < SHARDS; i++ {
 				if kv.config.Shards[i] == kv.gid && kv.config.Num > kv.shardNum[i] {
+					wg.Add(1)
 					DPrintf("server-%d-%d update shard%d", kv.gid, kv.me, i)
-					go kv.getShardData(i)
+					go func(i int) {
+						kv.getShardData(i)
+						wg.Done()
+					}(i)
 				}
 			}
 			kv.mu.Unlock()
+			wg.Wait()
 		}
 		time.Sleep(time.Millisecond * 80)
 	}
@@ -592,7 +598,7 @@ func (kv *ShardKV) getShardData(shard int) {
 					ShardNum:  targetNum,
 					Shard:     shard,
 				}
-				kv.rf.Start(op)
+				return
 			}
 		}
 	}
