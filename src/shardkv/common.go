@@ -54,10 +54,9 @@ type GetReply struct {
 }
 
 type TransmitArgs struct {
-	LastNum        int
-	Shard          int
-	ShardConfigNum int
-	//Data      []byte
+	LastNum  int
+	Shard    int
+	ShardNum int
 }
 
 type TransmitReply struct {
@@ -65,4 +64,15 @@ type TransmitReply struct {
 	ConfigNum int
 	Data      []byte
 	Err       string
+}
+
+type DeleteArgs struct {
+	LastNum  int
+	Shard    int
+	ShardNum int
+}
+
+type DeleteReply struct {
+	LastNum int
+	Err     string
 }

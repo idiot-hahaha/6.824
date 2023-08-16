@@ -82,6 +82,7 @@ type Raft struct {
 
 	//2D
 	installSnapshot bool
+	Name            string
 }
 
 const (
@@ -289,11 +290,11 @@ func (rf *Raft) Snapshot(index int, snapshot []byte) {
 	if index < rf.getLogIndexStart() || index > rf.getLastLogIndexL() {
 		return
 	}
-	DPrintf("server(%d) snapshot index:%d, old log:%+v", rf.me, index, rf.log)
+	//DPrintf("server(%d) snapshot index:%d, old log:%+v", rf.me, index, rf.log)
 	rf.log = rf.log.sliceLogTail(index + 1)
 	rf.persist()
 	rf.persister.SaveStateAndSnapshot(rf.persister.ReadRaftState(), snapshot)
-	DPrintf("server(%d) snapshot index:%d, new log:%+v", rf.me, index, rf.log)
+	//DPrintf("server(%d) snapshot index:%d, new log:%+v", rf.me, index, rf.log)
 }
 
 // example RequestVote RPC arguments structure.
@@ -508,7 +509,7 @@ func (rf *Raft) InstallSnapshot(args *InstallSnapshotArgs, reply *InstallSnapsho
 		rf.currentTerm = args.Term
 	}
 	rf.persister.SaveStateAndSnapshot(rf.persister.ReadRaftState(), args.Data)
-	DPrintf("server(%d) install snapshot ,old log:%+v", rf.me, rf.log)
+	//DPrintf("server(%d) install snapshot ,old log:%+v", rf.me, rf.log)
 	if rf.getLogIndexStart() < args.LastIncludedIndex && args.LastIncludedIndex < rf.getLastLogIndexL() {
 		rf.log = rf.log.sliceLogTail(args.LastIncludedIndex + 1)
 	} else {
@@ -518,7 +519,7 @@ func (rf *Raft) InstallSnapshot(args *InstallSnapshotArgs, reply *InstallSnapsho
 	rf.log.Entries[0].Index = args.LastIncludedIndex
 	rf.log.Entries[0].Term = args.LastIncludedTerm
 	rf.persist()
-	DPrintf("server(%d) install snapshot ,new log:%+v", rf.me, rf.log)
+	//DPrintf("server(%d) install snapshot ,new log:%+v", rf.me, rf.log)
 	rf.installSnapshot = true
 	rf.applyCond.Broadcast()
 	return
@@ -604,8 +605,8 @@ func (rf *Raft) ticker() {
 			rf.leaderAlive = true
 		}
 		if rf.leaderAlive == false {
+			DPrintf("%s become candidate of term%d because of time out!", rf.Name, rf.currentTerm)
 			rf.changeStateL(candidate)
-			DPrintf("server(%d) become candidate of term%d because of time out!", rf.me, rf.currentTerm)
 		}
 		rf.leaderAlive = false
 		rf.mu.Unlock()
@@ -715,7 +716,7 @@ func (rf *Raft) changeStateL(target int) {
 					//DPrintf("candidate(%d) get vote from server(%d)", rf.me, server)
 					if voteCount == majorCount {
 						rf.changeStateL(leader)
-						DPrintf("candidate(%d) become leader of term%d", rf.me, rf.currentTerm)
+						DPrintf("%s become leader of term%d", rf.Name, rf.currentTerm)
 					}
 				}
 			}(i)

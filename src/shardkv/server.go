@@ -4,6 +4,7 @@ import (
 	"6.824/labrpc"
 	"6.824/shardctrler"
 	"bytes"
+	"fmt"
 	"sync/atomic"
 	"time"
 	"unsafe"
@@ -18,10 +19,10 @@ const (
 	Append      = "Append"
 	Get         = "Get"
 	SetShard    = "SetShard"
-	GetShard    = "GetShard"
 	SetConfig   = "SetConfig"
 	DeleteShard = "DeleteShard"
 	OpSize      = int(unsafe.Sizeof(Op{}))
+	//GetShard    = "GetShard"
 )
 
 type Op struct {
@@ -30,8 +31,8 @@ type Op struct {
 	// otherwise RPC will break.
 	Operation string
 	LastNum   int // ?
-	ClientID  int64
-	ClientCmd int
+	CallerID  int64
+	CmdIndex  int
 
 	Key   string
 	Value string
@@ -56,52 +57,48 @@ type ShardKV struct {
 	mck  *shardctrler.Clerk
 
 	db         []map[string]string
-	clientCmd  []map[int64]int
+	callerCmd  []map[int64]int
 	shardNum   []int
 	config     shardctrler.Config
 	applyIndex int
+
+	ID       int64
+	cmdIndex int
 }
 
 func (kv *ShardKV) Get(args *GetArgs, reply *GetReply) {
 	// Your code here.
 	kv.mu.Lock()
 	defer kv.mu.Unlock()
-	if args.LastNum < kv.config.Num {
+	if args.LastNum != kv.config.Num {
 		reply.Err = ErrWrongGroup
-		return
-	}
-	if args.LastNum > kv.config.Num {
-		reply.Err = ErrWrongGroup
-		kv.config = kv.mck.Query(-1)
 		return
 	}
 	shard := key2shard(args.Key)
-	configNum := kv.shardNum[shard]
-	if configNum != kv.config.Num {
-		reply.Err = ErrWrongGroup
-		return
-	}
-	if kv.config.Shards[shard] != kv.gid {
+	if kv.config.Shards[shard] != kv.gid || kv.shardNum[shard] != kv.config.Num {
 		reply.Err = ErrWrongGroup
 		return
 	}
 	op := Op{
 		Operation: Get,
 		Key:       args.Key,
-		ClientID:  args.ClerkID,
-		ClientCmd: args.CmdIndex,
-		LastNum:   kv.config.Num,
+		CallerID:  args.ClerkID,
+		CmdIndex:  args.CmdIndex,
+		LastNum:   args.LastNum,
 	}
-	_, _, isLeader := kv.rf.Start(op)
+	idx, _, isLeader := kv.rf.Start(op)
 	if !isLeader {
 		reply.Err = ErrWrongLeader
 		return
 	}
-	//for
-	for kv.clientCmd[shard][args.ClerkID] < args.CmdIndex {
+	for !kv.Killed() && idx > kv.applyIndex {
 		kv.mu.Unlock()
-		time.Sleep(time.Millisecond * 100)
+		time.Sleep(time.Millisecond * 10)
 		kv.mu.Lock()
+	}
+	if kv.callerCmd[shard][args.ClerkID] < args.CmdIndex {
+		reply.Err = ErrWrongGroup
+		return
 	}
 	reply.Value = kv.db[shard][args.Key]
 	reply.Err = OK
@@ -112,22 +109,12 @@ func (kv *ShardKV) PutAppend(args *PutAppendArgs, reply *PutAppendReply) {
 	// Your code here.
 	kv.mu.Lock()
 	defer kv.mu.Unlock()
-	if args.LastNum < kv.config.Num {
+	if args.LastNum != kv.config.Num {
 		reply.Err = ErrWrongGroup
-		return
-	}
-	if args.LastNum > kv.config.Num {
-		reply.Err = ErrWrongGroup
-		kv.config = kv.mck.Query(-1)
 		return
 	}
 	shard := key2shard(args.Key)
-	configNum := kv.shardNum[shard]
-	if configNum != kv.config.Num {
-		reply.Err = ErrWrongGroup
-		return
-	}
-	if kv.config.Shards[shard] != kv.gid {
+	if kv.config.Shards[shard] != kv.gid || kv.shardNum[shard] != kv.config.Num {
 		reply.Err = ErrWrongGroup
 		return
 	}
@@ -135,23 +122,26 @@ func (kv *ShardKV) PutAppend(args *PutAppendArgs, reply *PutAppendReply) {
 		Operation: Put,
 		Key:       args.Key,
 		Value:     args.Value,
-		ClientID:  args.ClerkID,
-		ClientCmd: args.CmdIndex,
-		LastNum:   kv.config.Num,
+		CallerID:  args.ClerkID,
+		CmdIndex:  args.CmdIndex,
+		LastNum:   args.LastNum,
 	}
 	if args.Op == "Append" {
 		op.Operation = Append
 	}
-	_, _, isLeader := kv.rf.Start(op)
+	idx, _, isLeader := kv.rf.Start(op)
 	if !isLeader {
 		reply.Err = ErrWrongLeader
 		return
 	}
-	for kv.clientCmd[shard][args.ClerkID] < args.CmdIndex {
-		DPrintf("wait CmdIndex:%d", args.CmdIndex)
+	for !kv.Killed() && idx > kv.applyIndex {
 		kv.mu.Unlock()
-		time.Sleep(time.Millisecond * 100)
+		time.Sleep(time.Millisecond * 10)
 		kv.mu.Lock()
+	}
+	if kv.callerCmd[shard][args.ClerkID] < args.CmdIndex {
+		reply.Err = ErrWrongGroup
+		return
 	}
 	reply.Err = OK
 	return
@@ -161,88 +151,77 @@ func (kv *ShardKV) GetShard(args *TransmitArgs, reply *TransmitReply) {
 	kv.mu.Lock()
 	defer kv.mu.Unlock()
 	reply.LastNum = kv.config.Num
-	if args.LastNum < kv.config.Num {
+	if args.LastNum != kv.config.Num {
 		reply.Err = ErrWrongGroup
 		return
 	}
-	if args.LastNum > kv.config.Num {
-		kv.config = kv.mck.Query(-1)
-	}
-	if args.ShardConfigNum != kv.shardNum[args.Shard] {
+	if args.ShardNum != kv.shardNum[args.Shard] {
 		reply.Err = ErrWrongNum
 		reply.ConfigNum = kv.shardNum[args.Shard]
 		return
-	} else {
-		op := Op{
-			Operation: GetShard,
-			LastNum:   kv.config.Num,
-		}
-		idx, _, isLeader := kv.rf.Start(op)
-		if !isLeader {
-			reply.Err = ErrWrongLeader
-			return
-		}
-		for idx > kv.applyIndex {
-			kv.mu.Unlock()
-			time.Sleep(time.Millisecond * 100)
-			kv.mu.Lock()
-		}
-		w := new(bytes.Buffer)
-		e := labgob.NewEncoder(w)
-		if err := e.Encode(kv.db[args.Shard]); err != nil {
-			panic(err)
-		}
-		if err := e.Encode(kv.clientCmd[args.Shard]); err != nil {
-			panic(err)
-		}
-		reply.Err = OK
-		reply.Data = w.Bytes()
-		return
 	}
+	w := new(bytes.Buffer)
+	e := labgob.NewEncoder(w)
+	if err := e.Encode(kv.db[args.Shard]); err != nil {
+		panic(err)
+	}
+	if err := e.Encode(kv.callerCmd[args.Shard]); err != nil {
+		panic(err)
+	}
+	reply.Err = OK
+	reply.Data = w.Bytes()
+	return
 }
 
-func (kv *ShardKV) SendShard(args *TransmitArgs, reply *TransmitReply) {
+func (kv *ShardKV) DeleteShard(args *DeleteArgs, reply *DeleteReply) {
 	kv.mu.Lock()
 	defer kv.mu.Unlock()
 	reply.LastNum = kv.config.Num
-	if args.LastNum < kv.config.Num {
+	if args.LastNum != kv.config.Num {
 		reply.Err = ErrWrongGroup
 		return
 	}
-	if args.LastNum > kv.config.Num {
-		kv.config = kv.mck.Query(-1)
-	}
-	if args.ShardConfigNum != kv.shardNum[args.Shard] {
-		reply.Err = ErrWrongNum
-		reply.ConfigNum = kv.shardNum[args.Shard]
-		return
-	} else {
-		op := Op{
-			Operation: GetShard,
-			LastNum:   kv.config.Num,
+	if kv.shardNum[args.Shard] != args.ShardNum {
+		// test
+		num := kv.shardNum[args.Shard]
+		if num < 0 {
+			num *= -1
 		}
-		idx, _, isLeader := kv.rf.Start(op)
-		if !isLeader {
-			reply.Err = ErrWrongLeader
-			return
-		}
-		for idx > kv.applyIndex {
-			kv.mu.Unlock()
-			time.Sleep(time.Millisecond * 100)
-			kv.mu.Lock()
-		}
-		w := new(bytes.Buffer)
-		e := labgob.NewEncoder(w)
-		if err := e.Encode(kv.db[args.Shard]); err != nil {
-			panic(err)
-		}
-		if err := e.Encode(kv.clientCmd[args.Shard]); err != nil {
-			panic(err)
+		if num < args.ShardNum {
+			panic("err")
 		}
 		reply.Err = OK
-		reply.Data = w.Bytes()
 		return
 	}
+	op := Op{
+		Operation: DeleteShard,
+		Shard:     args.Shard,
+		ShardNum:  args.ShardNum,
+	}
+	idx, _, isLeader := kv.rf.Start(op)
+	if !isLeader {
+		reply.Err = ErrWrongLeader
+		return
+	}
+	for !kv.Killed() && idx >= kv.applyIndex {
+		kv.mu.Unlock()
+		time.Sleep(time.Millisecond * 10)
+		kv.mu.Lock()
+	}
+	if kv.shardNum[args.Shard] != args.ShardNum {
+		// test
+		num := kv.shardNum[args.Shard]
+		if num < 0 {
+			num *= -1
+		}
+		if num < args.ShardNum {
+			panic("err")
+		}
+		reply.Err = OK
+		return
+	}
+	reply.Err = ErrWrongGroup
+	return
 }
 
 // the tester calls Kill() when a ShardKV instance won't
@@ -299,27 +278,32 @@ func StartServer(servers []*labrpc.ClientEnd, me int, persister *raft.Persister,
 	kv.ctrlers = ctrlers
 
 	// Your initialization code here.
-
 	kv.mck = shardctrler.MakeClerk(kv.ctrlers)
 	kv.db = make([]map[string]string, SHARDS)
 	for i := 0; i < SHARDS; i++ {
 		kv.db[i] = make(map[string]string)
 	}
-	kv.clientCmd = make([]map[int64]int, SHARDS)
+	kv.callerCmd = make([]map[int64]int, SHARDS)
 	for i := 0; i < SHARDS; i++ {
-		kv.clientCmd[i] = make(map[int64]int)
+		kv.callerCmd[i] = make(map[int64]int)
 	}
 	kv.shardNum = make([]int, 10)
 	kv.config.Num = 0
 	kv.config.Shards = [10]int{}
 	kv.applyIndex = 0
+	kv.ID = nrand()
+	kv.cmdIndex = 0
 	// Use something like this to talk to the shardctrler:
 	// kv.mck = shardctrler.MakeClerk(kv.ctrlers)
 
 	kv.applyCh = make(chan raft.ApplyMsg)
 	kv.rf = raft.Make(servers, me, persister, kv.applyCh)
+	kv.rf.Name = fmt.Sprintf("server-%d-%d", gid, me)
+
 	go kv.applier()
 	go kv.updateConfig()
+	go kv.updateShard()
+
 	return kv
 }
 func (kv *ShardKV) applier() {
@@ -333,11 +317,6 @@ func (kv *ShardKV) applier() {
 			op, ok := m.Command.(Op)
 			kv.mu.Lock()
 			DPrintf("server-%d-%d get cmd msg:%+v", kv.gid, kv.me, op)
-			if kv.config.Num < op.LastNum {
-				kv.config = kv.mck.Query(-1)
-			} else if kv.config.Num > op.LastNum {
-
-			}
 			if !ok {
 				panic("type err")
 			}
@@ -351,9 +330,7 @@ func (kv *ShardKV) applier() {
 			case SetShard:
 				kv.setShardHandler(&op)
 			case SetConfig:
-
-			case GetShard:
-
+				kv.setConfigHandler(&op)
 			case DeleteShard:
 				kv.deleteShardHandler(&op)
 			default:
@@ -373,18 +350,14 @@ func (kv *ShardKV) applier() {
 	}
 }
 
-func (kv *ShardKV) updateConfig() {
+func (kv *ShardKV) updateShard() {
 	for !kv.Killed() {
 		if _, isLeader := kv.rf.GetState(); isLeader {
 			kv.mu.Lock()
-			config := kv.mck.Query(-1)
-			if config.Num > kv.config.Num {
-				kv.config = config
-			}
 			for i := 0; i < SHARDS; i++ {
-				if kv.config.Shards[i] == kv.gid && kv.shardNum[i] < kv.config.Num {
-					//kv.getShardDataL(kv.config.Num, i)
-					go kv.getShardData(kv.config.Num, i)
+				if kv.config.Shards[i] == kv.gid && kv.config.Num > kv.shardNum[i] {
+					DPrintf("server-%d-%d update shard%d", kv.gid, kv.me, i)
+					go kv.getShardData(i)
 				}
 			}
 			kv.mu.Unlock()
@@ -393,126 +366,77 @@ func (kv *ShardKV) updateConfig() {
 	}
 }
 
-func (kv *ShardKV) getShardDataL(targetNum, shard int) {
-	args := TransmitArgs{
-		LastNum:        kv.config.Num,
-		Shard:          shard,
-		ShardConfigNum: 0,
-	}
-	queryNum := targetNum - 1
-	for queryNum > kv.shardNum[shard] {
-		args.ShardConfigNum = queryNum
-		config := kv.mck.Query(queryNum)
-		gid := config.Shards[shard]
-		if gid == kv.gid {
-			queryNum--
-			continue
-		}
-		servers := config.Groups[gid]
-		for i := 0; i < len(servers); i++ {
-			srv := kv.make_end(servers[i])
-			var reply TransmitReply
-			kv.mu.Unlock()
-			if ok := srv.Call("ShardKV.GetShard", &args, &reply); !ok {
-				if i == len(servers)-1 {
-					panic("all offline")
-				}
-				continue
-			}
+func (kv *ShardKV) updateConfig() {
+	for !kv.Killed() {
+		if _, isLeader := kv.rf.GetState(); isLeader {
 			kv.mu.Lock()
-			if reply.Err == ErrWrongLeader {
-				continue
+			config := kv.mck.Query(-1)
+			if config.Num > kv.config.Num {
+				kv.sendConfig(config.Num)
 			}
-			if reply.Err == ErrWrongGroup {
-				kv.config = kv.mck.Query(-1)
-				return
-			}
-			if reply.Err == ErrWrongNum {
-				if reply.ConfigNum < queryNum {
-					queryNum--
-				} else if reply.ConfigNum > queryNum {
-					if reply.ConfigNum > targetNum {
-						return
-					} else if reply.ConfigNum == targetNum {
-						panic("")
-					} else {
-						queryNum = targetNum - 1
-					}
-				} else {
-					panic("err")
-				}
-				break
-			}
-			if reply.Err == OK {
-				op := Op{
-					Operation: SetShard,
-					LastNum:   kv.config.Num,
-					Data:      reply.Data,
-					ShardNum:  targetNum,
-					Shard:     shard,
-				}
-				_, _, isLeader := kv.rf.Start(op)
-				if !isLeader {
-					panic("is not leader")
-				}
-			}
+			kv.mu.Unlock()
 		}
-	}
-	if queryNum == 0 {
-		emptyDB := map[string]string{}
-		emptyClientCmd := map[string]string{}
-		w := new(bytes.Buffer)
-		e := labgob.NewEncoder(w)
-		e.Encode(emptyDB)
-		e.Encode(emptyClientCmd)
-		op := Op{
-			Operation: SetShard,
-			LastNum:   kv.config.Num,
-			Data:      w.Bytes(),
-			ShardNum:  targetNum,
-			Shard:     shard,
-		}
-		_, _, isLeader := kv.rf.Start(op)
-		if !isLeader {
-			panic("is not leader")
-		}
-	} else {
-		op := Op{
-			Operation: SetShard,
-			LastNum:   kv.config.Num,
-			Data:      []byte{},
-			ShardNum:  targetNum,
-			Shard:     shard,
-		}
-		_, _, isLeader := kv.rf.Start(op)
-		if !isLeader {
-			panic("is not leader")
-		}
+		time.Sleep(time.Millisecond * 80)
 	}
 }
 
+func (kv *ShardKV) sendConfig(configNum int) {
+	op := Op{
+		Operation: SetConfig,
+		LastNum:   configNum,
+	}
+	kv.rf.Start(op)
+}
+
 func (kv *ShardKV) putHandler(op *Op) {
+	if op.LastNum != kv.config.Num {
+		return
+	}
 	shard := key2shard(op.Key)
-	if kv.clientCmd[shard][op.ClientID] < op.ClientCmd {
+	if kv.shardNum[shard] < kv.config.Num {
+		return
+	} else if kv.shardNum[shard] > kv.config.Num {
+		panic("err")
+	}
+	if kv.callerCmd[shard][op.CallerID] < op.CmdIndex {
 		kv.db[shard][op.Key] = op.Value
-		kv.clientCmd[shard][op.ClientID] = op.ClientCmd
+		kv.callerCmd[shard][op.CallerID] = op.CmdIndex
 	}
 }
 
 func (kv *ShardKV) appendHandler(op *Op) {
+	if op.LastNum != kv.config.Num {
+		return
+	}
 	shard := key2shard(op.Key)
-	if kv.clientCmd[shard][op.ClientID] < op.ClientCmd {
+	if kv.shardNum[shard] < kv.config.Num {
+		return
+	} else if kv.shardNum[shard] > kv.config.Num {
+		panic("err")
+	}
+	if kv.callerCmd[shard][op.CallerID] < op.CmdIndex {
 		kv.db[shard][op.Key] += op.Value
-		kv.clientCmd[shard][op.ClientID] = op.ClientCmd
+		kv.callerCmd[shard][op.CallerID] = op.CmdIndex
 	}
 }
 func (kv *ShardKV) getHandler(op *Op) {
+	if op.LastNum != kv.config.Num {
+		return
+	}
 	shard := key2shard(op.Key)
-	if kv.clientCmd[shard][op.ClientID] < op.ClientCmd {
-		kv.clientCmd[shard][op.ClientID] = op.ClientCmd
+	if kv.shardNum[shard] < kv.config.Num {
+		return
+	} else if kv.shardNum[shard] > kv.config.Num {
+		panic("err")
+	}
+	if kv.callerCmd[shard][op.CallerID] < op.CmdIndex {
+		kv.callerCmd[shard][op.CallerID] = op.CmdIndex
 	}
 }
 func (kv *ShardKV) setShardHandler(op *Op) {
+	if op.LastNum != kv.config.Num {
+		return
+	}
 	if kv.shardNum[op.Shard] >= op.ShardNum {
 		return
 	}
@@ -521,24 +445,35 @@ func (kv *ShardKV) setShardHandler(op *Op) {
 		return
 	}
 	var shard map[string]string
-	var clientCmd map[int64]int
+	var callerCmd map[int64]int
 	r := bytes.NewBuffer(op.Data)
 	d := labgob.NewDecoder(r)
 	if err := d.Decode(&shard); err != nil {
 		panic(err)
 	}
-	if err := d.Decode(&clientCmd); err != nil {
+	if err := d.Decode(&callerCmd); err != nil {
 		panic(err)
 	}
 	kv.db[op.Shard] = shard
 	kv.shardNum[op.Shard] = op.ShardNum
-	for k, v := range clientCmd {
-		kv.clientCmd[op.Shard][k] = v
+	for k, v := range callerCmd {
+		kv.callerCmd[op.Shard][k] = v
 	}
 }
 
 func (kv *ShardKV) deleteShardHandler(op *Op) {
+	if kv.shardNum[op.Shard] != op.ShardNum {
+		return
+	}
 	kv.db[op.Shard] = make(map[string]string)
+	kv.shardNum[op.Shard] *= -1
+}
+
+func (kv *ShardKV) setConfigHandler(op *Op) {
+	if kv.config.Num >= op.LastNum {
+		return
+	}
+	kv.config = kv.mck.Query(op.LastNum)
 }
 
 func (kv *ShardKV) snapshotInstall(m *raft.ApplyMsg) {
@@ -566,7 +501,7 @@ func (kv *ShardKV) snapshotInstall(m *raft.ApplyMsg) {
 	}
 	kv.mu.Lock()
 	kv.db = db
-	kv.clientCmd = clientCmd
+	kv.callerCmd = clientCmd
 	kv.config = config
 	kv.shardNum = shardNum
 	kv.applyIndex = applyIndex
@@ -577,7 +512,7 @@ func (kv *ShardKV) snapshot(index int) {
 	w := new(bytes.Buffer)
 	e := labgob.NewEncoder(w)
 	e.Encode(kv.db)
-	e.Encode(kv.clientCmd)
+	e.Encode(kv.callerCmd)
 	e.Encode(kv.config)
 	e.Encode(kv.shardNum)
 	e.Encode(kv.applyIndex)
@@ -585,20 +520,32 @@ func (kv *ShardKV) snapshot(index int) {
 	kv.rf.Snapshot(index, b)
 }
 
-func (kv *ShardKV) getShardData(targetNum, shard int) {
+func (kv *ShardKV) getShardData(shard int) {
 	kv.mu.Lock()
 	defer kv.mu.Unlock()
-	args := TransmitArgs{
-		LastNum:        kv.config.Num,
-		Shard:          shard,
-		ShardConfigNum: 0,
+	if kv.config.Shards[shard] != kv.gid {
+		return
 	}
-	queryNum := targetNum - 1
-	for queryNum > kv.shardNum[shard] {
-		args.ShardConfigNum = queryNum
+	args := TransmitArgs{
+		LastNum:  kv.config.Num,
+		Shard:    shard,
+		ShardNum: 0,
+	}
+	targetNum, queryNum := kv.config.Num, kv.config.Num-1
+	for queryNum > kv.shardNum[shard] && queryNum > 0 {
+		if kv.Killed() {
+			return
+		}
+		if targetNum != kv.config.Num {
+			return
+		}
+		args.ShardNum = queryNum
 		config := kv.mck.Query(queryNum)
 		gid := config.Shards[shard]
 		if gid == kv.gid {
+			if kv.shardNum[shard] < 0 && (-kv.shardNum[shard]) >= queryNum {
+				panic("err")
+			}
 			queryNum--
 			continue
 		}
@@ -608,11 +555,6 @@ func (kv *ShardKV) getShardData(targetNum, shard int) {
 			var reply TransmitReply
 			kv.mu.Unlock()
 			if ok := srv.Call("ShardKV.GetShard", &args, &reply); !ok {
-				//if i == len(servers)-1 {
-				//	queryNum--
-				//	kv.mu.Lock()
-				//	break
-				//}
 				kv.mu.Lock()
 				continue
 			}
@@ -621,11 +563,13 @@ func (kv *ShardKV) getShardData(targetNum, shard int) {
 				continue
 			}
 			if reply.Err == ErrWrongGroup {
-				kv.config = kv.mck.Query(-1)
 				return
 			}
 			if reply.Err == ErrWrongNum {
 				if reply.ConfigNum < queryNum {
+					if reply.ConfigNum*-1 > queryNum {
+						panic("err")
+					}
 					queryNum--
 				} else if reply.ConfigNum > queryNum {
 					if reply.ConfigNum > targetNum {
@@ -633,7 +577,7 @@ func (kv *ShardKV) getShardData(targetNum, shard int) {
 					} else if reply.ConfigNum == targetNum {
 						panic("")
 					} else {
-						queryNum = targetNum - 1
+						panic("err")
 					}
 				} else {
 					panic("err")
@@ -643,49 +587,23 @@ func (kv *ShardKV) getShardData(targetNum, shard int) {
 			if reply.Err == OK {
 				op := Op{
 					Operation: SetShard,
-					LastNum:   kv.config.Num,
+					LastNum:   args.LastNum,
 					Data:      reply.Data,
 					ShardNum:  targetNum,
 					Shard:     shard,
 				}
-				_, _, isLeader := kv.rf.Start(op)
-				if !isLeader {
-					//panic("is not leader")
-				}
+				kv.rf.Start(op)
 			}
 		}
 	}
-	if queryNum == 0 {
-		emptyDB := map[string]string{}
-		emptyClientCmd := map[int64]int{}
-		w := new(bytes.Buffer)
-		e := labgob.NewEncoder(w)
-		e.Encode(emptyDB)
-		e.Encode(emptyClientCmd)
-		op := Op{
-			Operation: SetShard,
-			LastNum:   kv.config.Num,
-			Data:      w.Bytes(),
-			ShardNum:  targetNum,
-			Shard:     shard,
-		}
-		_, _, isLeader := kv.rf.Start(op)
-		if !isLeader {
-			//panic("is not leader")
-		}
-	} else {
-		op := Op{
-			Operation: SetShard,
-			LastNum:   kv.config.Num,
-			Data:      []byte{},
-			ShardNum:  targetNum,
-			Shard:     shard,
-		}
-		_, _, isLeader := kv.rf.Start(op)
-		if !isLeader {
-			//panic("is not leader")
-		}
+	op := Op{
+		Operation: SetShard,
+		LastNum:   args.LastNum,
+		Data:      []byte{},
+		ShardNum:  targetNum,
+		Shard:     shard,
 	}
+	kv.rf.Start(op)
 }
 
 func max(a, b int) int {
