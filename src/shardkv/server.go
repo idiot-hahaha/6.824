@@ -565,7 +565,7 @@ func (kv *ShardKV) getShardData(shard int) {
 		gid := config.Shards[shard]
 		if gid == kv.gid {
 			if kv.shardNum[shard] < 0 && (-kv.shardNum[shard]) >= queryNum {
-				panic("err")
+				return
 			}
 			queryNum--
 			continue
@@ -577,6 +577,9 @@ func (kv *ShardKV) getShardData(shard int) {
 			kv.mu.Unlock()
 			if ok := srv.Call("ShardKV.GetShard", &args, &reply); !ok {
 				kv.mu.Lock()
+				if i == len(servers)-1 {
+					return
+				}
 				DPrintf("fail:server-%d-%d call getShard to server-%d-%d, args:%+v", kv.gid, kv.me, gid, i, args)
 				continue
 			}
