@@ -1,9 +1,12 @@
 package shardkv
 
-import "log"
+import (
+	"6.824/debugFlag"
+	"log"
+)
 
 // Debugging
-const Debug = true
+const Debug = debugFlag.ShardKVFlag
 
 func init() {
 	log.SetFlags(log.Lmicroseconds)

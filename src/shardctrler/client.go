@@ -4,7 +4,10 @@ package shardctrler
 // Shardctrler clerk.
 //
 
-import "6.824/labrpc"
+import (
+	"6.824/labrpc"
+	"sync"
+)
 import "time"
 import "crypto/rand"
 import "math/big"
@@ -14,6 +17,7 @@ type Clerk struct {
 	// Your data here.
 	id       int64
 	cmdIndex int
+	mu       sync.Mutex
 }
 
 func nrand() int64 {
@@ -35,9 +39,11 @@ func MakeClerk(servers []*labrpc.ClientEnd) *Clerk {
 func (ck *Clerk) Query(num int) Config {
 	args := &QueryArgs{}
 	// Your code here.
+	ck.mu.Lock()
 	ck.cmdIndex++
-	args.ID = ck.id
 	args.CmdIndex = ck.cmdIndex
+	ck.mu.Unlock()
+	args.ID = ck.id
 	args.Num = num
 	for {
 		// try each known server.
@@ -57,9 +63,11 @@ func (ck *Clerk) Query(num int) Config {
 func (ck *Clerk) Join(servers map[int][]string) {
 	args := &JoinArgs{}
 	// Your code here.
+	ck.mu.Lock()
 	ck.cmdIndex++
-	args.ID = ck.id
 	args.CmdIndex = ck.cmdIndex
+	ck.mu.Unlock()
+	args.ID = ck.id
 	args.Servers = servers
 
 	for {
@@ -79,9 +87,11 @@ func (ck *Clerk) Join(servers map[int][]string) {
 func (ck *Clerk) Leave(gids []int) {
 	args := &LeaveArgs{}
 	// Your code here.
+	ck.mu.Lock()
 	ck.cmdIndex++
-	args.ID = ck.id
 	args.CmdIndex = ck.cmdIndex
+	ck.mu.Unlock()
+	args.ID = ck.id
 	args.GIDs = gids
 
 	for {
@@ -101,9 +111,11 @@ func (ck *Clerk) Leave(gids []int) {
 func (ck *Clerk) Move(shard int, gid int) {
 	args := &MoveArgs{}
 	// Your code here.
+	ck.mu.Lock()
 	ck.cmdIndex++
-	args.ID = ck.id
 	args.CmdIndex = ck.cmdIndex
+	ck.mu.Unlock()
+	args.ID = ck.id
 	args.Shard = shard
 	args.GID = gid
 

@@ -1,9 +1,12 @@
 package raft
 
-import "log"
+import (
+	"6.824/debugFlag"
+	"log"
+)
 
 // Debugging
-const Debug = false
+const Debug = debugFlag.RaftFlag
 
 func init() {
 	log.SetFlags(log.Lmicroseconds)

@@ -82,7 +82,7 @@ type Raft struct {
 
 	//2D
 	installSnapshot bool
-	Name            string
+	name            string
 }
 
 const (
@@ -605,7 +605,7 @@ func (rf *Raft) ticker() {
 			rf.leaderAlive = true
 		}
 		if rf.leaderAlive == false {
-			DPrintf("%s become candidate of term%d because of time out!", rf.Name, rf.currentTerm)
+			DPrintf("%s become candidate of term%d because of time out!", rf.name, rf.currentTerm)
 			rf.changeStateL(candidate)
 		}
 		rf.leaderAlive = false
@@ -716,7 +716,7 @@ func (rf *Raft) changeStateL(target int) {
 					//DPrintf("candidate(%d) get vote from server(%d)", rf.me, server)
 					if voteCount == majorCount {
 						rf.changeStateL(leader)
-						DPrintf("%s become leader of term%d", rf.Name, rf.currentTerm)
+						DPrintf("%s become leader of term%d", rf.name, rf.currentTerm)
 					}
 				}
 			}(i)
@@ -1079,6 +1079,12 @@ func (rf *Raft) catchUpQuicklyL(server int, args *AppendEntriesArgs, reply *Appe
 			return
 		}
 	}
+}
+
+func (rf *Raft) SetName(name string) {
+	rf.mu.Lock()
+	rf.name = name
+	rf.mu.Unlock()
 }
 
 func max(a, b int) int {

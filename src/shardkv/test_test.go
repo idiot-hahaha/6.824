@@ -453,7 +453,10 @@ func TestConcurrent2(t *testing.T) {
 
 func TestConcurrent3(t *testing.T) {
 	fmt.Printf("Test: concurrent configuration change and restart...\n")
-
+	//go func() {
+	//	time.Sleep(time.Second * 30)
+	//	panic("too much time used")
+	//}()
 	cfg := make_config(t, 3, false, 300)
 	defer cfg.cleanup()
 
@@ -885,6 +888,11 @@ func TestChallenge2Unaffected(t *testing.T) {
 // has not yet completed.
 func TestChallenge2Partial(t *testing.T) {
 	fmt.Printf("Test: partial migration shard access (challenge 2) ...\n")
+
+	go func() {
+		time.Sleep(time.Second * 20)
+		panic("too much time used")
+	}()
 
 	cfg := make_config(t, 3, true, 100)
 	defer cfg.cleanup()

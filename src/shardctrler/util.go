@@ -1,9 +1,12 @@
 package shardctrler
 
-import "log"
+import (
+	"6.824/debugFlag"
+	"log"
+)
 
 // Debugging
-const Debug = false
+const Debug = debugFlag.ControllerFlag
 
 func init() {
 	log.SetFlags(log.Lmicroseconds)

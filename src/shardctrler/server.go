@@ -67,12 +67,16 @@ func (sc *ShardCtrler) Join(args *JoinArgs, reply *JoinReply) {
 	for k, _ := range op.Servers {
 		op.GIDs = append(op.GIDs, k)
 	}
-	idx, _, isLeader := sc.rf.Start(op)
+	idx, startTerm, isLeader := sc.rf.Start(op)
 	if !isLeader {
 		reply.WrongLeader = true
 		return
 	}
 	for !sc.Killed() && idx > sc.applyIndex {
+		if term, isLeader := sc.rf.GetState(); !isLeader || term != startTerm {
+			reply.WrongLeader = true
+			return
+		}
 		sc.mu.Unlock()
 		time.Sleep(time.Millisecond * 10)
 		sc.mu.Lock()
@@ -94,12 +98,16 @@ func (sc *ShardCtrler) Leave(args *LeaveArgs, reply *LeaveReply) {
 		CmdIndex:  args.CmdIndex,
 		GIDs:      args.GIDs,
 	}
-	idx, _, isLeader := sc.rf.Start(op)
+	idx, startTerm, isLeader := sc.rf.Start(op)
 	if !isLeader {
 		reply.WrongLeader = true
 		return
 	}
 	for !sc.Killed() && idx > sc.applyIndex {
+		if term, isLeader := sc.rf.GetState(); !isLeader || term != startTerm {
+			reply.WrongLeader = true
+			return
+		}
 		sc.mu.Unlock()
 		time.Sleep(time.Millisecond * 10)
 		sc.mu.Lock()
@@ -122,12 +130,16 @@ func (sc *ShardCtrler) Move(args *MoveArgs, reply *MoveReply) {
 		GID:       args.GID,
 		Shard:     args.Shard,
 	}
-	idx, _, isLeader := sc.rf.Start(op)
+	idx, startTerm, isLeader := sc.rf.Start(op)
 	if !isLeader {
 		reply.WrongLeader = true
 		return
 	}
 	for !sc.Killed() && idx > sc.applyIndex {
+		if term, isLeader := sc.rf.GetState(); !isLeader || term != startTerm {
+			reply.WrongLeader = true
+			return
+		}
 		sc.mu.Unlock()
 		time.Sleep(time.Millisecond * 10)
 		sc.mu.Lock()
@@ -148,12 +160,16 @@ func (sc *ShardCtrler) Query(args *QueryArgs, reply *QueryReply) {
 		ID:        args.ID,
 		CmdIndex:  args.CmdIndex,
 	}
-	idx, _, isLeader := sc.rf.Start(op)
+	idx, startTerm, isLeader := sc.rf.Start(op)
 	if !isLeader {
 		reply.WrongLeader = true
 		return
 	}
 	for !sc.Killed() && sc.applyIndex < idx {
+		if term, isLeader := sc.rf.GetState(); !isLeader || term != startTerm {
+			reply.WrongLeader = true
+			return
+		}
 		sc.mu.Unlock()
 		time.Sleep(time.Millisecond * 10)
 		sc.mu.Lock()
@@ -204,6 +220,7 @@ func StartServer(servers []*labrpc.ClientEnd, me int, persister *raft.Persister)
 	labgob.Register(Op{})
 	sc.applyCh = make(chan raft.ApplyMsg)
 	sc.rf = raft.Make(servers, me, persister, sc.applyCh)
+	sc.rf.SetName(fmt.Sprintf("shardCtrler-%d", me))
 
 	// Your code here.
 	sc.callerCmd = make(map[int64]int)
@@ -221,7 +238,6 @@ func StartServer(servers []*labrpc.ClientEnd, me int, persister *raft.Persister)
 	}
 	sc.groupsHead.pre = sc.groupsHead
 	sc.groupsHead.next = sc.groupsHead
-	sc.rf.Name = fmt.Sprintf("shardCtrler-%d", me)
 	go sc.applier()
 	DPrintf("shardCtrler-%d start", sc.me)
 	return sc
