@@ -319,6 +319,7 @@ func (cfg *config) joinm(gis []int) {
 		m[gid] = servernames
 	}
 	cfg.mck.Join(m)
+	DPrintf("Join:%+v", gis)
 }
 
 // tell the shardctrler that a group is leaving.
@@ -332,6 +333,7 @@ func (cfg *config) leavem(gis []int) {
 		gids = append(gids, cfg.groups[g].gid)
 	}
 	cfg.mck.Leave(gids)
+	DPrintf("Leave:%+v", gis)
 }
 
 var ncpu_once sync.Once

@@ -1,5 +1,12 @@
 package shardkv
 
+import (
+	"fmt"
+	"io/ioutil"
+	"os"
+	"testing"
+)
+
 //
 //import (
 //	"6.824/labgob"
@@ -105,3 +112,18 @@ package shardkv
 //	fmt.Println(unsafe.Sizeof(1))
 //	fmt.Println(unsafe.Sizeof(int32(1)))
 //}
+
+func TestTempFile(t *testing.T) {
+	file, err := ioutil.TempFile("", "*.html")
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(file.Name())
+}
+func TestOpen(t *testing.T) {
+	openFile, err := os.Open("/tmp/236907561.html")
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(openFile)
+}

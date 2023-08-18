@@ -67,6 +67,10 @@ type ShardKV struct {
 
 func (kv *ShardKV) Get(args *GetArgs, reply *GetReply) {
 	// Your code here.
+	if _, isLeader := kv.rf.GetState(); !isLeader {
+		reply.Err = ErrWrongLeader
+		return
+	}
 	kv.mu.Lock()
 	defer kv.mu.Unlock()
 	if args.LastNum != kv.config.Num { // || kv.shardNum[shard] != kv.config.Num
@@ -98,7 +102,7 @@ func (kv *ShardKV) Get(args *GetArgs, reply *GetReply) {
 		time.Sleep(time.Millisecond * 5)
 		kv.mu.Lock()
 	}
-	if kv.callerCmd[shard][args.ClerkID] < args.CmdIndex {
+	if kv.callerCmd[shard][args.ClerkID] < args.CmdIndex || kv.shardNum[shard] != args.LastNum {
 		reply.Err = ErrWrongGroup
 		return
 	}
@@ -109,6 +113,10 @@ func (kv *ShardKV) Get(args *GetArgs, reply *GetReply) {
 
 func (kv *ShardKV) PutAppend(args *PutAppendArgs, reply *PutAppendReply) {
 	// Your code here.
+	if _, isLeader := kv.rf.GetState(); !isLeader {
+		reply.Err = ErrWrongLeader
+		return
+	}
 	kv.mu.Lock()
 	defer kv.mu.Unlock()
 	if args.LastNum != kv.config.Num { // || kv.shardNum[shard] != kv.config.Num
@@ -153,6 +161,10 @@ func (kv *ShardKV) PutAppend(args *PutAppendArgs, reply *PutAppendReply) {
 }
 
 func (kv *ShardKV) GetShard(args *TransmitArgs, reply *TransmitReply) {
+	if _, isLeader := kv.rf.GetState(); !isLeader {
+		reply.Err = ErrWrongLeader
+		return
+	}
 	kv.mu.Lock()
 	defer kv.mu.Unlock()
 	reply.LastNum = kv.config.Num
@@ -179,6 +191,10 @@ func (kv *ShardKV) GetShard(args *TransmitArgs, reply *TransmitReply) {
 }
 
 func (kv *ShardKV) DeleteShard(args *DeleteArgs, reply *DeleteReply) {
+	if _, isLeader := kv.rf.GetState(); !isLeader {
+		reply.Err = ErrWrongLeader
+		return
+	}
 	kv.mu.Lock()
 	defer kv.mu.Unlock()
 	reply.LastNum = kv.config.Num
@@ -481,6 +497,7 @@ func (kv *ShardKV) deleteShardHandler(op *Op) {
 		return
 	}
 	kv.db[op.Shard] = make(map[string]string)
+	kv.callerCmd[op.Shard] = make(map[int64]int)
 	kv.shardNum[op.Shard] *= -1
 }
 
@@ -664,7 +681,7 @@ func (kv *ShardKV) callDeleteShard(shard int, shardNum int) {
 	}
 	servers := config.Groups[config.Shards[shard]]
 	//for {
-	for _, server := range servers {
+	for i, server := range servers {
 		srv := kv.make_end(server)
 		var reply DeleteReply
 		kv.mu.Unlock()
@@ -674,6 +691,7 @@ func (kv *ShardKV) callDeleteShard(shard int, shardNum int) {
 			continue
 		}
 		if reply.Err == OK {
+			DPrintf("success:server-%d-%d call DeleteShard(shard:%d, Num:%d) to server-%d-%d", kv.gid, kv.me, args.Shard, args.ShardNum, config.Shards[shard], i)
 			return
 		}
 	}

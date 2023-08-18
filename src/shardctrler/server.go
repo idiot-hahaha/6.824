@@ -73,11 +73,11 @@ func (sc *ShardCtrler) Join(args *JoinArgs, reply *JoinReply) {
 		return
 	}
 	for !sc.Killed() && idx > sc.applyIndex {
+		sc.mu.Unlock()
 		if term, isLeader := sc.rf.GetState(); !isLeader || term != startTerm {
 			reply.WrongLeader = true
 			return
 		}
-		sc.mu.Unlock()
 		time.Sleep(time.Millisecond * 10)
 		sc.mu.Lock()
 	}
@@ -104,11 +104,11 @@ func (sc *ShardCtrler) Leave(args *LeaveArgs, reply *LeaveReply) {
 		return
 	}
 	for !sc.Killed() && idx > sc.applyIndex {
+		sc.mu.Unlock()
 		if term, isLeader := sc.rf.GetState(); !isLeader || term != startTerm {
 			reply.WrongLeader = true
 			return
 		}
-		sc.mu.Unlock()
 		time.Sleep(time.Millisecond * 10)
 		sc.mu.Lock()
 	}
@@ -136,11 +136,11 @@ func (sc *ShardCtrler) Move(args *MoveArgs, reply *MoveReply) {
 		return
 	}
 	for !sc.Killed() && idx > sc.applyIndex {
+		sc.mu.Unlock()
 		if term, isLeader := sc.rf.GetState(); !isLeader || term != startTerm {
 			reply.WrongLeader = true
 			return
 		}
-		sc.mu.Unlock()
 		time.Sleep(time.Millisecond * 10)
 		sc.mu.Lock()
 	}
@@ -166,11 +166,11 @@ func (sc *ShardCtrler) Query(args *QueryArgs, reply *QueryReply) {
 		return
 	}
 	for !sc.Killed() && sc.applyIndex < idx {
+		sc.mu.Unlock()
 		if term, isLeader := sc.rf.GetState(); !isLeader || term != startTerm {
 			reply.WrongLeader = true
 			return
 		}
-		sc.mu.Unlock()
 		time.Sleep(time.Millisecond * 10)
 		sc.mu.Lock()
 	}
@@ -269,7 +269,7 @@ func (sc *ShardCtrler) applier() {
 				panic("undefined operation")
 			}
 			sc.applyIndex = m.CommandIndex
-			DPrintf("server-%d apply %d op:%+v", sc.me, sc.applyIndex, op)
+			//DPrintf("server-%d apply %d op:%+v", sc.me, sc.applyIndex, op)
 			//if (sc.applyIndex+1)%10 == 0 {
 			//	sc.snapshot(sc.applyIndex)
 			//}

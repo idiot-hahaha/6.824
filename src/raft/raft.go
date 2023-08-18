@@ -20,6 +20,7 @@ package raft
 import (
 	"6.824/labgob"
 	"bytes"
+	"fmt"
 	"math/rand"
 
 	//	"bytes"
@@ -292,8 +293,13 @@ func (rf *Raft) Snapshot(index int, snapshot []byte) {
 	}
 	//DPrintf("server(%d) snapshot index:%d, old log:%+v", rf.me, index, rf.log)
 	rf.log = rf.log.sliceLogTail(index + 1)
-	rf.persist()
-	rf.persister.SaveStateAndSnapshot(rf.persister.ReadRaftState(), snapshot)
+	w := new(bytes.Buffer)
+	e := labgob.NewEncoder(w)
+	e.Encode(rf.voteFor)
+	e.Encode(rf.currentTerm)
+	e.Encode(rf.log)
+	data := w.Bytes()
+	rf.persister.SaveStateAndSnapshot(data, snapshot)
 	//DPrintf("server(%d) snapshot index:%d, new log:%+v", rf.me, index, rf.log)
 }
 
@@ -605,8 +611,8 @@ func (rf *Raft) ticker() {
 			rf.leaderAlive = true
 		}
 		if rf.leaderAlive == false {
-			DPrintf("%s become candidate of term%d because of time out!", rf.name, rf.currentTerm)
 			rf.changeStateL(candidate)
+			DPrintf("%s become candidate of term%d because of time out!", rf.name, rf.currentTerm)
 		}
 		rf.leaderAlive = false
 		rf.mu.Unlock()
@@ -650,6 +656,7 @@ func Make(peers []*labrpc.ClientEnd, me int,
 	rf.installSnapshot = rf.persister.ReadSnapshot() != nil && len(rf.persister.ReadSnapshot()) != 0
 	//DPrintf("server(%d) start! log:%+v", me, rf.log)
 	// start ticker goroutine to start elections
+	rf.name = fmt.Sprintf("server-%d", me)
 	go rf.ticker()
 
 	go rf.applyEntry()
@@ -696,12 +703,14 @@ func (rf *Raft) changeStateL(target int) {
 				}
 				//DPrintf("candidate(%d) send RequestVoteMsg to server(%d)", args.CandidateId, server)
 				if ok := rf.sendRequestVote(server, args, reply); !ok {
-					//DPrintf("candidate(%d) send RequestVoteMsg to server(%d) failed!", args.CandidateId, server)
+					rf.mu.Lock()
+					DPrintf("candidate(%s) send RequestVoteMsg to server(%d) failed!", rf.name, server)
+					rf.mu.Unlock()
 					return
 				}
 				rf.mu.Lock()
 				defer rf.mu.Unlock()
-				//DPrintf("candidate(%d) get reply(%+v) from server(%d)", rf.me, reply, server)
+				DPrintf("candidate(%s)(curTerm:%d) get requestVote reply(%+v) from server(%d)", rf.name, rf.currentTerm, reply, server)
 				if rf.state != candidate || reply.Term != rf.currentTerm {
 					return
 				}
