@@ -601,6 +601,9 @@ func (kv *ShardKV) getShardData(shard int) {
 				continue
 			}
 			kv.mu.Lock()
+			if kv.shardNum[shard] >= queryNum {
+				return
+			}
 			DPrintf("success:server-%d-%d call getShard to server-%d-%d, args:%+v, reply:%+v", kv.gid, kv.me, gid, i, args, reply)
 			if reply.Err == ErrWrongLeader {
 				continue
