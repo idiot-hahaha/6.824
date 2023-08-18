@@ -683,22 +683,25 @@ func (kv *ShardKV) callDeleteShard(shard int, shardNum int) {
 		ShardNum: shardNum,
 	}
 	servers := config.Groups[config.Shards[shard]]
-	//for {
-	for i, server := range servers {
-		srv := kv.make_end(server)
-		var reply DeleteReply
+	for {
+		for i, server := range servers {
+			srv := kv.make_end(server)
+			var reply DeleteReply
+			kv.mu.Unlock()
+			ok := srv.Call("ShardKV.DeleteShard", &args, &reply)
+			kv.mu.Lock()
+			if !ok || reply.Err == ErrWrongLeader {
+				continue
+			}
+			if reply.Err == OK {
+				DPrintf("success:server-%d-%d call DeleteShard(shard:%d, Num:%d) to server-%d-%d", kv.gid, kv.me, args.Shard, args.ShardNum, config.Shards[shard], i)
+				return
+			}
+		}
 		kv.mu.Unlock()
-		ok := srv.Call("ShardKV.DeleteShard", &args, &reply)
+		time.Sleep(time.Second)
 		kv.mu.Lock()
-		if !ok || reply.Err == ErrWrongLeader {
-			continue
-		}
-		if reply.Err == OK {
-			DPrintf("success:server-%d-%d call DeleteShard(shard:%d, Num:%d) to server-%d-%d", kv.gid, kv.me, args.Shard, args.ShardNum, config.Shards[shard], i)
-			return
-		}
 	}
-	//}
 }
 
 func max(a, b int) int {
