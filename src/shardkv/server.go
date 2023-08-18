@@ -386,6 +386,14 @@ func (kv *ShardKV) updateShard() {
 						kv.getShardData(i)
 						wg.Done()
 					}(i)
+					continue
+				}
+				if kv.config.Shards[i] != kv.gid && kv.config.Shards[i] > 0 {
+					wg.Add(1)
+					go func(i int) {
+						kv.deleteShard(i)
+						wg.Done()
+					}(i)
 				}
 			}
 			kv.mu.Unlock()
@@ -651,9 +659,9 @@ func (kv *ShardKV) getShardData(shard int) {
 					time.Sleep(time.Millisecond * 5)
 					kv.mu.Lock()
 				}
-				if kv.shardNum[op.Shard] >= op.ShardNum {
-					go kv.callDeleteShard(op.Shard, queryNum)
-				}
+				//if kv.shardNum[op.Shard] >= op.ShardNum {
+				//	go kv.callDeleteShard(op.Shard, queryNum)
+				//}
 				return
 			} else {
 				panic("err")
@@ -702,6 +710,55 @@ func (kv *ShardKV) callDeleteShard(shard int, shardNum int) {
 		time.Sleep(time.Second)
 		kv.mu.Lock()
 	}
+}
+
+func (kv *ShardKV) deleteShard(shard int) {
+	kv.mu.Lock()
+	defer kv.mu.Unlock()
+	if kv.shardNum[shard] == kv.config.Num || kv.shardNum[shard] <= 0 {
+		return
+	}
+	args := GetNumArgs{
+		LastNum: kv.config.Num,
+		Shard:   shard,
+	}
+	servers := kv.config.Groups[kv.config.Shards[shard]]
+	for _, server := range servers {
+		var reply GetNumReply
+		srv := kv.make_end(server)
+		kv.mu.Unlock()
+		ok := srv.Call("ShardKV.GetNum", &args, &reply)
+		kv.mu.Lock()
+		if kv.shardNum[shard] == kv.config.Num || kv.shardNum[shard] <= 0 {
+			return
+		}
+		if !ok || reply.Err == ErrWrongLeader {
+			continue
+		}
+		if reply.Err == ErrWrongGroup {
+			return
+		}
+		if reply.ShardNum >= kv.shardNum[shard] {
+			op := Op{
+				Operation: DeleteShard,
+				Shard:     args.Shard,
+				ShardNum:  kv.shardNum[shard],
+				LastNum:   args.LastNum,
+			}
+			kv.rf.Start(op)
+		}
+	}
+}
+
+func (kv *ShardKV) GetNum(args *GetNumArgs, reply *GetNumReply) {
+	if _, isLeader := kv.rf.GetState(); !isLeader {
+		reply.Err = ErrWrongLeader
+		return
+	}
+	kv.mu.Lock()
+	defer kv.mu.Unlock()
+	reply.ShardNum = kv.shardNum[args.Shard]
+	return
 }
 
 func max(a, b int) int {

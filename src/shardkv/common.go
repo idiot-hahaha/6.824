@@ -76,3 +76,14 @@ type DeleteReply struct {
 	LastNum int
 	Err     string
 }
+
+type GetNumArgs struct {
+	LastNum int
+	Shard   int
+}
+
+type GetNumReply struct {
+	Err      string
+	LastNum  int
+	ShardNum int
+}
