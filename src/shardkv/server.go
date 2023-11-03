@@ -190,63 +190,63 @@ func (kv *ShardKV) GetShard(args *TransmitArgs, reply *TransmitReply) {
 	return
 }
 
-func (kv *ShardKV) DeleteShard(args *DeleteArgs, reply *DeleteReply) {
-	if _, isLeader := kv.rf.GetState(); !isLeader {
-		reply.Err = ErrWrongLeader
-		return
-	}
-	kv.mu.Lock()
-	defer kv.mu.Unlock()
-	reply.LastNum = kv.config.Num
-	if args.LastNum != kv.config.Num {
-		reply.Err = ErrWrongGroup
-		return
-	}
-	if kv.shardNum[args.Shard] != args.ShardNum {
-		num := kv.shardNum[args.Shard]
-		if num < 0 {
-			num *= -1
-		}
-		if num < args.ShardNum {
-			panic(fmt.Sprintf("err num:%d, args.ShardNum:%d", num, args.ShardNum))
-		}
-		reply.Err = OK
-		return
-	}
-	op := Op{
-		Operation: DeleteShard,
-		Shard:     args.Shard,
-		ShardNum:  args.ShardNum,
-		LastNum:   args.LastNum,
-	}
-	idx, startTerm, isLeader := kv.rf.Start(op)
-	if !isLeader {
-		reply.Err = ErrWrongLeader
-		return
-	}
-	for !kv.Killed() && idx >= kv.applyIndex {
-		if term, isLeader := kv.rf.GetState(); !isLeader || term != startTerm {
-			reply.Err = ErrWrongLeader
-			return
-		}
-		kv.mu.Unlock()
-		time.Sleep(time.Millisecond * 5)
-		kv.mu.Lock()
-	}
-	if kv.shardNum[args.Shard] != args.ShardNum {
-		num := kv.shardNum[args.Shard]
-		if num < 0 {
-			num *= -1
-		}
-		if num < args.ShardNum {
-			panic("err")
-		}
-		reply.Err = OK
-		return
-	}
-	reply.Err = ErrWrongGroup
-	return
-}
+//func (kv *ShardKV) DeleteShard(args *DeleteArgs, reply *DeleteReply) {
+//	if _, isLeader := kv.rf.GetState(); !isLeader {
+//		reply.Err = ErrWrongLeader
+//		return
+//	}
+//	kv.mu.Lock()
+//	defer kv.mu.Unlock()
+//	reply.LastNum = kv.config.Num
+//	if args.LastNum != kv.config.Num {
+//		reply.Err = ErrWrongGroup
+//		return
+//	}
+//	if kv.shardNum[args.Shard] != args.ShardNum {
+//		num := kv.shardNum[args.Shard]
+//		if num < 0 {
+//			num *= -1
+//		}
+//		if num < args.ShardNum {
+//			panic(fmt.Sprintf("err num:%d, args.ShardNum:%d", num, args.ShardNum))
+//		}
+//		reply.Err = OK
+//		return
+//	}
+//	op := Op{
+//		Operation: DeleteShard,
+//		Shard:     args.Shard,
+//		ShardNum:  args.ShardNum,
+//		LastNum:   args.LastNum,
+//	}
+//	idx, startTerm, isLeader := kv.rf.Start(op)
+//	if !isLeader {
+//		reply.Err = ErrWrongLeader
+//		return
+//	}
+//	for !kv.Killed() && idx >= kv.applyIndex {
+//		if term, isLeader := kv.rf.GetState(); !isLeader || term != startTerm {
+//			reply.Err = ErrWrongLeader
+//			return
+//		}
+//		kv.mu.Unlock()
+//		time.Sleep(time.Millisecond * 5)
+//		kv.mu.Lock()
+//	}
+//	if kv.shardNum[args.Shard] != args.ShardNum {
+//		num := kv.shardNum[args.Shard]
+//		if num < 0 {
+//			num *= -1
+//		}
+//		if num < args.ShardNum {
+//			panic("err")
+//		}
+//		reply.Err = OK
+//		return
+//	}
+//	reply.Err = ErrWrongGroup
+//	return
+//}
 
 // the tester calls Kill() when a ShardKV instance won't
 // be needed again. you are not required to do anything
@@ -325,14 +325,14 @@ func StartServer(servers []*labrpc.ClientEnd, me int, persister *raft.Persister,
 	kv.rf.SetName(fmt.Sprintf("server-%d-%d", gid, me))
 
 	go kv.applier()
-	go kv.updateConfig()
-	go kv.updateShard()
+	go kv.updateConfig() // 更新配置
+	go kv.updateShard()  // 更新分片数据
 
 	return kv
 }
 func (kv *ShardKV) applier() {
 	for m := range kv.applyCh {
-		if kv.Killed() {
+		if kv.Killed() { // todo: 有可能kill之后，没有新消息，导致协程一直等待而协程泄漏
 			return
 		}
 		if m.SnapshotValid {
@@ -622,7 +622,8 @@ func (kv *ShardKV) getShardData(shard int) {
 			if reply.Err == ErrWrongNum {
 				if reply.ConfigNum < queryNum {
 					if reply.ConfigNum*-1 > queryNum {
-						panic("err")
+						return
+						//panic("err")
 					}
 					queryNum--
 				} else if reply.ConfigNum > queryNum {
@@ -681,36 +682,36 @@ func (kv *ShardKV) getShardData(shard int) {
 	kv.rf.Start(op)
 }
 
-func (kv *ShardKV) callDeleteShard(shard int, shardNum int) {
-	config := kv.mck.Query(shardNum)
-	kv.mu.Lock()
-	defer kv.mu.Unlock()
-	args := DeleteArgs{
-		LastNum:  kv.config.Num,
-		Shard:    shard,
-		ShardNum: shardNum,
-	}
-	servers := config.Groups[config.Shards[shard]]
-	for {
-		for i, server := range servers {
-			srv := kv.make_end(server)
-			var reply DeleteReply
-			kv.mu.Unlock()
-			ok := srv.Call("ShardKV.DeleteShard", &args, &reply)
-			kv.mu.Lock()
-			if !ok || reply.Err == ErrWrongLeader {
-				continue
-			}
-			if reply.Err == OK {
-				DPrintf("success:server-%d-%d call DeleteShard(shard:%d, Num:%d) to server-%d-%d", kv.gid, kv.me, args.Shard, args.ShardNum, config.Shards[shard], i)
-				return
-			}
-		}
-		kv.mu.Unlock()
-		time.Sleep(time.Second)
-		kv.mu.Lock()
-	}
-}
+//func (kv *ShardKV) callDeleteShard(shard int, shardNum int) {
+//	config := kv.mck.Query(shardNum)
+//	kv.mu.Lock()
+//	defer kv.mu.Unlock()
+//	args := DeleteArgs{
+//		LastNum:  kv.config.Num,
+//		Shard:    shard,
+//		ShardNum: shardNum,
+//	}
+//	servers := config.Groups[config.Shards[shard]]
+//	for {
+//		for i, server := range servers {
+//			srv := kv.make_end(server)
+//			var reply DeleteReply
+//			kv.mu.Unlock()
+//			ok := srv.Call("ShardKV.DeleteShard", &args, &reply)
+//			kv.mu.Lock()
+//			if !ok || reply.Err == ErrWrongLeader {
+//				continue
+//			}
+//			if reply.Err == OK {
+//				DPrintf("success:server-%d-%d call DeleteShard(shard:%d, Num:%d) to server-%d-%d", kv.gid, kv.me, args.Shard, args.ShardNum, config.Shards[shard], i)
+//				return
+//			}
+//		}
+//		kv.mu.Unlock()
+//		time.Sleep(time.Second)
+//		kv.mu.Lock()
+//	}
+//}
 
 func (kv *ShardKV) deleteShard(shard int) {
 	kv.mu.Lock()
@@ -738,7 +739,7 @@ func (kv *ShardKV) deleteShard(shard int) {
 		if reply.Err == ErrWrongGroup {
 			return
 		}
-		if reply.ShardNum >= kv.shardNum[shard] {
+		if reply.ShardNum > kv.shardNum[shard] {
 			op := Op{
 				Operation: DeleteShard,
 				Shard:     args.Shard,

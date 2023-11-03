@@ -1,1 +1,1 @@
-python3 test.py -p 8 -n 1000 -r TestStaticShards TestJoinLeave TestSnapshot TestMissChange TestConcurrent1 TestConcurrent2 TestConcurrent3 TestUnreliable1 TestUnreliable2 TestUnreliable3 TestChallenge1Delete TestChallenge2Unaffected TestChallenge2Partial
+python3 test.py -p 8 -n 10000 -r TestStaticShards TestJoinLeave TestSnapshot TestMissChange TestConcurrent1 TestConcurrent2 TestConcurrent3 TestUnreliable1 TestUnreliable2 TestUnreliable3 TestChallenge1Delete TestChallenge2Unaffected TestChallenge2Partial
